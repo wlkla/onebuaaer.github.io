@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 第三章：存储系统
+
+## 存储器概述
+
+### 存储器的分类
+
+1. 按作用/层次分类：
+
+   - 主存储器/主存/内存储器/内存：用于存放计算机运行期间所需的程序和数据，CPU可以直接`随机对其进行访问`，也可以和Cache及辅助存储器交换数据。">
+<meta property="og:title" content="存储系统">
+<meta property="og:description" content="# 第三章：存储系统
+
+## 存储器概述
+
+### 存储器的分类
+
+1. 按作用/层次分类：
+
+   - 主存储器/主存/内存储器/内存：用于存放计算机运行期间所需的程序和数据，CPU可以直接`随机对其进行访问`，也可以和Cache及辅助存储器交换数据。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wlkla.github.io/onebuaaer.github.io/post/cun-chu-xi-tong.html">
+<meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
+<title>存储系统</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">存储系统</h1>
+<div class="title-right">
+    <a href="https://wlkla.github.io/onebuaaer.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/wlkla/onebuaaer.github.io/issues/15" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>第三章：存储系统</h1>
+<h2>存储器概述</h2>
+<h3>存储器的分类</h3>
+<ol>
+<li>
+<p>按作用/层次分类：</p>
+<ul>
+<li>主存储器/主存/内存储器/内存：用于存放计算机运行期间所需的程序和数据，CPU可以直接<code class="notranslate">随机对其进行访问</code>，也可以和Cache及辅助存储器交换数据。特点是<code class="notranslate">容量较小</code>，<code class="notranslate">存取速度较快</code>，价格较高。</li>
+<li>辅助存储器/辅存/外存储器/外存：用于存放当前暂时不用的程序和数据，以及一些需要永久性保存的信息。辅存的内容需要调入主存后才能被CPU访问。特点是<code class="notranslate">容量大</code>、<code class="notranslate">存储速度较慢</code>、单位成本低。</li>
+<li>高速缓冲存储器/Cache：位于主存和CPU之间，用于存放当前CPU经常使用的指令和数据，以便CPU高速访问。</li>
+</ul>
+</li>
+<li>
+<p>按存储介质分：</p>
+<ul>
+<li>磁表面存储器</li>
+<li>磁芯存储器</li>
+<li>半导体存储器</li>
+<li>光存储器</li>
+</ul>
+</li>
+<li>
+<p>按存取方式分：</p>
+<ul>
+<li>随机存储器RAM：存储器的任何一个存储单元都可以<code class="notranslate">随机存取</code>。优点是读写方便、使用灵活。主要<code class="notranslate">用作主存和高速缓冲存储器</code>。又分为静态RAM和动态RAM。</li>
+<li>只读存储器(ROM)：存储器的内容只能随机读出而不能写入。信息一旦写入，即使断电，内容也不会丢失。对于派生的可写存储器，存取方式也是<code class="notranslate">随机存取</code>。</li>
+<li>串行访问存储器：对存储单元进行读写操作时，需要按其物理地址的先后顺序寻址，包括<code class="notranslate">顺序存取存储器</code>和<code class="notranslate">直接存取存储器</code>。
+<ul>
+<li>顺序存取存储器：只能按某种顺序存取，存取时间与信息的物理位置有关，存取速度慢。</li>
+<li>直接存取存储器：存取信息时通常先寻找整个存储器的某个小区域，再在小区域中顺序查找。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>按信息的可保存性分：</p>
+<ul>
+<li>易失性存储器：断电后存储信息消失。</li>
+<li>非易失性存储器：断电后信息仍然保持。</li>
+</ul>
+<p>若某个存储单元所存储的信息被读出时，原存储信息被破坏，则称为<code class="notranslate">破坏性读出</code>；若读出时，被读单元存储信息不被破坏，则称为<code class="notranslate">非破坏性读出</code>。</p>
+</li>
+</ol>
+<h3>存储器的性能指标</h3>
+<ol>
+<li>
+<p>存储容量：存储容量=存储字数$\times$字长</p>
+</li>
+<li>
+<p>单位成本：每位价格=总成本/总容量</p>
+</li>
+<li>
+<p>存储速度：数据传输速率=数据的宽度/存取周期</p>
+<ul>
+<li>存取时间：从启动一次存储器操作到完成该操作所经历的时间。</li>
+<li>存取周期：连续两次独立访问存储器操作之间所需要的最小时间间隔。</li>
+<li>主存带宽/数据传输速率：每秒从主存进出信息的最大数量。</li>
+</ul>
+<p>启动存取存取结束下次存取存取时间恢复时间存取周期</p>
+</li>
+</ol>
+<h3>多级层次的存储系统</h3>
+<ol>
+<li>
+<p>为了解决存储系统大容量、高速度和低成本相互制约的矛盾，在计算机系统中，通常采用<code class="notranslate">多级存储器系统</code>。</p>
+<p>CPU寄存器Cache主存磁盘磁带光盘速度容量价格</p>
+</li>
+<li>
+<p>图中从上至下，价格越来越低，速度越来越慢，容量越来越大，CPU访问的频度也越来越低。</p>
+<p>存储系统层次结构主要体现在<code class="notranslate">Cache-主存层</code>和<code class="notranslate">主存-辅存层</code>。</p>
+</li>
+<li>
+<p>存储器层次结构的主要思想是上一层的存储器作为低一层的存储器的高速缓存。<br>
+当CPU要从存储器中存取数据时，访问顺序为：Cache$\rightarrow$主存$\rightarrow$磁盘。</p>
+</li>
+<li>
+<p>从CPU角度看，Cache-主存层的速度接近于Cache，容量和价格却接近主存。从主存-辅存层分析，其速度接近于主存，容量和价位却接近与辅存。从而解决了速度、容量和成本之间的矛盾。</p>
+</li>
+<li>
+<p>Cache-主存层主要解决<code class="notranslate">CPU和主存速度不匹配</code>的问题，主存和Cache之间的数据调动是由<code class="notranslate">硬件</code>自动完成的，对<code class="notranslate">所有程序员</code>是透明的。主存-辅存层主要解决存储系统的容量问题，主存和辅存之间的数据调动是由<code class="notranslate">硬件和操作系统</code>共同完成的，对<code class="notranslate">应用程序员</code>是透明的。</p>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>磁盘属于(  )类型的存储器</p>
+<p>A. 随机存储器(RAM)</p>
+<p>B. 只读存储器(ROM)</p>
+<p>C. 顺序存取存储器(SAM)</p>
+<p>D. 直接存取存储器(DAM)</p>
+</li>
+<li>
+<p>设机器字长为32位，一个容量为16MB的存储器，CPU按半字访问，其可寻址的单元数为(  )<br>
+A. $2^{24}$</p>
+<p>B. $2^{23}$</p>
+<p>C. $2^{22}$</p>
+<p>D. $2^{21}$</p>
+</li>
+</ol>
+<h2>主存储器</h2>
+<h3>SRAM芯片和DRAM芯片</h3>
+<ol>
+<li>
+<p>半导体存储器分为随机存储器(RAM)和只读存储器(ROM)。RAM又分为静态随机存储器(SRAM)和动态随机存储器(DRAM)。主存主要由DRAM实现，Cache主要由SRAM实现。</p>
+</li>
+<li>
+<p>把存放一个二进制位的物理器件称为<code class="notranslate">存储元</code>，它是存储器的最基本构件。地址码相同的多个存储元构成一个<code class="notranslate">存储单元</code>。若干个存储单元的集合构成<code class="notranslate">存储体</code>。</p>
+</li>
+<li>
+<p>为什么称为动态存储器：</p>
+<ul>
+<li>DRAM电容上的电荷一般只能维持1~2ms，因此即使电源不断电，信息也会自动消失(刷新)；</li>
+<li>读操作会使存储元状态发生变化，需要读后再生(再生)。</li>
+</ul>
+</li>
+<li>
+<p>芯片刷新方式：</p>
+<ul>
+<li>集中刷新：在一个刷新周期内，利用一段固定的时间，依此对存储器的所有行进行逐一再生，在此期间停止对存储器的读写操作，称为<code class="notranslate">死时间/死区</code>。优点是读写操作时不受刷新工作的影响；缺点是在死区不能访问存储器。</li>
+<li>分散刷新：将一个存储器系统的工作周期分为两部分：前半部分用于正常的读写操作；后半部分用于刷新。优点是没有死区；缺点是加长了系统的存取周期。</li>
+<li>异步刷新：将刷新周期除以行数，得到相邻两行之间刷新的时间间隔t，每隔t产生依此刷新请求。优点是使死区时间分散，避免让CPU连续等待过长的时间。</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>刷新对CPU是透明的，即刷新不依赖于外部的访问；</li>
+<li>刷新的单位是<code class="notranslate">行</code>；</li>
+<li>刷新时不需要选片，整个存储器中所有芯片同时被刷新。</li>
+</ul>
+</li>
+<li>
+<p>SRAM与DRAM的比较</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">存储元件</th>
+<th align="center">破坏性读出</th>
+<th align="center">刷新</th>
+<th align="center">送行列地址</th>
+<th align="center">运行速度</th>
+<th align="center">集成度</th>
+<th align="center">存储成本</th>
+<th align="center">主要用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">SRAM</td>
+<td align="center">触发器</td>
+<td align="center">非</td>
+<td align="center">不需要</td>
+<td align="center">同时送</td>
+<td align="center">块</td>
+<td align="center">低</td>
+<td align="center">高</td>
+<td align="center">Cache</td>
+</tr>
+<tr>
+<td align="center">DRAM</td>
+<td align="center">电容</td>
+<td align="center">是</td>
+<td align="center">需要</td>
+<td align="center">分两次送</td>
+<td align="center">慢</td>
+<td align="center">高</td>
+<td align="center">低</td>
+<td align="center">主存</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+</li>
+<li>
+<p>存储器芯片的内部结构</p>
+<ul>
+<li>存储体(存储矩阵)：存储单元的集合，它由行选择线和列选择线来选择所访问的单元。</li>
+<li>地址译码器：将地址转换为译码输出线上的高电平，以便驱动相应的读写电路。译码方法又分为<code class="notranslate">单译码法</code>和<code class="notranslate">双译码法</code>。<br>
+单译码法：只有一个行译码器。<br>
+双译码法：地址译码器分为X和Y方向的两个译码器，分别选中行和列。</li>
+<li>I/O控制电路：用以控制被选中的单元的读出或写入。</li>
+<li>片选控制信号：用于选中不同的芯片。</li>
+<li>读写控制信号：根据CPU给出的命令，控制被选中单元进行读或写。</li>
+</ul>
+</li>
+</ol>
+<h3>只读存储器(ROM)</h3>
+<ol>
+<li>ROM和RAM都<code class="notranslate">支持随机访问</code>。</li>
+<li>ROM的两个显著的优点：
+<ul>
+<li>结构简单，位密度比可读/写存储器的高。</li>
+<li>具有<code class="notranslate">非易失性</code>，可靠性高。</li>
+</ul>
+</li>
+<li>ROM的类型
+<ul>
+<li>掩模式只读存储器<br>
+由半导体制造厂直接写入，写入后不可更改。优点是可靠性高，集成度高，价格便宜，缺点是灵活性差</li>
+<li>一次可编程只读存储器<br>
+可以实现一次性编程的只读存储器。一旦写入，内容无法改变。</li>
+<li>可擦除可编程只读存储器<br>
+可以由用户利用编程器写入信息，而且可以多次改写内容。缺点：编程次数有限，写入时间长。</li>
+<li>Flash存储器<br>
+在不加电的情况下长期保存信息；在线进行快速擦除与重写。</li>
+<li>固态硬盘<br>
+基于闪存的固态硬盘使用固态电子存储芯片阵列制成的硬盘，由控制单元和存储单元组成。</li>
+</ul>
+</li>
+</ol>
+<h3>主存储器的基本组成</h3>
+<ol>
+<li>
+<p>由一个个存储0或1的存储元件构成的<code class="notranslate">存储矩阵</code>是存储器的核心部件。</p>
+</li>
+<li>
+<p><code class="notranslate">编址单位</code>是指具有相同地址的存储元件构成的一个单位，可以按字节编址，也可以按字编址。</p>
+</li>
+<li>
+<p>MDR的位数与数据线的位数相同，MAR的位数与地址线的位数相同。</p>
+</li>
+<li>
+<p>地址线的位数决定了主存地址空间的最大可寻址范围。</p>
+</li>
+<li>
+<p>执行过程中需要访问主存时：</p>
+<ul>
+<li>
+<p>CPU将被访问地址送至MAR</p>
+</li>
+<li>
+<p>地址线将地址送至地址寄存器</p>
+</li>
+<li>
+<p>地址译码器解析并选中相应单元</p>
+</li>
+<li>
+<p>CPU发送读写信号(与一同时进行)</p>
+<p>若为写：将数据送至MDR，写入</p>
+<p>若为读：将选中单元的数据送至MDR</p>
+</li>
+</ul>
+</li>
+<li>
+<p>引脚复用技术：</p>
+<p>DRAM容量大，引脚多，为了减少芯片的地址引脚数，行地址和列地址通过相同的引脚分先后两次输入。</p>
+</li>
+<li>
+<p>假设DRAM芯片的存储阵列行数为r，列数为c，则应当满足：</p>
+<ul>
+<li>|r-c|尽可能小：减少引脚数量</li>
+<li>r$\leqslant$c：减少刷新开销</li>
+</ul>
+</li>
+</ol>
+<h3>多模块存储器</h3>
+<ol>
+<li>
+<p>多模块存储器是一种空间并行技术，利用多个结构完全相同的存储模块的并行工作来提高存储器的分类吞吐率。</p>
+</li>
+<li>
+<p>单体多字存储器</p>
+<ul>
+<li>在单体多字系统中，每个存储单元存储m个字，总线宽度也为m个字，一次并行度出m个字。在一个存取周期中，从同一地址取出m条指令，然后将指令逐条送至CPU执行。</li>
+<li>优点：提高了单体存储器的工作速度。</li>
+<li>缺点：只有指令和数据在主存中连续存放时，这种方法才能有效提高存取速度。</li>
+</ul>
+</li>
+<li>
+<p>多体并行存储器分为<code class="notranslate">高位交叉编址</code>和<code class="notranslate">低位交叉编址</code>。</p>
+</li>
+<li>
+<p>高位交叉编址：</p>
+<ul>
+<li>高位地址表示模块号，地位地址表示模块内地址。</li>
+<li>访问一个连续主存块时，总是先在一个模块内访问，等到该模块访问完才转到下一个模块访问，CPU总是按顺序访问存储模块，各模块不能被并行访问，因而不能提高存储器的吞吐率。</li>
+<li>模块内地址是连续的，存取方式仍然是串行存取，因此这种存储器仍是顺序存储器。</li>
+</ul>
+</li>
+<li>
+<p>低位交叉编址：</p>
+<ul>
+<li>
+<p>低位地址为模块号，高位地址为模块内地址。</p>
+</li>
+<li>
+<p>每个模块按“模m”交叉编址，模块号=单元地址%m。</p>
+</li>
+<li>
+<p>交叉存储器可以采用轮流启动或同时启动两种方式。<br>
+<code class="notranslate">轮流启动</code>：若每个模块一次读写的位数正好等于数据总线位数，模块的存取周期为T，总线周期为r，则存储器交叉模块$\geqslant \frac Tr$。此时连续存取m个字所需要的时间为T+(m-1)r。</p>
+<p><code class="notranslate">同时启动</code>：若所有模块一次并行读写的总位数正好等于数据总线位数，则可以同时启动所有模块进行读写。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>某计算机系统，其操作系统保存于硬盘上，其内存储器应该采用(  )<br>
+A. RAM</p>
+<p>B. ROM</p>
+<p>C. RAM和ROM</p>
+<p>D. 均不完善</p>
+</li>
+<li>
+<p>下列(  )是动态半导体存储器的特点。</p>
+<p>I. 在工作中存储器内容会发生变化</p>
+<p>II. 每隔一定时间，需要根据原存内容重新写入一遍</p>
+<p>III. 一次完整的刷新过程需要占用两个存储周期</p>
+<p>IV. 一次完整的刷新过程只需要占用一个存储周期</p>
+<p>A. I、III</p>
+<p>B. II、III</p>
+<p>C. II、IV</p>
+<p>D. 只有III</p>
+</li>
+<li>
+<p>采用64K$\times $1位的DRAM芯片构成256K$\times$8位的存储器，若采用异步刷新方式，每单元刷新期间不超过2ms，则生成的刷新信号的时间间隔为(  )；若采用集中刷新方式，则存储器刷新一遍最少用(  )个读写周期。</p>
+<p>A. 7.8$\mu $s，256</p>
+<p>B. 1.9$\mu$s，256</p>
+<p>C. 7.8$\mu $s，128</p>
+<p>D. 1.9$\mu $s，256</p>
+</li>
+<li>
+<p>某机器采用四体低位交叉存储器，现分别执行下述操作：<br>
+操作一：读取6个连续地址单位中存放的存储字，重复80次；</p>
+<p>操作二：读取8个连续地址单位中存放的存储字，重复60次，</p>
+<p>则操作一、操作二所花费的时间之比为(  )</p>
+<p>A. 1:1</p>
+<p>B. 2:1</p>
+<p>C. 4:3</p>
+<p>D. 3:4</p>
+</li>
+<li>
+<p>下列关于闪存的叙述中，错误的是(  )</p>
+<p>A. 信息可读可写，并且读写速度一样快</p>
+<p>B. 存储元由MOS管组成，是一种半导体存储器</p>
+<p>C. 掉电后信息不丢失，是一种非易失性存储器</p>
+<p>D. 采用随机访问方式，可替代计算机外部存储器</p>
+</li>
+<li>
+<p>某内存条包含8个8192$\times$8192$\times$8位的DRAM芯片，按字节编址，支持突发传送方式，对应存储器总线宽度为64位，每个DRAM芯片内有一个行缓冲区。下列关于该内存条的叙述中，不正确的是(  )</p>
+<p>A. 内存条的容量为512MB</p>
+<p>B. 采用多模块交叉编址方式</p>
+<p>C. 芯片的地址引脚位26位</p>
+<p>D. 芯片内行缓冲有8192$\times$8位</p>
+</li>
+<li>
+<p>假定一个存储器系统支持四体交叉存取，某程序执行过程中访问地址序列为3、9、17、2、51、37、13、4、8、41、67、10，那些地址访问可能会发生体冲突？</p>
+</li>
+</ol>
+<h2>主存储器和CPU的连接</h2>
+<h3>连接原理</h3>
+<ol>
+<li>主存储器通过数据总线、地址总线和控制总线与CPU连接。</li>
+<li>数据总线的位数与工作频率的乘积正比于数据传输速率。</li>
+<li>地址总线的位数决定了可寻址的最大内存空间。</li>
+<li>控制总线指出总线周期的类型和本次输入/输出操作完成的时刻。</li>
+</ol>
+<h3>主存容量的扩展</h3>
+<ol>
+<li>位扩展法：对字长进行扩展
+<ul>
+<li>当CPU的系统数据线多于存储芯片的数据位数时，必须对存储芯片扩位，使其数据位数与CPU的数据线数相等。</li>
+<li>连接方式：各芯片的地址线、片选线和读写控制线与系统总线响应并联，各芯片的数据线单独引出，分别连接系统数据线。各芯片同时工作。</li>
+</ul>
+</li>
+<li>字扩展法：对存储字的数量进行扩展
+<ul>
+<li>系统数据线位数等于芯片数据线位数，系统地址线位数多于芯片地址线位数。</li>
+<li>连接方式：各芯片的地址线与系统地址线的低位对应相连；芯片的数据线和读写控制线与系统总线对应并联；由系统地址线的高位译码得到各芯片的片选信号。各芯片分时工作。</li>
+</ul>
+</li>
+<li>字位同时扩展法：既增加存储字的数量，又增加存储字长。
+<ul>
+<li>将进行位扩展的芯片作为一组，各组的连接方式与位扩展的相同；由系统地址线高位译码产生若干片选信号，分别接到各组芯片的片选信号。</li>
+</ul>
+</li>
+</ol>
+<h3>存储芯片的地址分配和片选</h3>
+<ol>
+<li>片选信号的产生分为<code class="notranslate">线选法</code>和<code class="notranslate">译码片选法</code>。</li>
+<li>线选法：
+<ul>
+<li>用除片内寻址外的高位地址线直接连接至各个存储芯片的片选端，当某位地址线信息为“0”时，就选中与之对应的存储芯片。这些片选地址线每次寻址时只能有一位有效，不允许同时有多位有效。</li>
+<li>优点：不需要地址译码器，线路简单。</li>
+<li>缺点：地址空间不连续，选片的地址线必须分时为低电平，不能充分利用系统的存储器空间，造成地址资源的浪费。</li>
+</ul>
+</li>
+<li>译码片选法：
+<ul>
+<li>用除片内寻址外的高位地址线通过地址译码器产生片选信号。</li>
+<li>地址空间连续，能充分利用系统的存储空间。</li>
+<li>缺点：需要地址译码器，线路复杂。</li>
+</ul>
+</li>
+</ol>
+<h3>存储器与CPU的连接</h3>
+<ol>
+<li>通常选用ROM存放系统程序、标准子程序和各类常熟，RAM则是为用户编程而设置的。</li>
+<li>地址线的连接：
+<ul>
+<li>CPU地址线的低位与存储芯片的地址线相连，进行<code class="notranslate">字选</code>，这部分的译码由<code class="notranslate">芯片的片内逻辑</code>完成。</li>
+<li>CPU地址线的高位用于<code class="notranslate">片选</code>，这部分的译码由<code class="notranslate">外接译码器</code>完整。</li>
+</ul>
+</li>
+<li>数据线的连接：如果芯片的数据线数与CPU的数据线数相等，可以直接连接，如果不等，需要对芯片进行位扩展</li>
+<li>读写命令线的连接：若为单线(读写命令线合并为一根)，则直接连接，若为分开，则分开连接。</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>地址总线$A_0$(高位)~$A_{15}$(低位)，用4K$\times$4位的存储芯片组成16KB存储器，则产生片选信号的译码器的输入地址线应该是(  )<br>
+A. $A_2A_3$</p>
+<p>B. $A_0A_1$</p>
+<p>C. $A_{12}A_{13}$</p>
+<p>D. $A_{14}A_{15}$</p>
+</li>
+<li>
+<p>若片选地址为111时，选定某一32K$\times$16位的存储芯片工作，则该芯片在存储器中的首地址和末地址分别为(  )<br>
+A. 00000H，01000H</p>
+<p>B. 38000H，3FFFH</p>
+<p>C. 3800H, 3FFFH</p>
+<p>D. 0000H，0100H</p>
+</li>
+<li>
+<p>假定用若干2K$\times$4位的芯片组成一个8K$\times$8位的存储器，则地址0B1FH所在芯片的最小地址为(  )</p>
+<p>A. 0000H</p>
+<p>B. 0600H</p>
+<p>C. 0700H</p>
+<p>D. 0800H</p>
+</li>
+<li>
+<p>某计算机存储器按字节编址，主存地址空间大小为64MB，现用4M$\times$8位的RAM芯片组成32MB的主存储器，则存储器地址寄存器MAR的位数至少是(  )位</p>
+<p>A. 22</p>
+<p>B. 23</p>
+<p>C. 25</p>
+<p>D. 26</p>
+</li>
+</ol>
+<h2>外部存储器</h2>
+<h3>磁盘存储器</h3>
+<ol>
+<li>
+<p>磁盘存储器是以磁盘为存储介质的存储器。</p>
+</li>
+<li>
+<p>磁盘存储器的优点：</p>
+<ul>
+<li>存储容量大，位价格低；</li>
+<li>记录介质可重复使用；</li>
+<li>记录信息可长期保存而不丢失，甚至可脱机存档；</li>
+<li>非破坏性读出，读出时不需要再生。</li>
+</ul>
+</li>
+<li>
+<p>磁盘存储器的缺点：</p>
+<ul>
+<li>存取速度慢；</li>
+<li>机械结构复杂；</li>
+<li>对工作环境要求高。</li>
+</ul>
+</li>
+<li>
+<p>磁盘设备的组成：由<code class="notranslate">磁盘驱动器</code>、<code class="notranslate">磁盘控制器</code>和<code class="notranslate">盘片</code>组成。</p>
+<ul>
+<li>磁盘驱动器：驱动磁盘转动并在盘面上通过磁头进行读写操作的设置；</li>
+<li>磁盘控制器：磁盘驱动器与主机的接口，负责接收并解释CPU发来的命令，像磁盘驱动器发出各种控制信号，并负责检测磁盘驱动器的状态。</li>
+</ul>
+</li>
+<li>
+<p>存储区域：一个<code class="notranslate">磁盘</code>含有若干记录面，每个<code class="notranslate">记录面</code>划分为若干圆形的磁道，而每条<code class="notranslate">磁道</code>又划分为若干扇区，<code class="notranslate">扇区</code>(也称块)是磁盘读写的最小单位，即磁盘按块读取。</p>
+<ul>
+<li>磁头数：一个记录面对应一个磁头，磁头用于读写盘片上的信息。</li>
+<li>柱面数：表示磁盘每面盘片上有多少条磁道。</li>
+<li>扇区数：表示每条磁道上有多少个扇区。</li>
+</ul>
+</li>
+<li>
+<p>由于扇区按固定圆心角度划分，因此位密度从外道向里道增加，磁盘的存储能力受限于最内道的最大记录密度。</p>
+</li>
+<li>
+<p>磁盘高速缓存：在内存中开辟一部份区域，用于缓冲将被送到磁盘上的数据。优点：可以避免频繁的用小块数据写盘；有些中间结果数据在写回磁盘之前可被快速地再次使用。</p>
+</li>
+<li>
+<p>磁盘的性能指标：</p>
+<ul>
+<li>
+<p><code class="notranslate">记录密度</code>：指盘片单位面积上记录的二进制信息量，通常以道密度、位密度和面密度表示。<br>
+<code class="notranslate">道密度</code>：延磁盘半径方向单位长度上的磁道数；<br>
+<code class="notranslate">位密度</code>：磁道单位长度上能记录的二进制代码位数；<br>
+<code class="notranslate">面密度</code>：位密度与道密度的乘积。</p>
+</li>
+<li>
+<p>磁盘的容量：磁盘容量有非格式化容量和格式化容量之分。<br>
+<code class="notranslate">非格式化容量</code>：磁记录表面可利用的磁化单元总数。非格式化容量=记录面数$\times$柱面数$\times$每条磁道的磁化单元数。</p>
+<p><code class="notranslate">格式化容量</code>：按照某种特定的记录格式所能存储信息的总量。格式化容量=记录面数$\times$柱面数$\times$每道扇区数$\times$每个扇区的容量。<br>
+格式化后的容量比非格式化容量要小。</p>
+</li>
+<li>
+<p>存取时间：由<code class="notranslate">寻道时间</code>(磁头移动到目的磁道的时间)、<code class="notranslate">旋转延迟时间</code>(磁头定位到要读写扇区的时间)和<code class="notranslate">传输时间</code>(传输数据所花费的时间)三部分组成。</p>
+</li>
+<li>
+<p>数据传输速率：磁盘存储器在单位时间内向主机传送数据的字节数。假设磁盘转速为r转每秒，每条磁道容量为N字节，则数据传输速率为：$D_L=rN$。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>磁盘地址：主机向磁盘控制器发送寻址信息，磁盘的地址一般为：柱面号+盘面号+扇区号</p>
+</li>
+<li>
+<p>磁盘的工作过程：磁盘的主要操作是<code class="notranslate">寻址</code>、<code class="notranslate">读盘</code>、<code class="notranslate">写盘</code>。每个操作对应一个控制字，磁盘工作时，第一步是取控制字，第二步是执行控制字。因为磁盘属于机械式部件，操作是<code class="notranslate">串行</code>的，不可能在同一时刻既读又写，也不可能在同一时刻读两组数据或写两组数据。</p>
+</li>
+<li>
+<p>RAID(独立冗余磁盘阵列)是指将多个独立的物理磁盘组成一个独立的逻辑盘，数据在多个物理盘上分割交叉存储、并行访问，具有更好的存储性能、可靠性和安全性。</p>
+<ul>
+<li>RAID0：无冗余和无校验的磁盘阵列</li>
+<li>RAID1：镜像磁盘阵列</li>
+<li>RAID2：采用纠错的海明码的磁盘阵列</li>
+<li>RAID3：位交叉奇偶检验的磁盘阵列</li>
+<li>RAID4：块交叉奇偶校验的磁盘阵列</li>
+<li>RAID5：无独立校验的奇偶校验磁盘阵列</li>
+</ul>
+</li>
+</ol>
+<h3>固态硬盘(SSD)</h3>
+<ol>
+<li>固态硬盘是一种基于<code class="notranslate">闪存技术</code>的存储器。</li>
+<li>一个SSD由一个或多个<code class="notranslate">闪存芯片</code>和<code class="notranslate">闪存翻译层</code>组成。
+<ul>
+<li>闪存芯片替代传统旋转磁盘中的机械驱动器</li>
+<li>闪存翻译层替代了磁盘控制器，将来自CPU的逻辑块读写请求翻译成对底层物理设备的读写控制信号</li>
+</ul>
+</li>
+<li>一个闪存由B块组成，每块由P页组成。数据是以<code class="notranslate">页</code>为单位读写的。只有在一页所属的块整个被擦除后，才能写这一页。一旦一个块被擦除，块中的每个页都可以直接再写一次。某个块进行若干次重复写之后，就会被磨损坏，不能再使用。</li>
+<li>SSD的优点：随机访问时间比机械硬盘要快；没有机械噪声和振动，能耗低，抗震性好，安全性高。</li>
+<li>SSD磨损均衡技术大致分为两种：
+<ul>
+<li><code class="notranslate">动态磨损均衡</code>：写入数据时，自动选择较新的闪存块。</li>
+<li><code class="notranslate">静态磨损均衡</code>：即使没有数据写入，SSD会检测并自动进行数据分配，让老的闪存块无需承担数据的存储任务，同时让新的闪存块腾出空间，读写操作在较新的闪存块中进行。</li>
+</ul>
+</li>
+</ol>
+<h2>高速缓冲存储器</h2>
+<h3>程序访问的局部性原理</h3>
+<ol>
+<li>Cache由SRAM组成，通常直接集成在CPU中。</li>
+<li>程序访问的局部性原理包括<code class="notranslate">时间局部性</code>和<code class="notranslate">空间局部性</code>。
+<ul>
+<li>时间局部性：最近的未来要用到的信息，很可能是现在正在使用的信息。</li>
+<li>空间局部性：最近的未来要用到的信息，很可能与现在正在使用的信息在存储空间上是邻近的。</li>
+</ul>
+</li>
+</ol>
+<h3>Cache的基本工作原理</h3>
+<ol>
+<li>为了便于Cache与主存交换信息，Cache和主存都被划分为大小相等的块，Cache块也被称为Cache行，每块都有若干字节组成，块的长度称为块长。</li>
+<li>CPU与Cache之间的数据交换以字为单位，而Cache与主存之间的数据交换则以Cache块为单位。</li>
+<li>CPU欲访问的信息已在Cache中的比率称为Cache的<code class="notranslate">命中率</code>。</li>
+</ol>
+<h3>Cache和主存的映射方式</h3>
+<ol>
+<li>
+<p>在Cache中要为每块加一个<code class="notranslate">标记位</code>，指明它是主存中哪一块的副本。</p>
+</li>
+<li>
+<p>为了说明Cahce行中的信息是否有效，每个Cache行需要一个<code class="notranslate">有效位</code>。</p>
+</li>
+<li>
+<p>地址映射的方法主要有三种：直接映射、全相联映射、组相联映射。</p>
+</li>
+<li>
+<p>直接映射：</p>
+<ul>
+<li>
+<p>主存中的每一块只能装入Cache中的唯一位置。若这个位置已有内容，则产生<code class="notranslate">块冲突</code>，原来的块将无条件地被替换出去。</p>
+</li>
+<li>
+<p>特点：块冲突概率最高，空间利用率最低。</p>
+</li>
+<li>
+<p>关系：Cache行号=主存块号 mod Cache 总行数</p>
+</li>
+<li>
+<p>给每个Cache行设置一个长为t=m-c的标记，当主存某块调入Cache后，就将其块号的高t位设置在对应Cache行的标记中。</p>
+</li>
+<li>
+<p>地址结构：tag+Cache行号+块内地址</p>
+</li>
+<li>
+<p>比较器数量：只有一个。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>全相联映射：</p>
+<ul>
+<li>
+<p>主存中的每一块可以装入Cache中的任何位置。每行的标记用于指出该行来自主存的哪一块，因此CPU访存时需要与所有Cache行的标记进行比较。</p>
+</li>
+<li>
+<p>优点：Cache块的冲突概率低，只要有空闲行，就不会发生冲突；空间利用率高；命中率高。</p>
+</li>
+<li>
+<p>缺点：标记的比较速度较慢；实现成本较高，通常需要采用按内容寻址的相关联存储器。</p>
+</li>
+<li>
+<p>地址结构：tag+块内地址</p>
+</li>
+<li>
+<p>比较器数量：每个Cache行设置一个比较器。</p>
+</li>
+<li>
+<p>CPU访存过程为：<br>
+首先将主存地址的高位标记与Cache各行的标记进行比较，若有一个相等且对应有效位为1，则命中，此时根据块内地址从该Cache行中取出信息；若都不相等，则不命中，此时CPU从主存中读出该地址所在的一块信息送到Cache的任意一个空闲行，将有效位标记为1，并设置标记，同时将地址中的内容送至CPU。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>组相联映射：</p>
+<ul>
+<li>
+<p>将Cache分为Q个大小相等的组，每个主存块可以装入固定组中的任意一行，即组间采用直接映射，而组内采用全相联映射。</p>
+</li>
+<li>
+<p>假设每组有r个Cache行，则称为r路组相连。</p>
+</li>
+<li>
+<p>关系：Cache组号=主存块号 mod Cache组数</p>
+</li>
+<li>
+<p>地址结构：tag+Cache组号+块内地址</p>
+</li>
+<li>
+<p>比较器数量：r路组相联映射需要r个比较器。</p>
+</li>
+<li>
+<p>CPU访存过程为：<br>
+首先根据访存地址中间的组号找到对应的Cache组，将对应Cache组中每个行的标记与主存地址的高位标记进行比较；若有一个相等且对应有效位为1，则访问Cache命中，此时根据主存地址中的块内地址，在对应Cache行中存取信息；若都不相等，则不命中，此时CPU从主存中读出该地址所在的一块信息送到对应Cache组的任意一个空闲行中，将有效位标记为1，同时将该地址中的内容送至CPU。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>映射方式总结：</p>
+<ul>
+<li>三种映射方式中，直接映射的每个主存块只能映射到Cache中的某一固定行；全相联映射可以映射到所有的Cache行；N路相联映射可以映射到N行。</li>
+<li>当Cache大小、主存大小一定时：直接映射的命中率最低，全相联映射的命中率最高；直接映射的判断开销最小、所需时间最短，全相联映射的判断开销最大、所需时间最长；直接映射标记所占的额外空间开销最少，全相联映射标记所占的额外空间开销最大。</li>
+</ul>
+</li>
+</ol>
+<h3>Cache中主存块的替换算法</h3>
+<ol>
+<li>采用直接映射时，一个给定的主存块只能放到唯一的固定Cache行中，所以在对应Cache行已有一个主存块的情况下，新的主存块直接替换掉原有主存块。</li>
+<li>若采用全相联映射或组相联映射时，如果Cache或Cache组被占满，就需要使用替换算法。</li>
+<li>常用的替换算法有随机算法(RAND)、先进先出算法(FIFO)、近期最少使用算法(LRU)和最不经常使用算法(LFU)。</li>
+<li>随机算法：
+<ul>
+<li>随机地确定替换的Cache行。</li>
+<li>优点：实现比较简单。</li>
+<li>缺点：未依据程序访问的局部性原理，命中率可能较低。</li>
+</ul>
+</li>
+<li>先进先出算法：
+<ul>
+<li>选择最早调入的Cache行进行替换。</li>
+<li>优点：实现比较简单。</li>
+<li>缺点：未依据程序访问的局部性原理，命中率可能较低。</li>
+</ul>
+</li>
+<li>近期最少使用算法：
+<ul>
+<li>选择近期内长久未访问过的Cache行进行替换。</li>
+<li>优点：依据程序的局部性原理，平均命中率较高。</li>
+<li>原理：每行设置一个计数器(也称LRU替换位)，用计数值来记录主存块的使用情况，并根据计数值选择淘汰某个块。</li>
+<li>计数器的变化规则：命中时，所命中行的计数器清零，比其低的计数器加一，其余不变；未命中且还有空行时，新装入的行计数器置为0，其余全加一；未命中且无空闲行时，计数器值最大的行对应的信息块被替换，新装入的行的计数器值置为0，其余加一。</li>
+</ul>
+</li>
+<li>最不经常使用算法：
+<ul>
+<li>将一段时间内被访问次数最少的Cache行换出。</li>
+<li>原理：每行设置一个计数器，新行装入后从0开始计数，每访问一次，被访问的行计数器加一，需要替换时比较各特定行的计数值，将计数值最小的行换出。</li>
+</ul>
+</li>
+</ol>
+<h3>Cache的一致性问题</h3>
+<ol>
+<li>全写法：
+<ul>
+<li>当CPU对Cache写命中时，必须将数据同时写入Cache和主存。</li>
+<li>优点：实现简单，能随时保持主存数据的正确性。</li>
+<li>缺点：增加了访存次数，降低了Cache的效率。</li>
+<li>为了减少全写法直接写入主存的时间消耗，在Cache和主存之间加一个<code class="notranslate">写缓冲</code>。CPU同时写数据道Cache和写缓冲中，写缓冲再将内容写入主存中。如果出现频繁写的情况，会使写缓冲饱和溢出。</li>
+</ul>
+</li>
+<li>回写法：
+<ul>
+<li>当CPU对Cache写命中时，只需要将数据写入Cache中，而不立即写入主存，只有当此块被替换出时才写入主存。</li>
+<li>优点：减少了访存次数。</li>
+<li>缺点：存在数据不一致的隐患。</li>
+<li>为了减少写回主存的次数，给每个Cache行设置一个<code class="notranslate">脏位</code>。若脏位为1，则说明Cache块被修改，替换时需要写入主存；否则不需要写入主存。</li>
+</ul>
+</li>
+<li>写分配法：
+<ul>
+<li>当CPU对Cache写未命中时，更新主存单元，然后将主存块调入Cache。</li>
+</ul>
+</li>
+<li>非写分配法：
+<ul>
+<li>当CPU对Cache写未命中时，只需要更新主存单元，而不需要将主存块调入Cache。</li>
+</ul>
+</li>
+<li>非写分配法通常搭配全写法使用，写分配法通常搭配回写法使用。</li>
+<li>分离的Cache结构：
+<ul>
+<li>执行部件存取数据时，指令预取部件要从同一Cache读指令，可能引发冲突。</li>
+<li>分离的指令和数据Cache可以充分利用指令和数据的不同局部性来优化性能。</li>
+</ul>
+</li>
+<li>现代计算机的Cache通常设立多级Cache，离CPU越远，访问速度越慢，容量越大。</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>下列关于Cache的描述中，比较合理的是(  )</p>
+<p>I. 指令Cache通常比数据Cache具有更好的空间局部性。</p>
+<p>II. 由于空间局部性，适当增加Cache块大小通常会提高命中率。</p>
+<p>III. 回写法的写主存操作次数少于全写法。</p>
+<p>A. III</p>
+<p>B. I和II</p>
+<p>C. II和III</p>
+<p>D. I和II和III</p>
+</li>
+<li>
+<p>在某存储系统中，主存容量是Cache容量的4096倍，Cache被分为64个块，当主存地址和Cache地址采用直接映像方式时，地址映射表的大小应为(  )</p>
+<p>A. 6$\times$4096bit</p>
+<p>B. 64$\times$12bit</p>
+<p>C. 64$\times$4096bit</p>
+<p>D. 64$\times$13bit</p>
+</li>
+<li>
+<p>有效容量为128KB的Cache，每块16B，采用8路组相联。字节地址为1234567H的单元调入该Cache，则其Tag应为(  )</p>
+<p>A. 1234H</p>
+<p>B. 2468H</p>
+<p>C. 048DH</p>
+<p>D. 12345H</p>
+</li>
+<li>
+<p>对于由高速缓存、主存、硬盘构成的三级存储体系，CPU直接根据(  )进行访问。</p>
+<p>A. 高速缓存地址</p>
+<p>B. 虚拟地址</p>
+<p>C. 主存物理地址</p>
+<p>D. 磁盘地址</p>
+</li>
+<li>
+<p>设有8页的逻辑空间，每页有1024B，它们被映射到32块的物理存储区中，则按字节编址逻辑地址的有效位是(  )，物理地址至少是(  )位。</p>
+<p>A. 10，12</p>
+<p>B. 10，15</p>
+<p>C. 13，15</p>
+<p>D. 13，12</p>
+</li>
+<li>
+<p>某计算机的Cache有16行，块大小位16B，其映射方式可配置为直接映射或2-路组相联映射，主存按字节编址，主存单元从0开始编号。若以此访问下列主存单元，则不论采取上述哪种映射方式都可能引起Cache冲突的是(  )</p>
+<p>A. 25号和102号单元</p>
+<p>B. 48号和308号单元</p>
+<p>C. 60号和160号单元</p>
+<p>D. 46号和236号单元</p>
+</li>
+<li>
+<p>假设主存地址位数为32位，按字节编址，主存和Cache之间采用全相联映射方式，主存块大小位1个字，每字32位，采用回写法(wirte back)方式和随机替换策略，则能存放32K字数据的Cache的总容量至少应有(  )位。</p>
+<p>A. 1536K</p>
+<p>B. 1568K</p>
+<p>C. 2016K</p>
+<p>D. 2048K</p>
+</li>
+<li>
+<p>假定CPU通过存储器总线读取数据的过程为：发送地址和读命令需要1个时钟周期，存储器准备一个数据需要8个时钟周期。若主存和Cache之间交换的主存块大小为64B，存取宽度和总线宽度都为8B，则Cache的一次缺失损失至少为(  )个时钟周期。</p>
+<p>A. 64</p>
+<p>B. 72</p>
+<p>C. 80</p>
+<p>D. 160</p>
+</li>
+<li>
+<p>下列关于Cache大小、主存块大小和Cache缺失率之间关系的叙述中，错误的是(  )</p>
+<p>A. 主存块大小和Cache容量无直接关系</p>
+<p>B. Cache容量越大，Cache缺失率越低</p>
+<p>C. 主存块大小通常为几十到上百字节</p>
+<p>D. 主存块越大，Cache缺失率越低</p>
+</li>
+<li>
+<p>某计算机的Cache共有16块，采用二路组相联映射方式。每个主存块大小位32B，按字节编址，主存块129号单元所在主存块应装入的Cache组号为(  )</p>
+<p>A. 0</p>
+<p>B. 2</p>
+<p>C. 4</p>
+<p>D. 6</p>
+</li>
+<li>
+<p>假设某计算机按字编址，Cache有4行，Cache和主存之间交换的块大小为1个字。若Cache的内容初始为空，采用二路组相联映射方式和LRU替换策略，则访问的主存地址依此为0，4，8，2，0，6，8，6，4，8时，命中Cache的次数是(  )</p>
+<p>A. 1</p>
+<p>B. 2</p>
+<p>C. 3</p>
+<p>D. 4</p>
+</li>
+<li>
+<p>有如下的C语言程序段：</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">for</span>(k = <span class="pl-c1">0</span>; k &lt; <span class="pl-c1">1000</span>; k++)
+    a[k] = a[k] + <span class="pl-c1">32</span>;</pre></div>
+<p>若数组a和变量k均为int型，int型数据占4B，数据Cache采用直接映射方式，数据区大小为1KB、块大小为16B，该程序段执行前Cache为空，则该程序段执行过程中访问数组a的Cache缺失率约为(  )</p>
+<p>A. 1.25%</p>
+<p>B. 2.5%</p>
+<p>C. 12.5%</p>
+<p>D. 25%</p>
+</li>
+<li>
+<p>某C语言程序段如下：</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt;= <span class="pl-c1">9</span>; i++) {
+    <span class="pl-k">int</span> temp = <span class="pl-c1">1</span>;
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> j = <span class="pl-c1">0</span>; j &lt;= i; j++) {
+        temp *= a[j];
+    }
+    sum += temp;
+}</pre></div>
+<p>下列关于数组a的访问局部性的描述中，正确的是(  )</p>
+<p>A. 时间局部性和空间局部性都有</p>
+<p>B. 无时间局部性，有空间局部性</p>
+<p>C. 有时间局部性，无空间局部性</p>
+<p>D. 时间局部性和空间局部性皆无</p>
+</li>
+</ol>
+<h2>虚拟存储器</h2>
+<h3>虚拟存储器的基本概念</h3>
+<ol>
+<li>
+<p>虚拟存储器将主存或辅存的地址空间统一编址，形成一个庞大的地址空间。</p>
+</li>
+<li>
+<p>用户编程允许涉及的地址称为<code class="notranslate">虚地址</code>或<code class="notranslate">逻辑地址</code>，实际的主存单元地址称为<code class="notranslate">实地址</code>或<code class="notranslate">物理地址</code>。</p>
+<ul>
+<li>
+<p>虚地址对应的存储空间称为<code class="notranslate">虚拟空间</code>或<code class="notranslate">程序空间</code>。</p>
+</li>
+<li>
+<p>实地址对应的存储空间称为<code class="notranslate">主存地址空间</code>或<code class="notranslate">实地址空间</code>。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>CPU使用虚地址时，先判断虚地址对应的内容是否已装入主存。</p>
+<ul>
+<li>若已在主存中，则通过地址变换，CPU可直接访问主存指示的实际单元。</li>
+<li>若不在主存中，则把包含这个字的一页或一段调入主存后再由CPU访问。</li>
+<li>若主存已满，则采用<code class="notranslate">替换算法</code>置换主存中的交换块。</li>
+</ul>
+</li>
+<li>
+<p>虚拟存储器将经常访问的数据副本存放到主存中，但是未命中的代价很大，因此为了<code class="notranslate">提高命中率</code>，虚拟存储机制采用<code class="notranslate">全相联映射</code>。此外，当进行写操作时，不能每次写操作都写回磁盘，因此采用<code class="notranslate">回写法</code>。</p>
+</li>
+</ol>
+<h3>页式虚拟存储器</h3>
+<ol>
+<li>
+<p>页式虚拟存储器以页为基本单位。主存空间和虚拟地址空间都被划分为相同大小的页，主存空间中的页称为<code class="notranslate">物理页</code>、<code class="notranslate">实页</code>、<code class="notranslate">页框</code>；虚拟地址空间中的页称为<code class="notranslate">虚拟页</code>、<code class="notranslate">虚页</code>。</p>
+</li>
+<li>
+<p>页表记录了程序的虚页调入主存时被安排在主存中的位置。</p>
+</li>
+<li>
+<p>页表项一般组成如下：有效位+脏位+引用位+物理页或磁盘地址</p>
+<ul>
+<li>
+<code class="notranslate">有效位/装入位</code>：用来表示对应的页面是否在主存中。若为1，则表示该虚拟页已从外存调入主存，此时页表项存放该项的物理页号；若为0，则表示没有调入主存，此时页表项可以存放该页的磁盘地址。</li>
+<li>
+<code class="notranslate">脏位/修改位</code>：用来表示页面是否被修改过，虚存机制中采用回写策略，利用脏位判断替换时是否需要写回磁盘。</li>
+<li>
+<code class="notranslate">引用位/使用位</code>：用来配合替换策略进行设置，例如FIFO或LRU。</li>
+</ul>
+</li>
+<li>
+<p>页式虚拟存储器的特点：</p>
+<ul>
+<li>优点：页面的长度固定，页表简单，调入方便。</li>
+<li>缺点：因为程序不一定正好是页面的整数倍，最后一页无法完全利用，并且页不是逻辑上独立的实体，所以处理、保护和共享都不方便。</li>
+</ul>
+</li>
+<li>
+<p>虚拟地址分为两个字段：高位为<code class="notranslate">虚页号</code>，低位为<code class="notranslate">页内偏移地址</code>。物理地址分为两个字段，高位为<code class="notranslate">物理页号</code>，低位为<code class="notranslate">页内偏移地址</code>。<br>
+虚页号到物理页号的转换是通过页表实现的。</p>
+</li>
+<li>
+<p>每个进程都有一个<code class="notranslate">页表基址寄存器</code>，存放在该进程的页表首地址</p>
+</li>
+<li>
+<p>快表(TLB)：</p>
+<ul>
+<li>依据程序访问的局部性原理，在一段时间内总是经常访问某些页时，若把这些页对应的页表项存放在高速缓冲器组成的快表中，则可以明显提高效率。相应的把放在主存中的页表称为<code class="notranslate">慢表</code>。</li>
+<li>快表用SRAM实现，通常采用全相联或组相联映射方式。TLB表项由页表表项和TLB标记组成。全相联映射下，TLB标记就是对应页表项的虚拟页号；组相联映射下，TLB标记则是对应虚拟页号的高位部分，而虚拟页号的低位部分作为TLB组的组号。</li>
+</ul>
+</li>
+<li>
+<p>具有TLB和Cache的多级存储系统</p>
+<p>查找时，快表和慢表可以同步进行，若快表中有此虚页号，则使慢表的查找作废。</p>
+</li>
+<li>
+<p>TLB、Cache和Page缺失组合的分析<br>
+CPU一次访存操作可能涉及TLB、页表、Cache、主存和磁盘的访问。<br>
+CPU访存过程中存在三种缺失情况：</p>
+<ul>
+<li>TLB缺失：要访问的页面的页表项不在TLB中</li>
+<li>Cache缺失：要访问的主存块不在Cache中</li>
+<li>Page缺失：要访问的页面不在主存中</li>
+</ul>
+<table role="table">
+<thead>
+<tr>
+<th align="center">TLB</th>
+<th align="center">Page</th>
+<th align="center">Cache</th>
+<th align="center">访存次数</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">命中</td>
+<td align="center">命中</td>
+<td align="center">命中</td>
+<td align="center">0</td>
+<td align="center">TLB命中则Page一定命中<br>信息在主存中，就可能在Cache中</td>
+</tr>
+<tr>
+<td align="center">命中</td>
+<td align="center">命中</td>
+<td align="center">缺失</td>
+<td align="center">1</td>
+<td align="center">TLB命中则Page一定命中<br>信息在主存中，可能不在Cache中</td>
+</tr>
+<tr>
+<td align="center">缺失</td>
+<td align="center">命中</td>
+<td align="center">命中</td>
+<td align="center">1</td>
+<td align="center">TLB缺失但Page可能命中<br>信息在主存中，就可能在Cache中</td>
+</tr>
+<tr>
+<td align="center">缺失</td>
+<td align="center">命中</td>
+<td align="center">缺失</td>
+<td align="center">2</td>
+<td align="center">TLB缺失但Page可能命中<br>信息在主存中，可能不在Cache中</td>
+</tr>
+<tr>
+<td align="center">缺失</td>
+<td align="center">缺失</td>
+<td align="center">缺失</td>
+<td align="center">$\geqslant2$</td>
+<td align="center">TLB缺失且Page缺失<br>信息不在主存中，也一定不在Cache中</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Cache缺失处理由硬件完成</li>
+<li>缺页处理由软件完成，操作系统通过“缺页异常处理程序”来实现</li>
+<li>TLB缺失既可以用硬件，又可以用软件来处理</li>
+</ul>
+</li>
+</ol>
+<h3>段式虚拟存储器</h3>
+<ol>
+<li>段式虚拟存储器中的段是按程序的逻辑结果划分的，每个段的长度因程序而异。</li>
+<li>虚拟地址分为两部分：段号和段内地址。</li>
+<li>段表是程序的逻辑段和主存中存放位置的对照表。<br>
+段表的每行记录与某个段对应的<code class="notranslate">段号</code>、<code class="notranslate">装入位</code>、<code class="notranslate">段起点</code>和<code class="notranslate">段长</code>等信息。</li>
+<li>CPU根据虚拟地址访存时，首先根据段表基地址与段号拼接成对应的段表项，然后根据该段表项的装入位判断该段是否已经调入主存。已调入主存时，从段表中读出该段在主存中的起始地址，与段内地址相加，得到对应的主存实地址。</li>
+<li>分段对程序员来说是不透明度，而分页对程序员来说是透明的。</li>
+<li>段式虚拟存储器的特点：
+<ul>
+<li>优点：段的分界与程序的自然分界相对应，因而具有逻辑独立性，使得它更易于编译、管理、修改和保护，也便于多道程序的共享。</li>
+<li>缺点：因为段长度可变，分配空间不变，容易在段间留下碎片，不好利用，造成浪费。</li>
+</ul>
+</li>
+</ol>
+<h3>段页式虚拟存储器</h3>
+<ol>
+<li>在段页式虚拟存储器中，把程序按逻辑结构分段，每段再分为固定大小的页，主存空间也划分为大小相等的页，程序对主存的调入、调出仍以<code class="notranslate">页</code>为基本交换单位。</li>
+<li>每个程序对应一个段表，每段对应一个页表，段的长度必须是页长的整数倍，段的起点必须是某一页的起点。</li>
+<li>虚地址分为<code class="notranslate">段号</code>、<code class="notranslate">段内页号</code>和<code class="notranslate">页内地址</code>三部分。</li>
+<li>段页式虚拟存储器的特点：
+<ul>
+<li>优点：兼具页式和段式虚拟存储器的优点，可以按段实现共享和保护。</li>
+<li>缺点：地址变换过程中需要两次查表，系统开销较大。</li>
+</ul>
+</li>
+</ol>
+<h3>虚拟存储器和Cache的比较</h3>
+<ol>
+<li>相同之处
+<ul>
+<li>最终目标都是提高系统性能</li>
+<li>都把数据划分为小信息块，并作为基本的交换单位</li>
+<li>都有地址映射、替换算法和更新策略等问题</li>
+<li>都依据局部性原理应用“快速缓存”的思想</li>
+</ul>
+</li>
+<li>不同之处
+<ul>
+<li>Cache主要解决系统速度，而虚拟存储器主要解决主存容量。</li>
+<li>Cache全由硬件实现，是硬件存储器，对所有程序员透明；而虚拟存储器由OS和硬件共同实现，对系统程序员不透明，对应用程序员透明。</li>
+<li>虚拟存储器系统不命中时对系统性能的影响更大。</li>
+<li>在Cache不命中时主存能和CPU直接通信，同时将数据调入Cache；而虚拟存储器系统不命中时，只能先由硬盘调入主存，而不能直接和CPU通信。</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>虚拟存储管理系统的基础是程序访问的局部性原理，此理论的基本含义是(  )</p>
+<p>A. 在程序的执行过程中，程序对主存的访问是不均匀的</p>
+<p>B. 空间局部性</p>
+<p>C. 时间局部性</p>
+<p>D. 代码的顺序执行</p>
+</li>
+<li>
+<p>下列关于Cache与虚拟存储器的说法中，错误的是(  )</p>
+<p>I. 一次访存时，页表不命中，则Cache一定也不命中</p>
+<p>II. Cache不命中的损失要大于页表不命中的损失</p>
+<p>III. Cache和TLB缺失后的处理都由硬件完成</p>
+<p>IV. 虚拟存储器的实际容量可以大于主存和辅存的容量之和</p>
+<p>A. I和II</p>
+<p>B. II和III</p>
+<p>C. I、III和IV</p>
+<p>D. II、III和IV</p>
+</li>
+<li>
+<p>下列关于虚拟存储机制的页表的叙述中，错误的是(  )</p>
+<p>A. 系统中的每个进程都有一个页表</p>
+<p>B. 页表中每个表项都与一个虚页对应</p>
+<p>C. 每个页表项中都包含装入位</p>
+<p>D. 所有进程都可以访问页表</p>
+</li>
+<li>
+<p>假定主存地址为32位，按字节编址，主存和Cache之间采用直接映射方式，主存块大小为4个字，每字32位，采用回写法，则能存放4K字数据的Cache的总容量的位数至少为(  )</p>
+<p>A. 146K</p>
+<p>B. 147K</p>
+<p>C. 148K</p>
+<p>D. 158K</p>
+</li>
+</ol>
+<h2>本章小结</h2>
+<h3>影响Cache性能的因素有哪些？</h3>
+<p>决定Cache系统访存效率重要因素是命中率，命中率与很多因素有关：</p>
+<ul>
+<li>映射方式：全相联映射方式的命中率最高，直接映射方式的命中率最低</li>
+<li>Cache容量：Cache容量越大，命中率就越高</li>
+<li>主存块(或Cache行)的大小</li>
+</ul>
+<p>此外，系统是采用单级还是采用多级Cache，数据Cahce和指令Cahce是分离还是合在一起，主存-总线-Cache-CPU之间采用什么架构等，都会影响Cache的总体性能。</p>
+<h3>Cache行的大小和命中率之间有什么关系？</h3>
+<p>Cache行的长度较大时，能充分利用程序访问的空间局部性，是一个较大的局部空间被一起调入Cache中，从而可以增加命中机会。但是，行长不能太大：</p>
+<ul>
+<li>若行长太大，未命中时，需要花费更多时间从主存读块</li>
+<li>行长太大，Cache项数变少，因而命中的可能性变小</li>
+</ul>
+<p>Cache行的长度较小时，命中率会很低，但好处是存取块的代价很小。</p>
+<h3>Cache总容量与映射关系有何种关系？</h3>
+<p>Cache总容量=[每个Cache行标记项的容量+Cache行长]$\times $Cache总行数</p>
+<p>其中，有效位和标记位是Cache必需的；脏位只在Cache采用回写法时才需要设置；LRU替换位只在Cache采用LRU替换算法时才需要设置。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://wlkla.github.io/onebuaaer.github.io">我在人世间踽踽独行</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/02/2024"!=""){
+    var startSite=new Date("09/02/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","wlkla/onebuaaer.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script>MathJax = {tex: {inlineMath: [["$", "$"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</html>
