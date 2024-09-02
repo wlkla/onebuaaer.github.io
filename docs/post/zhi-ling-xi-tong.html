@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="
+# 第四章：指令系统
+
+## 指令系统
+
+### 指令集体系结构
+
+1. 一台计算机的所有指令的集合构成该机的`指令系统/指令集`。">
+<meta property="og:title" content="指令系统">
+<meta property="og:description" content="
+# 第四章：指令系统
+
+## 指令系统
+
+### 指令集体系结构
+
+1. 一台计算机的所有指令的集合构成该机的`指令系统/指令集`。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wlkla.github.io/onebuaaer.github.io/post/zhi-ling-xi-tong.html">
+<meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
+<title>指令系统</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">指令系统</h1>
+<div class="title-right">
+    <a href="https://wlkla.github.io/onebuaaer.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/wlkla/onebuaaer.github.io/issues/16" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>第四章：指令系统</h1>
+<h2>指令系统</h2>
+<h3>指令集体系结构</h3>
+<ol>
+<li>一台计算机的所有指令的集合构成该机的<code class="notranslate">指令系统/指令集</code>。</li>
+<li>指令系统是指令集体系结构(ISA)中最核心的部分，ISA完整定义了软硬件之间的接口。</li>
+<li>ISA规定的内容主要包括：
+<ul>
+<li>指令格式、指令寻址方式、操作类型以及每种操作对应的操作数的相关规定</li>
+<li>操作数的类型、操作数寻址方式以及数据的大小端存储方式</li>
+<li>程序可访问的寄存器编号、个数和位数、存储空间的大小和编制方式</li>
+<li>指令执行过程的控制方式</li>
+</ul>
+</li>
+</ol>
+<h3>指令的基本格式</h3>
+<ol>
+<li>
+<p>一条指令通常包括<code class="notranslate">操作码字段</code>和<code class="notranslate">地址码字段</code>两部分。</p>
+<ul>
+<li>操作码指出该指令应执行什么操作以及具有何种功能</li>
+<li>地址码给出被操作的信息的地址</li>
+</ul>
+</li>
+<li>
+<p><code class="notranslate">指令字长</code>是指一条指令所包含的二进制代码的位数，其取决于操作码的长度、地址码的长度和地址码的个数。</p>
+<p>指令字长与机器字长没有固定的关系。通常定义：</p>
+<ul>
+<li>单字长指令：指令长度等于机器字长的指令</li>
+<li>半字长指令：指令长度等于半个机器字长的指令</li>
+<li>双字长指令：指令长度等于两个机器字长的指令</li>
+</ul>
+</li>
+<li>
+<p>若所有指令的长度都相等，则称为<code class="notranslate">定长指令字结构</code>；若各种指令的长度随指令功能而异，则称为<code class="notranslate">变长指令字结构</code>。因为主存一般是按字节编址的，所以指令字长通常为字节的整数倍。</p>
+</li>
+<li>
+<p>零地址指令：OP</p>
+</li>
+<li>
+<p>一地址指令：OP+A<del>1</del></p>
+</li>
+<li>
+<p>二地址指令：OP+A<del>1</del>+A<del>2</del></p>
+<ul>
+<li>指令含义：$(A_1)OP(A_2)\rightarrow A_1$<br>
+对于常用的算术和逻辑运算指令，往往需要使用两个操作数，需要分别给出目的操作数和源操作数的地址，其中目的操作数地址还用于保存本次的运算结果</li>
+<li>若地址码字段均为主存地址，则完成一条二地址指令需要四次访存：取指令+取操作数+取操作数+存结果</li>
+</ul>
+</li>
+<li>
+<p>三地址指令：OP+A<del>1</del>+A<del>2</del>+A<del>3</del></p>
+<ul>
+<li>指令含义：$(A_1)OP(A_2)\rightarrow A_3$</li>
+<li>若地址码字段均为主存地址，则完成一条三地址指令需要四次访存：取指令+取操作数+取操作数+存结果</li>
+</ul>
+</li>
+<li>
+<p>四地址指令：OP+A<del>1</del>+A<del>2</del>+A<del>3</del>+A<del>4</del></p>
+<ul>
+<li>指令含义：$(A_1)OP(A_2)\rightarrow A_3$, $A_4$=​下一条将要执行指令的地址</li>
+<li>若地址码字段均为主存地址，则完成一条四地址指令需要四次访存：取指令+取操作数+取操作数+存结果</li>
+</ul>
+</li>
+</ol>
+<h3>定长操作码指令格式</h3>
+<ol>
+<li>定长操作码指令在指令字的最高位部分分配固定的若干位表示操作码。</li>
+<li>定长操作码对于简化计算机硬件设计，提高指令译码和识别速度很有利。</li>
+</ol>
+<h3>扩展操作码指令格式</h3>
+<ol>
+<li>可变长度操作码指全部指令的操作码字段的位数不固定，且分散的放在指令字的不同位置上。</li>
+<li>最常见的变长操作码方法是扩展操作码，它使操作码的长度随地址码的减少而增加，不同地址数的指令可具有不同长度的操作码，从而在满足需求的前提下，有效地缩短指令字长。</li>
+<li>在设计扩展操作码指令格式时，需要注意：
+<ul>
+<li>不允许短码是长码的前缀</li>
+<li>各指令的操作码一定不能重复</li>
+</ul>
+</li>
+</ol>
+<h3>指令的操作类型</h3>
+<ol>
+<li>数据传送
+<ul>
+<li>传送指令通常有寄存器之间的传送(MOV)、从内存单元读取数据到CPU寄存器(LOAD)、从CPU寄存器写数据到内存单元(STORE)、进栈操作(PUSH)、出栈操作(POP)等。</li>
+</ul>
+</li>
+<li>算术和逻辑运算
+<ul>
+<li>这类指令主要有加(ADD)、减(SUB)、乘(MUL)、除(DIV)、加一(INC)、减一(DEC)、与(AND)、或(OR)、取反(NOT)、异或(XOR)等</li>
+</ul>
+</li>
+<li>移位操作
+<ul>
+<li>移位指令主要有算术移位、逻辑移位、循环移位。</li>
+</ul>
+</li>
+<li>转移操作
+<ul>
+<li>转移指令主要有无条件转移(JMP)，条件转移(BRANCH)，调用(CALL)，返回(RET)，陷阱(TRAP)等。</li>
+<li>调用指令和转移指令的区别：执行调用指令时必须保存下一条指令的地址，当子程序执行结束后，根据返回地址返回到主程序继续执行；而转移指令则不执行返回。</li>
+</ul>
+</li>
+<li>输入输出操作
+<ul>
+<li>这类指令用于完成CPU​与外部设备交换数据或传送控制命令及状态信息。</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>某计算机按字节编址，指令字长固定且只有两种指令格式，其中三地址指令29条、二地址指令107条，每个地址字段为6位，则指令字长至少应该是(  )位</p>
+<p>A. 24</p>
+<p>B. 26</p>
+<p>C. 28</p>
+<p>D. 32​</p>
+</li>
+<li>
+<p>在一个36位长的指令系统中，设计一个扩展操作码，使之能表示下列指令：</p>
+<ul>
+<li>7条具有两个15位地址和一个3位地址的指令；</li>
+<li>500条具有一个15位地址和一个3位地址的指令；</li>
+<li>50条无地址指令</li>
+</ul>
+</li>
+</ol>
+<h2>指令的寻址方式</h2>
+<h3>指令寻址和数据寻址</h3>
+<ol>
+<li>
+<p>寻找下一条将要执行的指令地址称为<code class="notranslate">指令寻址</code>；寻找本条指令的数据地址称为<code class="notranslate">数据寻址</code>。</p>
+</li>
+<li>
+<p>指令寻址：有两种方式：<code class="notranslate">顺序寻址方式</code>和<code class="notranslate">跳跃寻址方式</code></p>
+<ul>
+<li>顺序寻址方式：通过程序计数器PC+1，自动形成下一条指令的地址。</li>
+<li>跳跃寻址方式：通过转移类指令实现。由于CPU总是根据PC的内容去主存取指令的，因此转移指令执行的结果是修改PC的值，下一条指令仍然通过PC​给出。</li>
+</ul>
+</li>
+<li>
+<p>数据寻址</p>
+<ul>
+<li>
+<p>数据寻址的方式较多，为区别各种方式，通常在指令字中设置一个<code class="notranslate">寻址特征</code>字段，用来指明寻址方式，因此指令的格式为：操作码+寻址特征+形式地址A</p>
+</li>
+<li>
+<p>指令中的地址码字段并不代表操作数的真实地址，这种地址称为<code class="notranslate">形式地址(A)</code>。形式地址结合寻址方式，可以计算出操作数在存储器中的真实地址，这种地址称为<code class="notranslate">有效地址(EA)</code>。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3>常见的数据寻址方式</h3>
+<ol>
+<li>
+<p>隐含寻址</p>
+<ul>
+<li>这种类型的指令不明显给出操作数的地址，而是隐含操作数的地址。</li>
+<li>优点：有利于缩短指令字长</li>
+<li>缺点：需增加存储操作数或隐含地址的硬件</li>
+</ul>
+</li>
+<li>
+<p>立即寻址</p>
+<ul>
+<li>指令字中的地址字段指出的不是操作数的地址，而是操作数本身，也称<code class="notranslate">立即数</code>，采用补码表示。</li>
+<li>优点：指令在执行阶段不访存，指令执行速度最快</li>
+<li>缺点：操作数的位数限制了立即数的范围</li>
+</ul>
+</li>
+<li>
+<p>直接寻址</p>
+<ul>
+<li>指令字中的形式地址就是操作数的真实地址。</li>
+<li>优点：简单，不需要专门计算操作数的地址，指令在执行阶段仅需访存一次</li>
+<li>缺点：形式地址的位数限制了该指令操作数的寻址范围，操作数的地址不易修改</li>
+</ul>
+</li>
+<li>
+<p>间接寻址</p>
+<ul>
+<li>指令的地址字段给出的不是操作数的真实地址，而是操作数有效地址所在主存单元的地址，也就是操作数地址的地址。</li>
+<li>优点：可扩大寻址范围，便于编程</li>
+<li>缺点：在执行阶段要多次访存</li>
+</ul>
+</li>
+<li>
+<p>寄存器寻址</p>
+<ul>
+<li>与直接寻址的原理一样，只是把访问主存改为访问寄存器，指令的地址字段给出的是操作数所在寄存器的编号。</li>
+</ul>
+</li>
+<li>
+<p>寄存器间接寻址</p>
+<ul>
+<li>综合了间接寻址和寄存器寻址各自的特点，指令字中所指的寄存器给出的不是一个操作数，而是操作数所在主存单元的地址。</li>
+<li>优点：既扩大了寻址范围，又减少了访存次数，在执行阶段仅需访存一次。</li>
+</ul>
+</li>
+<li>
+<p>偏移寻址：相对寻址</p>
+<ul>
+<li>把PC的内容加上指令格式中的形式地址而形成操作数的有效地址。其中形式地址是相对于当前PC值得<code class="notranslate">偏移量</code>，可正可负。</li>
+<li>优点：操作数的地址不是固定的，它随PC值得变化而变化，且与指令地址之间总是相差一个固定的偏移量，因此便于程序浮动。</li>
+<li>相对寻址广泛应用于<code class="notranslate">转移指令</code>。</li>
+</ul>
+</li>
+<li>
+<p>偏移寻址：基址寻址</p>
+<ul>
+<li>基址寻址是指将基址寄存器(BR)的内容加上指令字中的形式地址而形成操作数得有效地址。</li>
+<li>主要用于解决程序逻辑空间与存储空间的无关性。在程序执行过程中，基址寄存器的内容不变，作为基地址，形式地址可变，作为偏移量。</li>
+<li>优点：可以扩大寻址范围，有利于多道程序设计，并可用于编制浮动程序</li>
+<li>缺点：偏移量的位数较短</li>
+</ul>
+</li>
+<li>
+<p>偏移寻址：变址寻址</p>
+<ul>
+<li>变址寻址是指将变址寄存器(IX)的内容加上指令字中的形式地址而形成操作数的有效地址。</li>
+<li>在程序执行过程中，变址寄存器的内容可由用户改变，作为偏移量，形式地址不变，作为基地址。</li>
+<li>优点：可扩大寻址范围，适合编制循环程序。偏移量的位数足以表示整个存储空间。</li>
+</ul>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>变址寻址与基址寻址的区别：</p>
+<ul>
+<li>基址寻址面向系统，主要用于为多道程序或数据分配存储空间。BR中数据不可变，形式地址可变</li>
+<li>变址寻址面向用户，主要用于处理数组问题。IX中数据可变，形式地址不可变。</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>堆栈寻址</p>
+<ul>
+<li>堆栈中读写单元的地址是用一个特定寄存器给出的，该寄存器成为堆栈指针(SP)。</li>
+<li>堆栈分为硬堆栈和软堆栈。硬堆栈是指用寄存器管理数据，软堆栈是指从主存中划取一部分管理数据。</li>
+<li>在堆栈计算机中，大部分指令都是无操作数指令，因为操作数地址都隐含使用SP，在读写堆栈前后都伴有自动完成对SP的加减操作。</li>
+</ul>
+</li>
+<li>
+<p>寻址方式总结：</p>
+<table role="table">
+<thead>
+<tr>
+<th align="center">寻址方式</th>
+<th align="center">有效地址</th>
+<th align="center">访存次数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">立即寻址</td>
+<td align="center">A即为操作数</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">直接寻址</td>
+<td align="center">EA=A</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">一次间接寻址</td>
+<td align="center">EA=(A)</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">寄存器寻址</td>
+<td align="center">EA=$R_i$</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">寄存器间接一次寻址</td>
+<td align="center">EA=($R_i$)</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">相对寻址</td>
+<td align="center">EA=(PC)+A</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">基址寻址</td>
+<td align="center">EA=(BR)+A</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">变址寻址</td>
+<td align="center">EA=(IX)+A</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>指令系统中采用不同寻址方式的目的是(  )</p>
+<p>A. 提供扩展操作码的可能性并降低指令译码的难度</p>
+<p>B. 可缩短指令字长，扩大寻址空间，提高编程的灵活性</p>
+<p>C. 实现程序控制</p>
+<p>D. 三者都正确</p>
+</li>
+<li>
+<p>设指令中的地址码为A，变址寄存器为X，程序计数器为PC，则变址间址寻址方式的操作数的有效地址EA是(  )</p>
+<p>A. ((PC)+A)</p>
+<p>B. ((X)+A)</p>
+<p>C. (X)+(A)</p>
+<p>D. (X)+A</p>
+</li>
+<li>
+<p>指令寻址方式有顺序和跳跃两种，采用跳跃寻址方式可以实现(  )</p>
+<p>A. 程序浮动</p>
+<p>B. 程序的无条件浮动和条件浮动</p>
+<p>C. 程序的无条件转移和条件转移</p>
+<p>D. 程序的调用</p>
+</li>
+<li>
+<p>某计算机的字长为16位，指令MOV R1, [R2]的功能是把内存数据传送到寄存器R1，寻址方式位寄存器间接寻址。R2的值为1234H，内存单元1234H存放数据56H，内存单元1235H存放数据78H，采用小端存储。则执行指令后R1的值为(  )</p>
+<p>A. 5678H</p>
+<p>B. 7856H</p>
+<p>C. 8765H</p>
+<p>D. 6587H</p>
+</li>
+<li>
+<p>对按字寻址的机器，程序计数器和指令寄存器的位数各取决于(  )</p>
+<p>A. 机器字长，存储器的字数</p>
+<p>B. 存储器的字数，指令字长</p>
+<p>C. 指令字长，机器字长</p>
+<p>D. 地址总线宽度，存储器的字数</p>
+</li>
+<li>
+<p>某计算机按字节编址，采用大端方式，某指令的一个操作数的机器数为ABCD 00FFH，该操作数采用基址寻址方式，指令中形式地址（用补码表示）为FF00H，当前基址寄存器的内容为C000 0000H，则该操作数的LSB存放的地址为(  )</p>
+<p>A. C000 FF00H</p>
+<p>B. C000 FF03H</p>
+<p>C. BFFF FF00H</p>
+<p>D. BFFF FF03H</p>
+</li>
+</ol>
+<h2>程序的机器级代码表示</h2>
+<h3>常用的汇编指令介绍</h3>
+<ol>
+<li>
+<p>相关寄存器（32位）：EAX，EBX，ECX，EDX，ESI，EDI，EBP，ESP​</p>
+<ul>
+<li>为了向后兼容，EAX，EBX，ECX和EDX的高两位字节和地两位字节可以独立使用。例如EAX的低两位字节称为AX，而AX的高低字节又可分别作为两个8位寄存器，分别成为AH和AL。</li>
+</ul>
+</li>
+<li>
+<p>汇编指令格式：AT&amp;T格式和Intel格式</p>
+<table role="table">
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">AT&amp;T格式</th>
+<th align="center">Intel格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">目的操作数d，源操作数s</td>
+<td align="center">
+$op \ s,d$<br>注：源操作数在左，目的操作数在右</td>
+<td align="center">
+$op \ d ,s$<br>注：源操作数在右，目的操作数在左</td>
+</tr>
+<tr>
+<td align="center">寄存器的表示</td>
+<td align="center">
+$mov \ %ebx, \ %eax$<br>注：寄存器名前必须加%</td>
+<td align="center">
+$mov eax,\ ebx$<br>注：直接写寄存器名字即可</td>
+</tr>
+<tr>
+<td align="center">立即数的表示</td>
+<td align="center">
+$mov \ \ 985, \ %eax$<br>注：立即数之前必须加“\”</td>
+<td align="center">
+$mov \ eax, \ 985$<br>注：直接写数字即可</td>
+</tr>
+<tr>
+<td align="center">主存地址的表示</td>
+<td align="center">
+$mov \ %eax, \ (af996h)$<br>注：用小括号</td>
+<td align="center">
+$mov [af996h],\ eax$<br>注：用中括号</td>
+</tr>
+<tr>
+<td align="center">读写长度的表示</td>
+<td align="center">
+$movb \ \ 5, \ (af996h)$<br>$movw \ \ 5, \ (af996h)$<br>$movl \ \ 5, \ (af996h)$<br>$addb \ \ 4,\ (af996h)$<br>注：指令后加b，w，l分别表示读写长度为byte，word，dword</td>
+<td align="center">
+$mov \ byte \ ptr \ [af996h], \ 5$<br>$mov \ word \ ptr \ [af996h], \ 5$<br>$mov \ dword \ ptr \ [af996h], \ 5$<br>$add \ byte \ ptr \ [af996h], \ 5$<br>注：在主存地址之前说明读写长度为byte，word，dword</td>
+</tr>
+<tr>
+<td align="center">主存地址偏移量的表示</td>
+<td align="center">
+$mov \ -8(%ebx), \ % eax$<br>注：偏移量（基址）<br>$mov \ 4(%ebx, \ %eax, \ 32), \ %eax$<br>注：偏移量（基址，变址，比例因子）</td>
+<td align="center">
+$mov \ eax, \ [ebx-8]$<br>注：[基址+偏移量]<br>$mov \ eax, \ [ebx+ecx \times 32+4]$<br>注：[基址+变址*比例因子+偏移量]</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>常用指令：汇编指令通常可分为<code class="notranslate">数据传送指令</code>，<code class="notranslate">算术和逻辑运算指令</code>和<code class="notranslate">控制流指令</code>。</p>
+<blockquote>
+<p>&lt;reg&gt;：表示任意寄存器，若其后带有数字，则指定其位数。</p>
+<p>&lt;reg32&gt;表示32位寄存器(eax,ebx,ecx,edx,esi,edi,esp,ebp)；</p>
+<p>&lt;reg16&gt;表示16位寄存器(ax,bx,cx,dx)；</p>
+<p>&lt;reg8&gt;表示8位寄存器，(ah,al,bh,bl,ch,cl,dh,dl)。</p>
+<p>&lt;mem&gt;：表示内存地址。</p>
+<p>&lt;con&gt;：表示8位、16位或32位常数。</p>
+<p>&lt;con8&gt;表示8位常数。</p>
+</blockquote>
+<ul>
+<li>
+<p>数据传送指令：mov指令：将第二操作数（寄存器的内容、内存中的内容或常数值）复制到第一个操作数（寄存器或内存）。双操作数指令的两个操作数不能都是内存。若需要在内存之间复制，可先从内存复制到一个寄存器，再从寄存器复制到内存。</p>
+<blockquote>
+<p>mov &lt;reg&gt;, &lt;reg&gt;</p>
+<p>mov &lt;reg&gt;, &lt;mem&gt;</p>
+<p>mov &lt;mem&gt;, &lt;reg&gt;</p>
+<p>mov &lt;reg&gt;, &lt;con&gt;</p>
+<p>mov &lt;mem&gt;, &lt;con&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>数据传送指令：push指令：将操作数压入内存的栈，常用于函数调用。ESP是栈顶，入栈前先将ESP的值减四，然后将操作数压入ESP​指示的地址。</p>
+<blockquote>
+<p>push &lt;reg32&gt;</p>
+<p>push &lt;mem&gt;</p>
+<p>push &lt;con32&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>数据传送指令：pop指令：出栈前先将ESP指示的地址中的内容出栈，然后将ESP​值加四。</p>
+<blockquote>
+<p>pop &lt;reg32&gt;</p>
+<p>pop &lt;mem&gt;</p>
+<p>pop &lt;con32&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：add/sub​指令：指令将两个操作数相加/减，然后将结果保存到第一个操作数中。</p>
+<blockquote>
+<p>add &lt;reg&gt;, &lt;reg&gt;/sub &lt;reg&gt;, &lt;reg&gt;</p>
+<p>add &lt;reg&gt;, &lt;mem&gt;/sub &lt;reg&gt;, &lt;mem&gt;</p>
+<p>add &lt;mem&gt;, &lt;reg&gt;/sub &lt;mem&gt;, &lt;reg&gt;</p>
+<p>add &lt;reg&gt;, &lt;con&gt;/sub &lt;reg&gt;, &lt;con&gt;</p>
+<p>add &lt;mem&gt;, &lt;con&gt;/sub &lt;mem&gt;, &lt;con&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：inc/dec指令：将操作数自加一、自减一。</p>
+<blockquote>
+<p>inc &lt;reg&gt;/dec &lt;reg&gt;</p>
+<p>inc &lt;mem&gt;/dec &lt;mem&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：imul指令：有符号整数乘法指令，有两种格式：</p>
+<p>两个操作数：将两个操作数相乘，将结果保存在第一个操作数中，第一个操作数必须是寄存器</p>
+<blockquote>
+<p>imul &lt;reg32&gt;, &lt;mem32&gt;</p>
+<p>imul &lt;reg32&gt;, &lt;mem&gt;</p>
+</blockquote>
+<p>三个操作数：将第二个和第三个操作数相乘，将结果保存在第一个操作数中，第一个操作数必须是寄存器</p>
+<blockquote>
+<p>imul &lt;reg32&gt;, &lt;reg32&gt;, &lt;con&gt;<br>
+imul &lt;reg32&gt;, &lt;mem&gt;, &lt;con&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：idiv指令：有符号整数的除法指令，他只有一个操作数，即除数，而被除数则为edx:eax中的内容，操作结果有两部分：商和余数，商送至eax，余数送至edx​。</p>
+<blockquote>
+<p>idiv &lt;reg32&gt;</p>
+<p>idiv &lt;mem&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：and/or/xor指令：and、or、xor​指令分别是逻辑与、逻辑或、逻辑异或操作指令，用于操作数的位操作，操作结果放在第一个操作数中。</p>
+<blockquote>
+<p>and &lt;reg&gt;, &lt;reg&gt;/or &lt;reg&gt;, &lt;reg&gt;/xor &lt;reg&gt;, &lt;reg&gt;</p>
+<p>and &lt;reg&gt;, &lt;mem&gt;/or &lt;reg&gt;, &lt;mem&gt;/xor &lt;reg&gt;, &lt;mem&gt;</p>
+<p>and &lt;mem&gt;, &lt;reg&gt;/or &lt;mem&gt;, &lt;reg&gt;/xor &lt;mem&gt;, &lt;reg&gt;</p>
+<p>and &lt;reg&gt;, &lt;con&gt;/or &lt;reg&gt;, &lt;con&gt;/xor &lt;reg&gt;, &lt;con&gt;</p>
+<p>and &lt;mem&gt;, &lt;con&gt;/or &lt;mem&gt;, &lt;con&gt; /xor &lt;mem&gt;, &lt;con&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：not​指令：位翻转指令，将操作数中的每一位取反。</p>
+<blockquote>
+<p>not &lt;reg&gt;</p>
+<p>not &lt;mem&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：neg​指令：取反指令。</p>
+<blockquote>
+<p>neg &lt;reg&gt;</p>
+<p>neg &lt;mem&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>算术和逻辑运算指令：shl/shr指令：逻辑移位指令，shl为逻辑左移，shr​为逻辑右移，第一个操作数表示被操作数，第二个操作数指示移位的位数</p>
+<blockquote>
+<p>shl &lt;reg&gt;, &lt;con8&gt;/shr &lt;reg&gt;, &lt;con8&gt;</p>
+<p>shl &lt;mem&gt;, &lt;con8&gt;/shr &lt;mem&gt;, &lt;con8&gt;</p>
+<p>shl &lt;reg&gt;, &lt;cl&gt;/shr &lt;reg&gt;, &lt;cl&gt;</p>
+<p>shl &lt;mem&gt;, &lt;cl&gt;/shr &lt;mem&gt;, &lt;cl&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>控制流指令：jmp指令：控制程序计数器IP无条件转移到label所指示的地址。</p>
+<blockquote>
+<p>jmp &lt;label&gt;</p>
+</blockquote>
+</li>
+<li>
+<p>控制流指令：$j\textit{condition}$指令：条件转移指令，依据CPU状态字中的一系列条件状态转移。</p>
+<blockquote>
+<p>je &lt;label&gt;#若a=b，则跳转，ZF=1？</p>
+<p>jz &lt;label&gt; #若a≠b则跳转，ZF≠0？</p>
+<p>jne &lt;label&gt;</p>
+<p>jg &lt;label&gt; #若a&gt;b则跳转，ZF=0&amp;SF=OF?</p>
+<p>jge &lt;label&gt;#若a≥b则跳转，SF=OF？</p>
+<p>jl &lt;label&gt;#若a&lt;b则跳转，SF≠OF?</p>
+<p>jle &lt;label&gt;#若a≤b则跳转，SF≠OF|ZF=1？</p>
+</blockquote>
+</li>
+<li>
+<p>控制流指令：cmp/test指令：cmp指令相当于sub指令，用于比较两个操作数的值。test指令相当于and指令，用于对两个操作数进行逐位与运算。根据运算结果修改CPU状态字中的条件码。</p>
+<blockquote>
+<p>cmp &lt;reg&gt;, &lt;reg&gt;/test &lt;reg&gt;, &lt;reg&gt;</p>
+<p>cmp &lt;reg&gt;, &lt;mem&gt;/test &lt;reg&gt;, &lt;mem&gt;</p>
+<p>cmp &lt;mem&gt;, &lt;reg&gt;/test &lt;mem&gt;, &lt;reg&gt;</p>
+<p>cmp &lt;reg&gt;, &lt;con&gt;/test &lt;reg&gt;, &lt;con&gt;​</p>
+</blockquote>
+</li>
+<li>
+<p>控制流指令：call/ret指令：call指令首先将当前指令地址入栈，然后无条件转移到由标签指示的指令，同时需要保存调用之前的地址信息。ret指令实现子程序的返回i机制，ret指令弹出栈中保存的指令地址，然后无条件转移到保存的的指令地址执行。</p>
+<blockquote>
+<p>call &lt;label&gt;</p>
+<p>ret​</p>
+</blockquote>
+<p>call指令的作用：</p>
+<ul>
+<li>将<code class="notranslate">IP旧值</code>压栈保存（保存在函数的栈帧顶部）</li>
+<li>设置<code class="notranslate">IP新值</code>，无条件转移至被调用函数的第一条指令</li>
+</ul>
+<p>ret指令的作用：</p>
+<ul>
+<li>从函数的栈帧顶部找到<code class="notranslate">IP旧值</code>，将其出栈并恢复IP寄存器</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>选择语句的机器级表示</h3>
+<ol>
+<li>
+<p>常见的算术逻辑指令(add,sub,imul,or,and,shl,inc,dec,not,sal)会设置条件码，还有cmp和test指令只设置条件码而不改变任何其他寄存器。</p>
+</li>
+<li>
+<p>根据条件码ZF和SF来判断条件，然后结合jcondition指令实现条件跳转。</p>
+</li>
+<li>
+<p>if-else语句的通用形式为：</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">if</span> (test_expr)
+    then_statement
+<span class="pl-k">else</span> 
+    else_statement</pre></div>
+<p>被翻译为的汇编语句格式为：</p>
+<pre class="notranslate"><code class="notranslate">t = test_expr
+if (t)
+	goto true
+else_statement
+goto done
+true:
+	then_statement
+done:
+</code></pre>
+</li>
+</ol>
+<h3>循环语句的机器级表示</h3>
+<ol>
+<li>
+<p>do-while​循环通用格式如下：</p>
+<pre class="notranslate"><code class="notranslate">do
+	body_statement
+	while(test_expr)
+</code></pre>
+<p>被翻译为的汇编语句格式为：</p>
+<pre class="notranslate"><code class="notranslate">loop:
+	body_statement
+	t = test_expr;
+	if (t)
+		goto loop;
+</code></pre>
+</li>
+<li>
+<p>while循环通用格式如下：</p>
+<pre class="notranslate"><code class="notranslate">while (test_expr)
+	body_statement
+</code></pre>
+<p>被翻译为的汇编语句格式为：</p>
+<pre class="notranslate"><code class="notranslate">t = test_expr;
+if (!t)
+	goto done;
+loop:
+	body_statement
+	t = test_expr;
+	if (t)
+		goto loop
+done:
+</code></pre>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>如果使用loop命令实现，则对于循环计数器，只能使用ecx。</p>
+</blockquote>
+</li>
+<li>
+<p>for循环通用格式如下：</p>
+<pre class="notranslate"><code class="notranslate">for (init_expr; test_expr; update_expr) 
+	body_statement
+</code></pre>
+<p>被翻译为的汇编语句格式为：</p>
+<pre class="notranslate"><code class="notranslate">init_expr;
+t = test_expr
+if (!t)
+	goto done;
+loop:
+	body_statement
+	update_expr
+	t = test_expr
+	if (t)
+		goto loop
+done:
+</code></pre>
+</li>
+</ol>
+<h3>过程调用的机器级表示</h3>
+<ol>
+<li>
+<p>假定过程P（调用者）调用过程Q（被调用者），调用过程的执行步骤如下：</p>
+<ul>
+<li>P将入口参数（实参）放到Q能访问到的地方</li>
+<li>P将返回地址存到特定的地方，然后将控制转移到Q</li>
+<li>Q保存P的现场，并为自己的非静态局部变量分配空间</li>
+<li>执行过程Q</li>
+<li>Q恢复P的现场，将返回结果放到P能访问到的地方，并释放局部变量所占空间</li>
+<li>Q取出返回地址，将控制转移到P</li>
+</ul>
+</li>
+<li>
+<p>因为寄存器被共享，为了程序能正确运行，有如下规范：</p>
+<ul>
+<li>寄存器EAX、ECX、EDX是调用者保存寄存器，当P调用Q时，若Q需要用到这些寄存器，则由P将内容保存到栈中，并在返回后由P恢复它们的值。</li>
+<li>寄存器EBX、ESI、EDI是被调用者保存寄存器，当P调用Q时，Q必须先将这些寄存器的内容保存到栈中才能使用它们，并在返回P之前先恢复它们的值。</li>
+</ul>
+</li>
+<li>
+<p>每个过程都有自己的栈区，称为<code class="notranslate">栈帧</code>，因此，一个栈由若干个栈帧组成。EBP指示栈帧的起始位置，ESP​指示栈顶。</p>
+<blockquote>
+<p>在X86系统中，默认以4​字节为栈的操作单位。</p>
+</blockquote>
+</li>
+<li>
+<p>栈帧的组成：</p>
+<ul>
+<li>栈帧最底部一定是上一层栈帧基址（ebp旧值）</li>
+<li>栈帧最顶部一定是返回地址</li>
+<li>通常将局部变量集中存储在栈帧底部区域</li>
+<li>通常将调用参数集中存储在栈帧顶部区域</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>某C语言程序段在计算机M上的部分机器级代码如下，数组a的定义为<code class="notranslate">int a[24][64]</code>，每个机器级代码行中依此包含指令序号、虚拟地址、机器指令和汇编指令</p>
+<pre class="notranslate"><code class="notranslate">   for (i = 0; i &lt; 24; i++)
+1  00401072    C7 45 F8 00 00 00 00    mov [ebp - 8], 0
+2  00401079    EB 09                   jmp 00401084h
+3  0040107B    8B 55 F8                mov eax, [ebp - 8]
+   ......      ......                  ......
+7  00401088    7D 32                   jge 004010bch
+      for (j = 0; j &lt; 64; j++)
+8  0040108A    C7 45 FC 00 00 00 00    mov [ebp - 4], 0
+   ......      ......                  ......
+         a[i][j] = 10;
+   ......      ......                  ......
+19 004010AE    C7 84 82 00 20 42 00 0A 00 00 00    mov [ecx + edx * 4 + 00422000h], 0Ah
+20 ......      ......                  ......
+</code></pre>
+<p>请回答下列问题：</p>
+<ul>
+<li>第20条指令的虚拟地址是多少？</li>
+<li>已知第2条jmp和第7条jge都是跳转指令，其操作码分别是EBH和7DH，跳转目标地址分别为0040 1084H、0040 10BCH，这两条指令都采用什么寻址方式？给出第2条指令jmp的跳转目标地址计算过程。</li>
+<li>已知第19条mov指令的功能为$a[i][j]\leftarrow10$，其中ecx和edx为寄存器名，0042 2000H是数组a的首地址，指令中源操作数采用什么寻址方式？已知edx中存放的是变量j，ecx中存放的是什么？根据该指令的机器码判断M采用的是大端还是小端方式。</li>
+<li>第一次执行第19条指令时，取指令过程中是否会发生缺页异常？为什么？</li>
+</ul>
+</li>
+</ol>
+<h2>CISC和RISC的基本概念</h2>
+<h3>基本概念</h3>
+<ol>
+<li>复杂指令系统计算机：增强原有指令的功能，设置更为复杂的新指令实现软件功能的硬化。</li>
+<li>精简指令系统计算机：减少指令种类和简化指令功能，提高指令的执行速度。</li>
+</ol>
+<h3>CISC与RISC的比较</h3>
+<ol>
+<li>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">CISC</th>
+<th align="center">RISC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">指令系统</td>
+<td align="center">复杂</td>
+<td align="center">简单</td>
+</tr>
+<tr>
+<td align="center">指令数目</td>
+<td align="center">一般大于两百条</td>
+<td align="center">一般小于一百条</td>
+</tr>
+<tr>
+<td align="center">指令字长</td>
+<td align="center">不固定</td>
+<td align="center">固定</td>
+</tr>
+<tr>
+<td align="center">可访存指令</td>
+<td align="center">不加限制</td>
+<td align="center">仅LOAD/STORE指令</td>
+</tr>
+<tr>
+<td align="center">各种指令执行时间</td>
+<td align="center">相差较大</td>
+<td align="center">绝大多数可在一个周期内完成</td>
+</tr>
+<tr>
+<td align="center">各种指令使用频度</td>
+<td align="center">相差很大</td>
+<td align="center">都比较常用</td>
+</tr>
+<tr>
+<td align="center">通用寄存器数量</td>
+<td align="center">较少</td>
+<td align="center">多</td>
+</tr>
+<tr>
+<td align="center">目标代码</td>
+<td align="center">难以用优化编译生成高效的目标代码程序</td>
+<td align="center">采用优化的编译程序，生成代码较为高效</td>
+</tr>
+<tr>
+<td align="center">控制方式</td>
+<td align="center">绝大多数为微程序控制</td>
+<td align="center">绝大多数为组合逻辑控制</td>
+</tr>
+<tr>
+<td align="center">指令流水线</td>
+<td align="center">可以通过一定方式实现</td>
+<td align="center">必须实现</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://wlkla.github.io/onebuaaer.github.io">我在人世间踽踽独行</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/02/2024"!=""){
+    var startSite=new Date("09/02/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","wlkla/onebuaaer.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script>MathJax = {tex: {inlineMath: [["$", "$"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</html>
