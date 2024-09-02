@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 传输层
+
+## 传输层提供的服务
+
+### 传输层的功能
+
+1. 传输层为运行在不同主机上的进程之间提供逻辑通信
+2. 从网络层来说，通信双方是两台主机；从传输层来说，通信双方是主机中的进程
+3. 复用和分用：
+   - 复用：发送方不同的应用进程都可以使用同一传输层协议传送数据
+   - 分用：接收方的传输层在剥去报文的首部后能够把这些数据正确交付到目的应用进程
+4. 差错检测：传输层要对收到的报文进行差错检测。">
+<meta property="og:title" content="传输层">
+<meta property="og:description" content="# 传输层
+
+## 传输层提供的服务
+
+### 传输层的功能
+
+1. 传输层为运行在不同主机上的进程之间提供逻辑通信
+2. 从网络层来说，通信双方是两台主机；从传输层来说，通信双方是主机中的进程
+3. 复用和分用：
+   - 复用：发送方不同的应用进程都可以使用同一传输层协议传送数据
+   - 分用：接收方的传输层在剥去报文的首部后能够把这些数据正确交付到目的应用进程
+4. 差错检测：传输层要对收到的报文进行差错检测。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wlkla.github.io/onebuaaer.github.io/post/chuan-shu-ceng.html">
+<meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
+<title>传输层</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">传输层</h1>
+<div class="title-right">
+    <a href="https://wlkla.github.io/onebuaaer.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/wlkla/onebuaaer.github.io/issues/11" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>传输层</h1>
+<h2>传输层提供的服务</h2>
+<h3>传输层的功能</h3>
+<ol>
+<li>传输层为运行在不同主机上的进程之间提供逻辑通信</li>
+<li>从网络层来说，通信双方是两台主机；从传输层来说，通信双方是主机中的进程</li>
+<li>复用和分用：
+<ul>
+<li>复用：发送方不同的应用进程都可以使用同一传输层协议传送数据</li>
+<li>分用：接收方的传输层在剥去报文的首部后能够把这些数据正确交付到目的应用进程</li>
+</ul>
+</li>
+<li>差错检测：传输层要对收到的报文进行差错检测。对于TCP协议，若接收方发现报文段出错，则要求发送方重发该报文段；对于UDP协议，若接收方发现数据报出错，则直接丢弃</li>
+<li>当传输层采用TCP协议时，逻辑通信信道相当于一条全双工的可靠信道；当传输层采用无连接的UDP协议时，逻辑通信信道相当于一条不可靠信道</li>
+</ol>
+<h3>传输层的寻址与端口</h3>
+<ol>
+<li>
+<p>端口能让应用层的各种进程将其数据通过端口向下交付给传输层，以及让传输层知道应当将其报文段中的数据向上通过端口交付给应用层的相应的进程</p>
+</li>
+<li>
+<p>端口号：</p>
+<ul>
+<li>
+<p>长度：16bit</p>
+</li>
+<li>
+<p>端口号只标识本计算机应用层中的各进程</p>
+</li>
+<li>
+<p>端口号的分类：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TB</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>端口号<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>服务器端使用的端口号<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>客户端使用的端口号<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>熟知端口号<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>0~1023，指派给TCP/IP最重要的一些应用程序<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>登记端口号<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>1024~49151，供没有熟知端口号的应用程序使用<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>49152~65535，仅在客户进程运行时动态选择<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>套接字 ::= {IP地址: 端口号}</p>
+<ul>
+<li>通过IP地址标识和区别网络中不同的主机，通过端口号标识和区别主机中不同的进程，端口号拼接到IP地址构成的套接字唯一标识一台主机上一个一个进程</li>
+<li>在网络通信中，主机A发给主机B的报文包含目的端口号和源端口号</li>
+</ul>
+</li>
+</ol>
+<h3>无连接服务与面向连接服务</h3>
+<ol>
+<li>面向连接的传输控制协议/TCP：传输层向上提供一条全双工的可靠逻辑信道
+<ul>
+<li>通信双方在传送数据之前必须先建立连接，然后基于此连接进行可靠数据传输，传输结束后释放连接</li>
+<li>不提供广播或多播服务</li>
+<li>提供确认、流量控制、计时器、连接管理等功能，因此开销较大，适用于可靠性更重要的场合</li>
+</ul>
+</li>
+<li>无连接的用户数据报协议/UDP：传输层向上提供一条不可靠的逻辑信道
+<ul>
+<li>通信双方在传送数据之前不需要建立连接，接收方的传输层在收到UDP用户数据报后无须给发送方发回任何确认</li>
+<li>在IP层以上提供两种附加服务：多路复用和对数据的错误检查</li>
+<li>执行速度较快，实时性好，适用于小文件传送协议和实时传输协议</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>在网络层若采用虚电路方式，则无法提供无连接服务；若传输层采用TCP不影响网络层提供无连接服务</p>
+</blockquote>
+<h3>错题</h3>
+<ol>
+<li>
+<p>传输层的面向连接服务的特性是(  )</p>
+<p>A. 不保证可靠和顺序交付</p>
+<p>B. 不保证可靠但保证顺序交付</p>
+<p>C. 保证可靠但不保证顺序交付</p>
+<p>D. 保证可靠和顺序交付</p>
+</li>
+<li>
+<p>可靠传输协议中的“可靠”指的是(  )</p>
+<p>A. 使用面向连接的会话</p>
+<p>B. 使用尽力而为的传输</p>
+<p>C. 使用滑动窗口来维持可靠性</p>
+<p>D. 使用确认机制来确保传输的数据不丢失</p>
+</li>
+<li>
+<p>在TCP/IP参考模型中，若用户程序使用UDP进行数据传输，则(  )协议必须承担可靠性方面的全部工作</p>
+<p>A. 数据链路层</p>
+<p>B. 网际层</p>
+<p>C. 传输层</p>
+<p>D. 应用层</p>
+</li>
+</ol>
+<h2>UDP协议</h2>
+<h3>UDP数据报</h3>
+<ol>
+<li>
+<p>UDP仅在IP层的数据报服务之上增加了两个最基本的功能：复用和分用、差错检测</p>
+</li>
+<li>
+<p>UDP协议的特点：</p>
+<ul>
+<li>UDP无须建立连接，因此UDP不会引入建立连接的时延</li>
+<li>TCP需要在端系统中维护连接状态，UDP则不需要维护连接状态，因此能支持更多的客户机</li>
+<li>UDP的首部开销小。TCP首部为20B，UDP首部为8B</li>
+<li>UDP没有拥塞控制，因此网络中的拥塞不会影响源主机的发送速率</li>
+<li>UDP支持一对一、一对多、多对一和多对多的交互通信</li>
+</ul>
+</li>
+<li>
+<p>UDP是面向报文的。发送方UDP对应用层下来的报文，在添加首部后就向下交付给IP层，一次发送一个报文，既不合并，也不拆分；接收方UDP对IP层交上来的UDP报文，在去除首部后直接交付给应用进程。因此报文不可分割，是UDP数据报处理的最小单位。若报文太长，UDP把它交给IP层后，可能会导致分片；若报文太短，UDP把它交给IP层后，会使IP数据报的首部的相对长度太大，都会降低IP层的效率</p>
+</li>
+<li>
+<p>UDP数据报的格式：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>UDP数据报<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>首部字段<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>数据字段<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>源端口，2B<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>在需要对方回信时选用，不需要是可用全0<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>目的端口，2B<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>终点交付报文时用到<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>长度，2B<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>UDP数据报的长度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>检验和，2B<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>检查数据报是否有误<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+<li>
+<p>若接收方UDP发现收到的报文中的目的端口号不正确，则丢弃该报文，并由ICMP发送“端口不可达”差错报文</p>
+</li>
+</ol>
+<h3>UDP检验</h3>
+<ol>
+<li>
+<p>在计算检验和时，要在UDP数据报之前增加12B的伪首部，得到一个临时的UDP数据报</p>
+<blockquote>
+<p>IP数据报的检验和只检验数据报的首部，UDP数据报的检验和检验数据报的首部和数据部分</p>
+</blockquote>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/8418fb52e868e1732478cca93f50c8921b833f882a8a066d33217db10678cc08/68747470733a2f2f74656c6567726170682d696d6167652d3662342e70616765732e6465762f66696c652f3337643337346435383631666338616363666266342e706e67"><img src="https://camo.githubusercontent.com/8418fb52e868e1732478cca93f50c8921b833f882a8a066d33217db10678cc08/68747470733a2f2f74656c6567726170682d696d6167652d3662342e70616765732e6465762f66696c652f3337643337346435383631666338616363666266342e706e67" alt="flower" data-canonical-src="https://telegraph-image-6b4.pages.dev/file/37d374d5861fc8accfbf4.png" style="max-width: 100%;"></a></p>
+<ol start="2">
+<li>
+<p>计算检验和的方法：</p>
+<ol>
+<li>
+<p>发送方首先把全0放入检验和字段并添加伪首部，然后把UDP数据报是为许多16位的字串接起来</p>
+</li>
+<li>
+<p>若UDP数据报的数据部分不是偶数个字节，则要在尾部填入全0字节</p>
+</li>
+<li>
+<p>按二进制反码计算出所有16位字的和，将结果的二进制反码写入检验和字段</p>
+</li>
+<li>
+<p>接收方把收到的UDP数据报加上伪首部，同时可能要补全0字节</p>
+</li>
+<li>
+<p>按二进制反码求出所有16位字的和。若结果为全1，则无差错</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>以下关于UDP检验和的说法中，错误的是(  )</p>
+<p>A. 计算检验和时需要按2字节对齐，若数据部分不足，则需用一个全0字节填充</p>
+<p>B. 若UDP检验和计算结果为0，则在检验和字段填充0</p>
+<p>C. UDP检验和字段的计算包括一个伪首部、UDP首部和携带的用户数据</p>
+<p>D. UDP检验和的计算方法是二进制反码运算求和再取反</p>
+</li>
+<li>
+<p>某应用层数据大小为200B，传输层使用UDP，网际层使用IP(采用最大首部长度)，使用以太网进行传输，则该应用层数据的传输效率为(  )</p>
+<p>A. 82.6%</p>
+<p>B. 77.5%</p>
+<p>C. 69.9%</p>
+<p>D. 67.1%</p>
+</li>
+<li>
+<p>一个UDP用户数据报的数据字段为8192B，要使用以太网来传送。假定IP数据报无选项。试问应当划分为几个IP数据报片？说明每个IP数据报片的数据字段长度和片段偏移字段的值</p>
+</li>
+</ol>
+<h2>TCP协议</h2>
+<h3>TCP协议的特点</h3>
+<ol>
+<li>TCP是在不可靠的IP层之上实现的可靠地数据传输协议，主要解决传输的可靠、有序、无丢失和不重复问题</li>
+<li>TCP特点：
+<ul>
+<li>TCP是面向连接的传输层协议，TCP连接是一条逻辑链接</li>
+<li>每一条TCP连接只能有两个端点，是一对一的</li>
+<li>TCP提供可靠交付的服务</li>
+<li>TCP提供全双工通信，允许通信双方的应用进程在任何时候都能发送数据，为此TCP连接的两端都设有发送缓存和接收缓存，用来临时存放双向通信的数据
+<ul>
+<li>发送缓存存放的数据：发送应用程序传送给发送方TCP准备发送的数据；TCP已发送但尚未收到确认的数据</li>
+<li>接收缓存存放的数据：按序到达但尚未被接收应用程序读取的数据；不按序到达的数据</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>TCP与UDP的一些比较：
+<ul>
+<li>UDP报文的长度由发送应用进程决定</li>
+<li>TCP报文的长度则根据接收方给定的窗口值和当前的网络拥塞程度决定</li>
+</ul>
+</li>
+<li>若应用进程传送到TCP缓存的数据块太长，则TCP会进行拆分在传送；若数据块太短，则TCP会等到积累足够的字节后拼接发送</li>
+</ol>
+<h3>TCP报文段</h3>
+<ol>
+<li>
+<p>TCP传送的数据单元称为报文段。TCP报文段既可以用来运载数据，又可以用来建立连接、释放连接和应答</p>
+</li>
+<li>
+<p>一个TCP报文段分为首部和数据两部分，首部前20B是固定的，后面4N字节根据需要增加，长度为4B的整数倍</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4da373dba02b106c46572e7e5d1dff21feb9eea80dc74df47cadbe77ca86f28a/68747470733a2f2f74656c6567726170682d696d6167652d3662342e70616765732e6465762f66696c652f6436313734626135353466643166373866393465652e706e67"><img src="https://camo.githubusercontent.com/4da373dba02b106c46572e7e5d1dff21feb9eea80dc74df47cadbe77ca86f28a/68747470733a2f2f74656c6567726170682d696d6167652d3662342e70616765732e6465762f66696c652f6436313734626135353466643166373866393465652e706e67" alt="flower" data-canonical-src="https://telegraph-image-6b4.pages.dev/file/d6174ba554fd1f78f94ee.png" style="max-width: 100%;"></a></p>
+<ul>
+<li>源端口和目的端口：2B，标识发送方和接收方使用的端口</li>
+<li>序号：4B，TCP连接中传送的字节流中的每个字节都要按顺序变好，序号字段值是本报文段所发送的数据的第一个字节的序号</li>
+<li>确认号：4B，期望收到对方下一个报文段的第一个数据字节的序号。若确认号为N，则表明到序号N-1为止的所有数据均已正确收到</li>
+<li>数据偏移：4B，表示首部长度，指出TCP报文段的数据其实处距离TCP报文段起始处有多远</li>
+<li>保留：6bit，暂时置为0</li>
+<li>紧急位URG：当URG=1时，表明紧急指针字段有效，说明此报文段中有紧急数据，应尽快传送。紧急数据被插入到报文段数据的最前面</li>
+<li>确认位ACK：当ACK=1时确认号字段有效。TCP规定，在连接建立后所有传送的报文段都必须把ACK置为1</li>
+<li>推送位PSH：接受方TCP收到PSH=1的报文后，就尽快交付给接受应用程序，而不再等到整个缓存都满了再向上交付</li>
+<li>复位位RST：当RST=1时，表明TCP中出现严重差错，必须释放连接，然后重新建立传输连接；还可用于拒绝一个非法的报文段</li>
+<li>同步位SYN：当SYN=1时，表明这是一个连接请求或连接接收报文。当SYN=1，ACK=0时，表明这是一个请求连接报文。若对方同意建立连接，则发送SYN=1，ACK=1的响应报文</li>
+<li>终止位FIN：当FIN=1时，表明此报文段的发送方的数据已发送完毕，并请求释放传输连接</li>
+<li>窗口：2B，从本报文段首部中的确认号算起，接收方目前允许对方发送的数据量</li>
+<li>检验和：2B，检验和字段检验的范围包括首部和数据两部分，方法类似UDP</li>
+<li>紧急指针：2B，紧急指针仅在URG=1时才有意义，指出本报文段中的紧急数据的字节数，窗口为零时也可以发送紧急数据</li>
+<li>选项：&lt;40B</li>
+<li>填充：保持首部长度位4NB</li>
+</ul>
+</li>
+</ol>
+<h3>TCP连接管理</h3>
+<ol>
+<li>
+<p>TCP连接的三个阶段：连接建立$\rightarrow$数据传送$\rightarrow$连接释放</p>
+</li>
+<li>
+<p>每条TCP连接都有两个端点，TCP连接的端口是套接字，每条TCP连接唯一地被通信的两个端点确定</p>
+</li>
+<li>
+<p>同一个IP地址可以有多个不同的TCP连接，而同一个端口号也可以出现在不同的TCP连接中</p>
+</li>
+<li>
+<p>主动发起连接的应用进程称为客户，被动等待连接建立的应用进程称为服务器</p>
+</li>
+<li>
+<p>TCP连接的建立</p>
+<ol>
+<li>
+<p>客户机的TCP首先向服务器的TCP发送连接请求报文段，客户机进入SYN-SENT状态(SYN=1,seq=x)</p>
+<blockquote>
+<p>SYN报文段不能携带数据，但会消耗掉一个序号</p>
+</blockquote>
+</li>
+<li>
+<p>服务器的TCP收到连接请求报文段后，如果同意建立连接，则向客户机发挥确认，并为该TCP连接分配缓存和变量，服务器进入SYN-RCVD状态(SYN=1,ACK=1,seq=y,ack=y+1)</p>
+<blockquote>
+<p>确认报文段不能携带数据，但也要消耗掉一个序号</p>
+</blockquote>
+</li>
+<li>
+<p>当客户机收到确认报文段后，还要向服务器给出确认，并为该TCP连接分配缓存和变量，客户机进入ESTABLISHED状态。当服务器收到来自客户机的确认后，也进入ESTABLISHED状态(ACK=1,seq=x+1,ack=y+1)</p>
+<blockquote>
+<p>该报文段可以携带数据，若不携带数据则不消耗序号</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>
+<p>TCP连接的释放：参与TCP连接的两个进程中的任何一个都能终止该进程</p>
+<ol>
+<li>
+<p>客户机打算关闭连接时，向其TCP发送连接释放报文段，并停止发送数据，主动关闭TCP连接，客户机进入FIN-WAIT-1状态(FIN=1,seq=u)</p>
+<blockquote>
+<p>FIN报文段无论是否携带数据，都要消耗掉一个序号</p>
+</blockquote>
+</li>
+<li>
+<p>服务器收到连接释放报文段后即发出确认，服务器进入CLOSE-WAIT状态。此时服务器若发送数据，客户机仍要接受。客户机收到来自服务器的确认后，进入FIN-WAIT-2状态(ACK=1,seq=v,ack=u+1)</p>
+</li>
+<li>
+<p>若服务器已经没有要向客户机发送的数据，就通知TCP释放连接，服务器进入LAST-ACK状态(FIN=1,ACK=1,seq=w,ack=u+1)</p>
+</li>
+<li>
+<p>客户机收到连接释放报文段后，必须发出确认，之后进入TIME-WAIT状态。服务器收到确认报文后进入CLOSED状态，客户机进入TIME-WAIT状态，等待2MSL后才进入CLOSED状态(ACK=1,seq=u+1,ack=w+1)</p>
+<blockquote>
+<p>MSL：最长报文段寿命</p>
+<p>若服务器收到连接释放请求后不再发送数据，则从客户机发出FIN报文段时刻算起，客户机释放连接的最短时间为RTT+2MSL，服务器释放连接的最短时间为1.5RTT</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+<h3>TCP可靠传输</h3>
+<ol>
+<li>TCP使用了检验、序号、确认和重传等机制来达到这一目的</li>
+<li>序号：
+<ul>
+<li>TCP首部的序号字段用来保证数据能有序提交给应用层，TCP把数据视为一个无结构但有序的字节流，序号建立在传送的字节流之上，而不建立在报文段上</li>
+</ul>
+</li>
+<li>确认：
+<ul>
+<li>TCP首部的确认号是期望收到对方的下一个报文段的数据的第一个字节的序号</li>
+<li>TCP使用累积确认，即TCP只确认数据流中至第一个丢失字节为止的字节</li>
+</ul>
+</li>
+<li>重传：有两种事件会导致TCP对报文段进行重传
+<ul>
+<li>超时
+<ul>
+<li>TCP每发送一个报文段，就对报文段设置一个超时计时器。计时器设置的重传时间到期还没收到确认时，就要重传这一报文段</li>
+<li>TCP采用自适应算法，记录一个报文段的往返时间RTT。TCP维护了RTT的一个加权平均往返时间RTTS，会随着RTT样本是变化而改变。</li>
+</ul>
+</li>
+<li>冗余ACK
+<ul>
+<li>冗余ACK就是再次确认某个报文段的ACK，而发送方先前已经收到过该报文的确认</li>
+<li>TCP规定每当比期望序号大的失序报文到达时，就发送一个冗余ACK，指明期待字节的序号</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>TCP流量控制</h3>
+<ol>
+<li>TCP要求发送方维持一个接收窗口(rwnd)，接收方根据当前接受缓存的大小，动态调整接收窗口的大小，反映了接收方的容量</li>
+<li>接收方将窗口大小放在TCP报文首部中的窗口字段以通知对方。发送方的发送窗口不能超过接收方给出的接收窗口值，以限制发送方向网络注入报文的速率</li>
+<li>TCP为每个连接设有一个持续计时器，只要发送方收到对方的零窗口通知，就启动计时器。若计时器超市，就发送一个零窗口探测报文段，而对方就在确认这个探测报文段时给出现在的窗口值。若窗口值仍为零，则发送方收到报文段后重置计时器</li>
+<li>传输层和数据链路层的流量控制的区别：
+<ul>
+<li>传输层实现的是端到端，即两个进程之间的流量控制，窗口大小能动态变化</li>
+<li>数据链路层实现的是两个中间相邻结点之间的流量控制，窗口大小不能动态变化</li>
+</ul>
+</li>
+</ol>
+<h3>TCP拥塞控制</h3>
+<ol>
+<li>拥塞控制是指防止过多的数据诸如网络，保证网络中的路由器或链路不过载</li>
+<li>拥塞控制与流量控制的区别：
+<ul>
+<li>拥塞控制是让网络能够承受现有的网络负荷，是一个全局性的过程，涉及所有的主机、路由器，以及与降低网络传输性有关的所有因素</li>
+<li>流量控制指点对点的通信量的控制，要做的是抑制发送端发送数据的速率，以便使接收端来得及接收</li>
+</ul>
+</li>
+<li>TCP进行拥塞控制的算法：慢开始、拥塞避免、快重传、快恢复</li>
+<li>TCP要求发送方维持一个拥塞窗口(cwnd)，其大小取决于网络的用色成都，并且动态地变化。发送方控制拥塞窗口的原则：只要未出现拥塞，拥塞窗口就增大；只要网络出现拥塞，拥塞窗口就减小</li>
+<li>发送窗口的上限=min(rwnd, cwnd)</li>
+<li>慢开始算法
+<ul>
+<li>当发送方刚开始发送数据时，先发送少量数据探测，若没有发生拥塞，则将拥塞窗口扩大一倍</li>
+<li>为了防止cwnd增长过大引起网络拥塞，还要设置一个慢开始门限ssthresh。当慢开始一直把cwnd增大到ssthresh时，改用拥塞避免算法</li>
+<li>若2cwnd&gt;ssthresh，则下一个RTT后的cwnd为ssthresh，而非2cwnd</li>
+</ul>
+</li>
+<li>拥塞避免算法
+<ul>
+<li>每经过一个往返时延RTT就把发送方的拥塞窗口cwnd+1，而非加倍，使cwnd按现行规律缓慢增大</li>
+<li>根据cwnd的大小执行不同的算法：
+<ul>
+<li>cwnd&lt;ssthresh：慢开始算法</li>
+<li>cwnd&gt;ssthresh：拥塞避免算法</li>
+<li>cwnd=ssthresh：慢开始算法/拥塞避免算法</li>
+</ul>
+</li>
+<li>网络拥塞的处理：无论是在慢开始阶段还是拥塞避免阶段，只要发送方判断出网络出现拥塞，就要首先把ssthresh设置为cwnd/2，然后设置cwnd=1，执行慢开始算法</li>
+</ul>
+</li>
+<li>快重传算法
+<ul>
+<li>使发送方尽快进行重传，而不等计时器超时再重传。要求接收方不要等待自己发送数据时才进行稍待确认，而要立即发送确认，即使收到了失序的报文段也要立即发出对已收到报文段的重复确认</li>
+<li>发送方一旦受到连续3个冗余ACK，就要立即重传相应的报文段</li>
+</ul>
+</li>
+<li>快恢复算法
+<ul>
+<li>当发送方收到3个冗余ACK时，把ssthresh设置为cwnd/2，且把cwnd设置为cwnd/2，然后执行拥塞避免算法，使窗口线性增大</li>
+</ul>
+</li>
+<li>TCP连接建立和网络出现超时时，采用慢开始和拥塞避免算法(ssthresh=cwnd/2, cwnd=1)；当发送方收到3个连续冗余ACK帧时，采用快重传和快恢复算法(ssthresh=cwnd/2, cwnd=ssthresh)</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://wlkla.github.io/onebuaaer.github.io">我在人世间踽踽独行</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/02/2024"!=""){
+    var startSite=new Date("09/02/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","wlkla/onebuaaer.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
