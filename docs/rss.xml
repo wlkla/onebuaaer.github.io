@@ -1,5 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 14:28:49 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>中央处理器</title><link>https://wlkla.github.io/onebuaaer.github.io/post/zhong-yang-chu-li-qi.html</link><description># 第五章：中央处理器&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 14:29:29 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>总线</title><link>https://wlkla.github.io/onebuaaer.github.io/post/zong-xian.html</link><description># 第六章：总线&#13;
+&#13;
+## 总线概述&#13;
+&#13;
+### 总线基本概念&#13;
+&#13;
+1. 总线：&#13;
+&#13;
+   - 定义：一组能为多个部件分时和共享的公共信息传送线路&#13;
+&#13;
+   - 特点：分时和共享&#13;
+&#13;
+     分时：同一时刻只允许有一个部件向总线发送消息。</description><guid isPermaLink="true">https://wlkla.github.io/onebuaaer.github.io/post/zong-xian.html</guid><pubDate>Mon, 02 Sep 2024 14:29:00 +0000</pubDate></item><item><title>中央处理器</title><link>https://wlkla.github.io/onebuaaer.github.io/post/zhong-yang-chu-li-qi.html</link><description># 第五章：中央处理器&#13;
 &#13;
 ## CPU的功能和基本结构&#13;
 &#13;
