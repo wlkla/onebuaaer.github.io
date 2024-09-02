@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 13:41:32 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>输入输出管理</title><link>https://wlkla.github.io/onebuaaer.github.io/post/shu-ru-shu-chu-guan-li.html</link><description># 输入输出管理&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 13:42:56 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>输入输出管理</title><link>https://wlkla.github.io/onebuaaer.github.io/post/shu-ru-shu-chu-guan-li.html</link><description># 输入输出管理&#13;
 &#13;
 ## I/O管理概述&#13;
 &#13;
@@ -15,9 +15,9 @@
 &#13;
 1. 文件：以硬盘为载体的存储在计算机上的信息集合&#13;
 &#13;
-2. 在系统运行时，计算机以进程为基本单位进行资源的调度与分配&#13;
+2. 在系统运行时计算机以进程为基本单位进行资源的调度与分配&#13;
 &#13;
-3. 在用户进行的输入、输出中，以文件为基本单位&#13;
+3. 在用户进行的输入输出中，以文件为基本单位&#13;
 &#13;
 4. 文件的组成：&#13;
 &#13;
