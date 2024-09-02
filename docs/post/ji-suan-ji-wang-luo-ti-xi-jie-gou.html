@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 计算机网络体系结构
+
+## 计算机网络概述
+
+### 计算机网络的概念
+
+1. 计算机网络由若干结点和连接这些结点的链路组成
+2. 网络之间通过路由器互连，构成一个覆盖范围更广的计算机网络
+
+### 计算机网络的组成
+
+```mermaid
+graph TB
+	A(计算机网络组成的分类)-->B(组成部分)
+	A-->C(工作方式)
+	A-->D(功能组成)
+	B-->E(硬件)
+	B-->F(软件)
+	B-->G(协议)
+	C-->H(边缘部分)
+	C-->I(核心部分)
+	D-->J(通信子网)
+	D-->K(资源子网)
+```
+
+### 计算机网络的功能
+
+1. 数据通信：最基本最重要的功能
+2. 资源共享
+3. 分布式处理：当计算机网络中某个计算机负载过重时，可将其处理的某个复杂任务分配给网络中的其他计算机系统，从而提高整个系统的利用率
+4. 提高可靠性：计算机网络中的各台计算机可以通过网络互为替代机
+5. 负载均衡：将工作任务均衡地分配给计算机网络中的各台计算机
+
+### 电路交换、报文交换与分组交换
+
+1. 电路交换
+
+   ```mermaid
+   graph LR
+   	A(连接建立)-->B(数据传输)-->C(连接释放)
+   ```
+
+   - 优点：
+     - 通信时延小：线路专用，数据直达
+     - 有序传输：双方通信按发送顺序传送数据，不存在失序问题
+     - 没有冲突：不同的通信双方拥有不同的信道
+     - 适用范围广：既适用于传输模拟信号，又适用于传输数字信号
+     - 实时性强：通路一旦建立，即可实时通信
+     - 控制简单
+   - 缺点：
+     - 建立连接时间长
+     - 线路利用率低
+     - 灵活性差
+     - 难以规格化
+     - 难以实现差错控制
+
+2. 报文交换
+
+   - 数据交换的单位是报文，用户数据加上源地址、目的地址等信息后，封装成报文
+   - 报文交换采用存储转发技术，整个报文先传送至相邻的结点，全部存储后查找转发表，转发到下一结点，重复操作，直到到达目的结点
+   - 优点：
+     - 无需建立连接
+     - 动态分配线路
+     - 线路可靠性高
+     - 线路利用率高
+     - 提供多目标服务
+   - 缺点：
+     - 转发时延高：交换结点接受完整报文后才转发给下一结点
+     - 缓存开销大
+     - 错误处理低效
+
+3. 分组交换
+
+   - 源结点在发送之前，先把较长的报文划分成若干个较小的等长数据段，在每个数据段前面添加一些由必要控制信息组成的首部，构成分组
+   - 源结点将分组发送到分组交换网中，分组交换机接收到一个分组后，先将其缓存，然后从首部提取目的地址并查找转发表，将分组转发给下一个分组交换机……并最终到达目的结点
+   - 优点：
+     - 无建立时延
+     - 线路利用率高
+     - 简化了存储管理
+     - 加速传输
+     - 减少了出错概率和重发数据量
+   - 缺点：
+     - 存在存储转发时延
+     - 需要传输额外的信息量
+     - 可能出现失序、丢失或重复分组的情况
+
+### 计算机网络的分类
+
+```mermaid
+graph LR
+	A(计算机网络的分类)
+	A-->B(按分布范围分类)
+	A-->C(按传输技术分类)
+	A-->D(按拓扑结构分类)
+	A-->E(按使用者分类)
+	A-->F(按传输介质分类)
+	B-->G(广域网WAN)
+	B-->H(城域网MAN)
+	B-->I(居域网LAN)
+	B-->J(个人区域网PAN)
+	C-->K(广播式网络)
+	C-->L(点对点网络)
+	D-->M(总线形网络)
+	D-->N(星形网络)
+	D-->O(环形网络)
+	D-->P(网状网络)
+	E-->Q(公用网)
+	E-->R(专用网)
+	F-->S(有线网络)
+	F-->T(无线网络)
+```
+
+
+
+### 计算机网络的性能指标
+
+1. 速率：指连接到网络上的结点在数字信道上传送数据的速率，也称数据传输速率/数据传输率/数据率/比特率，单位为：b/s或bit/s
+2. 带宽：表示网络的通信线路所能传送数据的能力，是数字信道所能传送到的最大数据传输速率，单位是bit/s
+3. 吞吐量：指单位时间内通过某个网络的实际数据量
+4. 时延：指数据从网络的一端传送到另一端所需要的总时间，总时延=发送时延+传播时延+处理时延+排队时延
+   - 发送时延：结点将分组的所有比特推向链路所需要的时间；发送时延=分组长度/发送速率
+   - 传播时延：一个比特从链路的一段传播到另一端所需的时间；传播时延=信道长度/电磁波传播速率
+   - 处理时延：数据在交换结点为存储转发而进行的一些必要处理所花的时间
+   - 排队时延：分组在进入路由器后要现在输入队列中排队等待处理；路由器确定转发端口后，还要在输出队列中排队等待转发
+5. 时延带宽积：指发送端发送的第一个比特即将到达终点时，发送端已发出了多少比特；时延带宽积=传播时延$\times$信道带宽
+6. 往返时延RTT：指从发送端发出一个短分组，到发送端收到来自接收端的确认共经历的时延
+7. 信道利用率：指某个信道有数据通过的时间占比；信道利用率=有数据通过的时间/总时间
+
+### 错题
+
+1. 计算机网络可分为通信子网和资源子网。">
+<meta property="og:title" content="计算机网络体系结构">
+<meta property="og:description" content="# 计算机网络体系结构
+
+## 计算机网络概述
+
+### 计算机网络的概念
+
+1. 计算机网络由若干结点和连接这些结点的链路组成
+2. 网络之间通过路由器互连，构成一个覆盖范围更广的计算机网络
+
+### 计算机网络的组成
+
+```mermaid
+graph TB
+	A(计算机网络组成的分类)-->B(组成部分)
+	A-->C(工作方式)
+	A-->D(功能组成)
+	B-->E(硬件)
+	B-->F(软件)
+	B-->G(协议)
+	C-->H(边缘部分)
+	C-->I(核心部分)
+	D-->J(通信子网)
+	D-->K(资源子网)
+```
+
+### 计算机网络的功能
+
+1. 数据通信：最基本最重要的功能
+2. 资源共享
+3. 分布式处理：当计算机网络中某个计算机负载过重时，可将其处理的某个复杂任务分配给网络中的其他计算机系统，从而提高整个系统的利用率
+4. 提高可靠性：计算机网络中的各台计算机可以通过网络互为替代机
+5. 负载均衡：将工作任务均衡地分配给计算机网络中的各台计算机
+
+### 电路交换、报文交换与分组交换
+
+1. 电路交换
+
+   ```mermaid
+   graph LR
+   	A(连接建立)-->B(数据传输)-->C(连接释放)
+   ```
+
+   - 优点：
+     - 通信时延小：线路专用，数据直达
+     - 有序传输：双方通信按发送顺序传送数据，不存在失序问题
+     - 没有冲突：不同的通信双方拥有不同的信道
+     - 适用范围广：既适用于传输模拟信号，又适用于传输数字信号
+     - 实时性强：通路一旦建立，即可实时通信
+     - 控制简单
+   - 缺点：
+     - 建立连接时间长
+     - 线路利用率低
+     - 灵活性差
+     - 难以规格化
+     - 难以实现差错控制
+
+2. 报文交换
+
+   - 数据交换的单位是报文，用户数据加上源地址、目的地址等信息后，封装成报文
+   - 报文交换采用存储转发技术，整个报文先传送至相邻的结点，全部存储后查找转发表，转发到下一结点，重复操作，直到到达目的结点
+   - 优点：
+     - 无需建立连接
+     - 动态分配线路
+     - 线路可靠性高
+     - 线路利用率高
+     - 提供多目标服务
+   - 缺点：
+     - 转发时延高：交换结点接受完整报文后才转发给下一结点
+     - 缓存开销大
+     - 错误处理低效
+
+3. 分组交换
+
+   - 源结点在发送之前，先把较长的报文划分成若干个较小的等长数据段，在每个数据段前面添加一些由必要控制信息组成的首部，构成分组
+   - 源结点将分组发送到分组交换网中，分组交换机接收到一个分组后，先将其缓存，然后从首部提取目的地址并查找转发表，将分组转发给下一个分组交换机……并最终到达目的结点
+   - 优点：
+     - 无建立时延
+     - 线路利用率高
+     - 简化了存储管理
+     - 加速传输
+     - 减少了出错概率和重发数据量
+   - 缺点：
+     - 存在存储转发时延
+     - 需要传输额外的信息量
+     - 可能出现失序、丢失或重复分组的情况
+
+### 计算机网络的分类
+
+```mermaid
+graph LR
+	A(计算机网络的分类)
+	A-->B(按分布范围分类)
+	A-->C(按传输技术分类)
+	A-->D(按拓扑结构分类)
+	A-->E(按使用者分类)
+	A-->F(按传输介质分类)
+	B-->G(广域网WAN)
+	B-->H(城域网MAN)
+	B-->I(居域网LAN)
+	B-->J(个人区域网PAN)
+	C-->K(广播式网络)
+	C-->L(点对点网络)
+	D-->M(总线形网络)
+	D-->N(星形网络)
+	D-->O(环形网络)
+	D-->P(网状网络)
+	E-->Q(公用网)
+	E-->R(专用网)
+	F-->S(有线网络)
+	F-->T(无线网络)
+```
+
+
+
+### 计算机网络的性能指标
+
+1. 速率：指连接到网络上的结点在数字信道上传送数据的速率，也称数据传输速率/数据传输率/数据率/比特率，单位为：b/s或bit/s
+2. 带宽：表示网络的通信线路所能传送数据的能力，是数字信道所能传送到的最大数据传输速率，单位是bit/s
+3. 吞吐量：指单位时间内通过某个网络的实际数据量
+4. 时延：指数据从网络的一端传送到另一端所需要的总时间，总时延=发送时延+传播时延+处理时延+排队时延
+   - 发送时延：结点将分组的所有比特推向链路所需要的时间；发送时延=分组长度/发送速率
+   - 传播时延：一个比特从链路的一段传播到另一端所需的时间；传播时延=信道长度/电磁波传播速率
+   - 处理时延：数据在交换结点为存储转发而进行的一些必要处理所花的时间
+   - 排队时延：分组在进入路由器后要现在输入队列中排队等待处理；路由器确定转发端口后，还要在输出队列中排队等待转发
+5. 时延带宽积：指发送端发送的第一个比特即将到达终点时，发送端已发出了多少比特；时延带宽积=传播时延$\times$信道带宽
+6. 往返时延RTT：指从发送端发出一个短分组，到发送端收到来自接收端的确认共经历的时延
+7. 信道利用率：指某个信道有数据通过的时间占比；信道利用率=有数据通过的时间/总时间
+
+### 错题
+
+1. 计算机网络可分为通信子网和资源子网。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wlkla.github.io/onebuaaer.github.io/post/ji-suan-ji-wang-luo-ti-xi-jie-gou.html">
+<meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
+<title>计算机网络体系结构</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">计算机网络体系结构</h1>
+<div class="title-right">
+    <a href="https://wlkla.github.io/onebuaaer.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/wlkla/onebuaaer.github.io/issues/7" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>计算机网络体系结构</h1>
+<h2>计算机网络概述</h2>
+<h3>计算机网络的概念</h3>
+<ol>
+<li>计算机网络由若干结点和连接这些结点的链路组成</li>
+<li>网络之间通过路由器互连，构成一个覆盖范围更广的计算机网络</li>
+</ol>
+<h3>计算机网络的组成</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TB</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>计算机网络组成的分类<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>组成部分<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>工作方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>功能组成<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>硬件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>软件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>协议<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>边缘部分<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>核心部分<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>通信子网<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>资源子网<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+<h3>计算机网络的功能</h3>
+<ol>
+<li>数据通信：最基本最重要的功能</li>
+<li>资源共享</li>
+<li>分布式处理：当计算机网络中某个计算机负载过重时，可将其处理的某个复杂任务分配给网络中的其他计算机系统，从而提高整个系统的利用率</li>
+<li>提高可靠性：计算机网络中的各台计算机可以通过网络互为替代机</li>
+<li>负载均衡：将工作任务均衡地分配给计算机网络中的各台计算机</li>
+</ol>
+<h3>电路交换、报文交换与分组交换</h3>
+<ol>
+<li>
+<p>电路交换</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>连接建立<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>数据传输<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>连接释放<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+<ul>
+<li>优点：
+<ul>
+<li>通信时延小：线路专用，数据直达</li>
+<li>有序传输：双方通信按发送顺序传送数据，不存在失序问题</li>
+<li>没有冲突：不同的通信双方拥有不同的信道</li>
+<li>适用范围广：既适用于传输模拟信号，又适用于传输数字信号</li>
+<li>实时性强：通路一旦建立，即可实时通信</li>
+<li>控制简单</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>建立连接时间长</li>
+<li>线路利用率低</li>
+<li>灵活性差</li>
+<li>难以规格化</li>
+<li>难以实现差错控制</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>报文交换</p>
+<ul>
+<li>数据交换的单位是报文，用户数据加上源地址、目的地址等信息后，封装成报文</li>
+<li>报文交换采用存储转发技术，整个报文先传送至相邻的结点，全部存储后查找转发表，转发到下一结点，重复操作，直到到达目的结点</li>
+<li>优点：
+<ul>
+<li>无需建立连接</li>
+<li>动态分配线路</li>
+<li>线路可靠性高</li>
+<li>线路利用率高</li>
+<li>提供多目标服务</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>转发时延高：交换结点接受完整报文后才转发给下一结点</li>
+<li>缓存开销大</li>
+<li>错误处理低效</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>分组交换</p>
+<ul>
+<li>源结点在发送之前，先把较长的报文划分成若干个较小的等长数据段，在每个数据段前面添加一些由必要控制信息组成的首部，构成分组</li>
+<li>源结点将分组发送到分组交换网中，分组交换机接收到一个分组后，先将其缓存，然后从首部提取目的地址并查找转发表，将分组转发给下一个分组交换机……并最终到达目的结点</li>
+<li>优点：
+<ul>
+<li>无建立时延</li>
+<li>线路利用率高</li>
+<li>简化了存储管理</li>
+<li>加速传输</li>
+<li>减少了出错概率和重发数据量</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>存在存储转发时延</li>
+<li>需要传输额外的信息量</li>
+<li>可能出现失序、丢失或重复分组的情况</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>计算机网络的分类</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>计算机网络的分类<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>按分布范围分类<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>按传输技术分类<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>按拓扑结构分类<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>按使用者分类<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>按传输介质分类<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>广域网WAN<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>城域网MAN<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>居域网LAN<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>个人区域网PAN<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>广播式网络<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">L</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>点对点网络<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">M</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>总线形网络<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">N</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>星形网络<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">O</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>环形网络<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">P</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>网状网络<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">Q</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>公用网<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">R</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>专用网<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-k">--&gt;</span><span class="pl-ent">S</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>有线网络<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-k">--&gt;</span><span class="pl-ent">T</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>无线网络<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+<h3>计算机网络的性能指标</h3>
+<ol>
+<li>速率：指连接到网络上的结点在数字信道上传送数据的速率，也称数据传输速率/数据传输率/数据率/比特率，单位为：b/s或bit/s</li>
+<li>带宽：表示网络的通信线路所能传送数据的能力，是数字信道所能传送到的最大数据传输速率，单位是bit/s</li>
+<li>吞吐量：指单位时间内通过某个网络的实际数据量</li>
+<li>时延：指数据从网络的一端传送到另一端所需要的总时间，总时延=发送时延+传播时延+处理时延+排队时延
+<ul>
+<li>发送时延：结点将分组的所有比特推向链路所需要的时间；发送时延=分组长度/发送速率</li>
+<li>传播时延：一个比特从链路的一段传播到另一端所需的时间；传播时延=信道长度/电磁波传播速率</li>
+<li>处理时延：数据在交换结点为存储转发而进行的一些必要处理所花的时间</li>
+<li>排队时延：分组在进入路由器后要现在输入队列中排队等待处理；路由器确定转发端口后，还要在输出队列中排队等待转发</li>
+</ul>
+</li>
+<li>时延带宽积：指发送端发送的第一个比特即将到达终点时，发送端已发出了多少比特；时延带宽积=传播时延$\times$信道带宽</li>
+<li>往返时延RTT：指从发送端发出一个短分组，到发送端收到来自接收端的确认共经历的时延</li>
+<li>信道利用率：指某个信道有数据通过的时间占比；信道利用率=有数据通过的时间/总时间</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>计算机网络可分为通信子网和资源子网。下列属于通信子网的是(  )</p>
+<p>A. 网桥、交换机、路由器</p>
+<p>B. 交换机、计算机软件、路由器</p>
+<p>C. 网桥、计算机软件、路由器</p>
+<p>D. 网桥、交换机、计算机软件</p>
+</li>
+<li>
+<p>分组交换对报文交换的主要改进是传输单位更小且有固定的最大长度，这种改进产生的直接结果是(  )</p>
+<p>A. 降低了误码率</p>
+<p>B. 提高了数据传输速率</p>
+<p>C. 减少了传输时延</p>
+<p>D. 增加了传输时延</p>
+</li>
+<li>
+<p>计算机网络拓扑结构主要取决于它的(  )</p>
+<p>A. 资源子网</p>
+<p>B. 路由器</p>
+<p>C. 通信子网</p>
+<p>D. 交换机</p>
+</li>
+</ol>
+<h2>计算机网络体系结构与参考模型</h2>
+<h3>计算机网络分层协议</h3>
+<ol>
+<li>网络的体系结构：计算机网络的各层及其协议的集合</li>
+<li>在计算机网络分层结构中，第n层中的活动元素通常称为第n层实体</li>
+<li>不同机器上的同一层称为对等层，同一层的实体称为对等实体</li>
+<li>对等层之间传递的数据单位称为该层的协议数据单元(PDU)，第n层的PDU记为n-PDU。各层PDU都分为数据和控制信息两部分</li>
+<li>为完成用户所需要的功能而传送的数据称为服务数据单元SDU，第n层的SDU记为n-SDU</li>
+<li>控制协议操作的信息称为协议控制信息PCI，第n层的PCI记为n-PCI</li>
+<li>当在各层之间传输数据时，将(n+1)-PDU作为n-SDU，加上n-PCI，就封装成了n-PDU/(n-1)-SDU</li>
+</ol>
+<h3>计算机网络协议、接口、服务的概念</h3>
+<ol>
+<li>
+<p>协议</p>
+<ul>
+<li>为了在网络中进行数据交换而建立的规则、标准或约定称为网络协议，是控制在对等实体之间进行通信的规则的集合</li>
+<li>协议的组成：</li>
+</ul>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>协议<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>语法<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>数据与控制信息的格式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>语义<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>需要发出何种控制信息、完成何种动作及做出何种应答<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>同步<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>执行各种操作的条件、时序关系等，及时间实现顺序的详细说明<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+<li>
+<p>接口：同一结点内相邻两层的实体交换信息的逻辑接口称为服务访问点。每层只能为紧邻的层定义接口，不能跨层定义接口</p>
+</li>
+<li>
+<p>服务：下层为紧邻的上层提供的功能调用。当上层使用下层提供的服务时，必须与下层交换一些命令，这些命令称为服务原语：</p>
+<ul>
+<li>请求：由服务用户发往服务提供者，请求完成某项工作</li>
+<li>指示：由服务提供者发往服务用户，指示用户完成某件事情</li>
+<li>响应：由服务用户发往服务提供者，作为对指示的响应</li>
+<li>证实：由服务提供者发往服务用户，作为对请求的证实</li>
+</ul>
+</li>
+<li>
+<p>计算机网络提供的服务有以下几类：</p>
+<ul>
+<li>面向连接服务和无连接服务
+<ul>
+<li>在面向连接服务中，铜锌铅双方必须先建立连接，分配相应的资源，以保证通信能正常进行，传输结束后释放连接和占用的资源</li>
+<li>在无连接服务中，通信双方不需要先建立连接，需要发送数据时直接发送，将每个带有目的地址的包传送到线路上，由系统选定路线进行传输</li>
+</ul>
+</li>
+<li>可靠服务和不可靠服务
+<ul>
+<li>可靠服务是指网络具有纠错、检错、应答机制，能保证数据正确、可靠地被传送到目的地</li>
+<li>不可靠服务是指网络只是尽量让数据正确、可靠地传送到目的地，是一种尽力而为的服务</li>
+</ul>
+</li>
+<li>有应答服务和无应答服务
+<ul>
+<li>有应答服务是指接收方在收到数据后向发送方给出相应的应答，该应答由传输系统内部自动实现，而不由用户实现</li>
+<li>无应答服务是指接收方收到数据后不自动给出应答</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>ISO/OSI参考模型和TCP/IP模型</h3>
+<ol>
+<li>OSI参考模型有七层，自下而上依次为物理层、数据链路层、网络层、传输层、会话层、表示层、应用层。低三层称为通信子网，完成数据的传输等功能；高三层称为资源子网，完成数据的处理等功能
+<ul>
+<li>物理层：传输单位是比特，功能是物理介质上为数据段设备透明地传输原始比特流。物理层主要定义数据终端设备DTE和数据通信设备DCE的物理与逻辑连接方法</li>
+<li>数据链路层：传输单位是帧。将网络层传来的IP分组封装成帧，并且可靠地传输到相邻结点的网络层。主要作用是加强物理层传输原始比特流的功能，将物理层提供的可能出错的物理连接改造成逻辑上无差错的数据链路，使之对网络层表现为一条无差错的链路</li>
+<li>网络层：传输单位是数据报。将网络层的协议数据单元从源结点传输到目的结点，为分组交换网上的不同主机提供分组服务。需要实现流量控制、拥塞控制、差错控制和网际互连等功能</li>
+<li>传输层：负责主机中两个进程之间的通信，功能是为端到端的连接提供可靠的传输服务，即为端到端连接提供流量控制、差错控制、服务质量、数据传输管理等服务。因为一台主机可同时运行多个进程，所以传输层具有复用和分用的功能。复用是指多个应用层进程可同时使用下层传输层的服务，分用是指传输层将收到的信息分别交付给上层应用层中相应的进程</li>
+<li>会话层：允许不同主机各个进程之间进行会话。主要为表示层实体或用户进程建立连接，并在连接上有序地传输数据，这就是会话/建立同步。会话层负责管理主机间的会化进程，包括建立、管理和终止进程间的会话。</li>
+<li>表示层：主要处理在两个通信系统中交换信息的表示方式</li>
+<li>应用层：OSI参考模型的最高层，是用户与网络的接口</li>
+</ul>
+</li>
+<li>TCP/IP模型从低到高依次为网络接口层、网际层、传输层和应用层
+<ul>
+<li>网络接口层：类似OSI参考模型的物理层和数据链路层。作用是从主机或结点接收IP分组，并将它们发送到指定的物理网络上</li>
+<li>网际层：类似于OSI参考模型的网络层。将分组发往任何网络，并为其独立地选择合适的路由，但不保证各个分组有序地到达，各个分组的有序和可靠交付给高层负责</li>
+<li>传输层：类似于OSI参考模型的传输层。主要使用以下两种协议：
+<ul>
+<li>传输控制协议TCP：是面向连接的，传输数据之前必须先建立连接，能够提供可靠的交付。传输单位是报文段</li>
+<li>用户数据报协议UDP：是无连接的，不保证提供可靠的交付。传输单位是用户数据报</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>OSI参考模型与TCP/IP模型的比较：
+<ul>
+<li>OSI参考模型在网络层支持无连接和面向连接的通信，但在传输层仅有面向连接的通信。但TCP/IP模型在网际层仅有一种无连接的通信模式，但传输层支持无连接和面向连接两种模式</li>
+<li>……(不重要)</li>
+</ul>
+</li>
+</ol>
+<h2>错题</h2>
+<ol>
+<li>
+<p>TCP通信双方通过手“三报文握”建立连接，这属于网络协议三要素中的(  )</p>
+<p>A. 语义</p>
+<p>B. 失序</p>
+<p>C. 服务</p>
+<p>D. 语法</p>
+</li>
+<li>
+<p>OSI参考模型中的数据链路层不具有(  )功能</p>
+<p>A. 物理寻址</p>
+<p>B. 流量控制</p>
+<p>C. 差错检验</p>
+<p>D. 拥塞控制</p>
+</li>
+<li>
+<p>在OSI参考模型中，路由器、交换机、集线器实现的最高功能层分别是(  )</p>
+<p>A. 2、2、1</p>
+<p>B. 2、2、2</p>
+<p>C. 3、2、1</p>
+<p>D. 3、2、2</p>
+</li>
+<li>
+<p>在TCP/IP参考模型中，由传输层相邻的下一层实现的主要功能是(  )</p>
+<p>A. 对话管理</p>
+<p>B. 路由选择</p>
+<p>C. 端到端报文段传输</p>
+<p>D. 结点到结点流量控制</p>
+</li>
+<li>
+<p>在ISO/OSI参考模型中，实现两个相邻结点间流量控制功能的是(  )</p>
+<p>A. 物理层</p>
+<p>B. 数据链路层</p>
+<p>C. 网络层</p>
+<p>D. 传输层</p>
+</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://wlkla.github.io/onebuaaer.github.io">我在人世间踽踽独行</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/02/2024"!=""){
+    var startSite=new Date("09/02/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","wlkla/onebuaaer.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
