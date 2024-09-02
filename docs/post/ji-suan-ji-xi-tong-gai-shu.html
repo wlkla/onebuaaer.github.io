@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 计算机系统概述
+
+## 操作系统的基本概念
+
+### 操作系统的概念
+
+1. 计算机系统自上而下可以大致分为四部分：
+
+   ```mermaid
+   graph BT
+   	A(硬件)
+   	B(操作系统)
+   	C(应用程序)
+   	D(用户)
+   	A<-->B
+   	B<-->C
+   	C<-->D
+   ```
+
+   - 硬件：提供基本的计算资源
+   - 应用程序：规定按何种方式使用这些资源来解决用户的计算问题
+   - 操作系统：控制和协调各用户的应用程序对硬件的分配和使用
+2. 操作系统：指控制和管理整个计算机系统的硬件和软件资源，合理地组织、调度计算机的工作与资源的分配，进而为用户和其他软件提供方便接口和环境的程序集合。">
+<meta property="og:title" content="计算机系统概述">
+<meta property="og:description" content="# 计算机系统概述
+
+## 操作系统的基本概念
+
+### 操作系统的概念
+
+1. 计算机系统自上而下可以大致分为四部分：
+
+   ```mermaid
+   graph BT
+   	A(硬件)
+   	B(操作系统)
+   	C(应用程序)
+   	D(用户)
+   	A<-->B
+   	B<-->C
+   	C<-->D
+   ```
+
+   - 硬件：提供基本的计算资源
+   - 应用程序：规定按何种方式使用这些资源来解决用户的计算问题
+   - 操作系统：控制和协调各用户的应用程序对硬件的分配和使用
+2. 操作系统：指控制和管理整个计算机系统的硬件和软件资源，合理地组织、调度计算机的工作与资源的分配，进而为用户和其他软件提供方便接口和环境的程序集合。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wlkla.github.io/onebuaaer.github.io/post/ji-suan-ji-xi-tong-gai-shu.html">
+<meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
+<title>计算机系统概述</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-important {border-left-color:var(--borderColor-done-emphasis, var(--color-done-emphasis));background-color:var(--color-done-subtle);}.markdown-alert.markdown-alert-important .markdown-alert-title {color: var(--fgColor-done,var(--color-done-fg));}</style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">计算机系统概述</h1>
+<div class="title-right">
+    <a href="https://wlkla.github.io/onebuaaer.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/wlkla/onebuaaer.github.io/issues/2" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>计算机系统概述</h1>
+<h2>操作系统的基本概念</h2>
+<h3>操作系统的概念</h3>
+<ol>
+<li>
+<p>计算机系统自上而下可以大致分为四部分：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">BT</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>硬件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>操作系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>应用程序<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>用户<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">&lt;--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">B</span><span class="pl-k">&lt;--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">C</span><span class="pl-k">&lt;--&gt;</span><span class="pl-ent">D</span></pre></div>
+<ul>
+<li>硬件：提供基本的计算资源</li>
+<li>应用程序：规定按何种方式使用这些资源来解决用户的计算问题</li>
+<li>操作系统：控制和协调各用户的应用程序对硬件的分配和使用</li>
+</ul>
+</li>
+<li>
+<p>操作系统：指控制和管理整个计算机系统的硬件和软件资源，合理地组织、调度计算机的工作与资源的分配，进而为用户和其他软件提供方便接口和环境的程序集合。</p>
+</li>
+<li>
+<p>系统调用又被称为广义指令。</p>
+</li>
+<li>
+<p>操作系统向上层提供的服务：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TD</span>
+    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>操作系统提供的服务<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>直接给用户使用的<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>给软件/程序员使用的<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>GUI<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>命令接口<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>联机命令接口<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>脱机命令接口<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>程序接口<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+    <span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+    <span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+    <span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+    <span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+    <span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+    <span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span></pre></div>
+</li>
+<li>
+<p>小节总结：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">mindmap</span>
+  <span class="pl-ent">操作系统</span>
+  	<span class="pl-ent">概念</span>
+  		<span class="pl-ent">负责管理协调硬件、软件等计算机资源的工作</span>
+  		<span class="pl-ent">为上层用户、应用程序提供简单易用的服务</span>
+  		<span class="pl-ent">是一种系统软件</span>
+  	<span class="pl-ent">功能和目标</span>
+  		<span class="pl-ent">资源的管理者</span>
+  			<span class="pl-ent">处理机管理</span>
+  			<span class="pl-ent">存储器管理</span>
+  			<span class="pl-ent">文件管理</span>
+  			<span class="pl-ent">设备管理</span>
+  		<span class="pl-ent">向上层提供服务</span>
+  			<span class="pl-ent">给普通用户</span>
+  				<span class="pl-ent">GUI</span>
+  				<span class="pl-ent">命令接口</span>
+  					<span class="pl-ent">联机命令接口</span>
+  					<span class="pl-ent">脱机命令接口</span>
+  			<span class="pl-ent">给软件/程序员</span>
+  				<span class="pl-ent">程序接口</span>
+  		<span class="pl-ent">对硬件机器的扩展</span>
+  			<span class="pl-ent">扩充机器</span></pre></div>
+</li>
+</ol>
+<h3>操作系统的特征</h3>
+<ol>
+<li>操作系统的基本特征包括并发、共享、虚拟和异步。</li>
+<li>并发：
+<ul>
+<li>指两个或多个事件在同一时间间隔内发生。</li>
+<li>并行性：系统具有同时进行运算或操作的特性，在同一时刻能完成两种或以上的工作。</li>
+<li>操作系统的并发性是通过分时实现的。</li>
+</ul>
+</li>
+<li>共享：
+<ul>
+<li>系统中的资源可供内存中多个并发执行的进程共同使用。</li>
+<li>资源共享的两种方式：
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>两种资源共享方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>互斥共享方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>同时共享方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span></pre></div>
+</li>
+</ul>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>并发和共享是操作系统两个<strong>最基本</strong>的特征，两者之间互为存在条件：</p>
+<ul>
+<li>资源共享是以程序的并发为条件，若系统不允许程序并发执行，则自然不存在资源共享问题</li>
+<li>若系统不能对资源共享实施有效的管理，则必将影响程序的并发执行，甚至根本无法并发执行</li>
+</ul>
+</div>
+<ol start="4">
+<li>
+<p>虚拟：</p>
+<ul>
+<li>
+<p>指将一个物理上的实体变为若干逻辑上的对应物。</p>
+</li>
+<li>
+<p>操作系统的虚拟技术：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>虚拟技术<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>时分复用技术<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>空分复用技术<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>利用多道程序设计技术将一个物理上的CPU虚拟为多个逻辑上的CPU<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将一台机器的物理存储器变为虚拟存储器，以便从逻辑上扩充存储器的容量<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">C</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">E</span></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>异步：</p>
+<ul>
+<li>多道程序环境允许多个程序并发执行，但由于资源有限，进程的执行并不是一贯到底的，它以不可预知的速度向前推进</li>
+</ul>
+</li>
+<li>
+<p>小节总结：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">mindmap</span>
+	<span class="pl-ent">操作系统的特征</span>
+		<span class="pl-ent">并发</span>
+			<span class="pl-ent">✨并发与并行的区别</span>
+		<span class="pl-ent">共享</span>
+			<span class="pl-ent">互斥共享方式</span>
+			<span class="pl-ent">同时共享方式</span>
+		<span class="pl-ent">虚拟</span>
+			<span class="pl-ent">空分复用技术</span>
+			<span class="pl-ent">时分复用技术</span>
+		<span class="pl-ent">异步</span></pre></div>
+</li>
+</ol>
+<h3>操作系统的目标和功能</h3>
+<ol>
+<li>操作系统应具有以下几个方面的功能：
+<ul>
+<li>处理机管理
+<ul>
+<li>在多道程序环境下，处理机的分配和运行都以<strong>进程</strong>为基本单位，因而对处理机的管理可归结为对进程的管理</li>
+<li>进程管理的主要功能包括进程控制、进程同步、进程通信、死锁处理、处理机调度等</li>
+</ul>
+</li>
+<li>存储器管理
+<ul>
+<li>为了给多道程序的运行提供良好的环境，方便用户使用及提高内存的利用率</li>
+<li>主要包括内存分配与回收、地址映射、内存保护与共享、内存扩充等</li>
+</ul>
+</li>
+<li>文件管理
+<ul>
+<li>计算机中的信息都是以文件的形式存在的，操作系统中负责文件管理的部分称为文件系统</li>
+<li>文件管理包括文件存储空间的管理、目录管理及文件读写管理和保护等</li>
+</ul>
+</li>
+<li>设备管理
+<ul>
+<li>完成用户的I/O请求，方便用户使用各种设备并提高设备的利用率</li>
+<li>主要包括缓冲管理、设备分配、设备处理、虚拟设备等</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>操作系统提供的接口主要分为两类：
+<ul>
+<li>命令接口：按作业控制方式的不同，可将命令接口分为：
+<ul>
+<li>联机命令接口/交互式命令接口：适用于分时或实时系统的接口</li>
+<li>脱机命令接口/批处理命令接口：适用于批处理系统</li>
+</ul>
+</li>
+<li>程序接口
+<ul>
+<li>由一组系统调用组成</li>
+<li>用户通过在程序中使用这些系统调用来请求操作系统为其提供服务</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>没有任何软件支持的计算机称为裸机；将覆盖了软件的机器成为扩充机器或虚拟机。</li>
+</ol>
+<h2>操作系统发展历程</h2>
+<h3>手工操作阶段</h3>
+<ol>
+<li>主要缺点：
+<ul>
+<li>用户独占全机，资源利用率低</li>
+<li>CPU等待手工操作，CPU的利用不充分</li>
+</ul>
+</li>
+</ol>
+<h3>单道批处理阶段</h3>
+<ol>
+<li>主要特征：
+<ul>
+<li>自动性：磁带上的一批作业能自动地逐个运行，而无需人工干预</li>
+<li>顺序性：磁带上的各道作业顺序地进入内存，先调入内存的作业先完成</li>
+<li>单道性：内存中仅有一道程序运行</li>
+</ul>
+</li>
+<li>问题：每次主机内存中仅存放一道作业，每当它在运行期间发出输入/输出请求后，高速的CPU便处于等待低速的I/O完成的状态。</li>
+</ol>
+<h3>多道批处理系统</h3>
+<ol>
+<li>用户所提交的作业都先存放在外存上并排成一个队列，作业调度程序按一定的算法从后备队列中选择若干作业调入内存，它们在管理程序的控制线相互穿插地运行，共享系统中的各种硬/软件资源。</li>
+<li>多道批处理系统与操作系统一同诞生。</li>
+<li>特点：
+<ul>
+<li>多道：计算机内存中同时存放多道相互独立的程序</li>
+<li>宏观上并行：同时进入系统的多道程序都处于运行过程中，但都未运行完毕</li>
+<li>微观上串行：内存中的多道程序轮流占用CPU，交替执行</li>
+</ul>
+</li>
+<li>优缺点：
+<ul>
+<li>优点：资源利用率高，多道程序共享计算机资源，从而使各种资源得到充分利用；系统吞吐率大，CPU和其他资源保持忙碌状态</li>
+<li>缺点：用户响应的时间较长，不提供人机交互能力，用户既不能了解自己程序的运行状态，也不能控制计算机</li>
+</ul>
+</li>
+</ol>
+<h3>分时操作系统</h3>
+<ol>
+<li>分时：将处理器的运行时间分成很短的时间片，按时间片轮流将处理器分配给各联机作业使用</li>
+<li>分时操作系统是指多个用户通过终端同时共享一台主机，这些终端连接在主机上，用户可以同时与主机进行交互操作而互不干扰</li>
+<li>主要特征：
+<ul>
+<li>同时性/多路性：允许多个终端用户同时使用一台计算机</li>
+<li>交互性：用户通过终端采用人机对话的方式直接控制程序运行，与同程序进行交互</li>
+<li>独立性：系统中多个用户可以独立地进行操作，互不干扰</li>
+<li>及时性：用户请求能在很短时间内获得响应</li>
+</ul>
+</li>
+</ol>
+<h3>实时操作系统</h3>
+<ol>
+<li>
+<p>为了能在某个时间限制内完成某些紧急任务而不需要时间片排队，诞生了实时操作系统</p>
+</li>
+<li>
+<p>实时操作系统的分类：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>实时操作系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>硬实时系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>软实时系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>必须在绝对严格的规定时间内完成处理<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>能接收偶尔违反时间规定<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">C</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">E</span></pre></div>
+</li>
+<li>
+<p>主要特点：</p>
+<ul>
+<li>及时性</li>
+<li>可靠性</li>
+</ul>
+</li>
+</ol>
+<h3>网络操作系统和分布式计算机系统</h3>
+<ol>
+<li>网络操作系统：将计算机网络中的各台计算机有机地结合起来，提供一种统一、经济而有效的使用各台计算机的方法，实现各台计算机之间数据的互相传送。</li>
+<li>网络操作系统的主要特点：网络中各种资源的共享以及各台计算机之间的通信。</li>
+<li>分布式计算机系统：
+<ul>
+<li>系统中任意两台计算机通过通信方式交换信息</li>
+<li>系统中的每台计算机都具有相等的地位</li>
+<li>每台计算机上的资源为所有用户共享</li>
+<li>系统中的任意台计算机都可以构成一个子系统，并且还能重构</li>
+<li>任何工作都可以分布在机台计算机上，由它们并行工作、协同完成</li>
+</ul>
+</li>
+<li>分布式计算机系统的特点：分布性和并行性。</li>
+</ol>
+<h3>总结</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">mindmap</span>
+	<span class="pl-ent">OS的发展与分类</span>
+		<span class="pl-ent">手工操作阶段</span>
+			<span class="pl-ent">缺点：人机速度矛盾</span>
+		<span class="pl-ent">批处理阶段</span>
+			<span class="pl-ent">单道批处理系统</span>
+				<span class="pl-ent">优点：缓解人机速度矛盾</span>
+				<span class="pl-ent">缺点：资源利用路依然很低</span>
+			<span class="pl-ent">多道批处理系统</span>
+				<span class="pl-ent">优点：多道程序并发执行，资源利用率高</span>
+				<span class="pl-ent">缺点：不提供人机交互能力</span>
+		<span class="pl-ent">分时操作系统</span>
+			<span class="pl-ent">优点：提供人机交互功能</span>
+			<span class="pl-ent">缺点：不能优先处理紧急任务</span>
+		<span class="pl-ent">实时操作系统</span>
+			<span class="pl-ent">硬实时操作系统</span>
+				<span class="pl-ent">必须在绝对严格的的规定时间内完成处理</span>
+			<span class="pl-ent">软实时操作系统</span>
+				<span class="pl-ent">能接受偶尔违反时间规定</span>
+			<span class="pl-ent">优点：能优先处理紧急任务</span>
+		<span class="pl-ent">其它操作系统</span>
+			<span class="pl-ent">网络操作系统</span>
+			<span class="pl-ent">分布式操作系统</span>
+			<span class="pl-ent">个人计算机操作系统</span></pre></div>
+<h3>错题</h3>
+<ol>
+<li>
+<p>下列选项中，不属于多道程序设计的基本特征的是(  )</p>
+<p>A. 制约性</p>
+<p>B. 间断性</p>
+<p>C. 顺序性</p>
+<p>D. 共享性</p>
+</li>
+<li>
+<p>下列关于多道程序系统的叙述中，不正确的是(  )</p>
+<p>A. 支持进程的并发执行</p>
+<p>B. 不必支持虚拟存储系统</p>
+<p>C. 需要实现对共享资源的管理</p>
+<p>D. 进程数越多CPU利用率越高</p>
+</li>
+</ol>
+<h2>操作系统的运行环境</h2>
+<h3>处理器运行模式</h3>
+<ol>
+<li>
+<p>CPU执行两种不同性质的程序：</p>
+<ul>
+<li>操作系统内核程序</li>
+<li>用户自编程序</li>
+</ul>
+</li>
+<li>
+<p>指令的分类：</p>
+<ul>
+<li>特权指令：不允许用户直接使用的指令</li>
+<li>非特权指令：允许用户直接使用的指令</li>
+</ul>
+</li>
+<li>
+<p>处理器的运行模式：将CPU的运行模式划分为用户态(目态)和内核态(管态)</p>
+</li>
+<li>
+<p>应用程序运行在用户态，操作系统内核程序运行在核心态</p>
+</li>
+<li>
+<p>如何在用户态和内核态之间相互转变：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>内核态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>用户态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">一条修改PSW的特权指令</span><span class="pl-k">|</span><span class="pl-ent">B</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">由中断引起，硬件自动完成</span><span class="pl-k">|</span><span class="pl-ent">A</span></pre></div>
+</li>
+<li>
+<p>大多数操作系统的内核包括四方面的内容：</p>
+<ul>
+<li>时钟管理：
+<ul>
+<li>适中的第一功能是计时；通过时钟中断的管理，可以实现进程的切换</li>
+</ul>
+</li>
+<li>中断机制：
+<ul>
+<li>引入中断技术的初衷是提高多道程序运行时的CPU利用率</li>
+<li>中断机制中，只有一小部分功能属于内核，他们负责保护和恢复中断线程的信息，转移控制权到相关的处理程序</li>
+</ul>
+</li>
+<li>原语：
+<ul>
+<li>按层次结构设计的操作系统，底层必然是一些可被调用的共用小程序，他们各自完成一个规定的操作，将具有这些特点的程序称为原语</li>
+<li>原语的特点为：
+<ul>
+<li>处于操作系统的底层，是最接近硬件的部分</li>
+<li>这些程序的运行具有原子性，其操作是连续的</li>
+<li>这些程序的运行时间都较短，而且调用频繁</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>系统控制的数据结构及处理：
+<ul>
+<li>系统中用来登记状态信息的数据结构很多，为了实现有效的管理，系统需要一些基本的操作，一般包括：
+<ul>
+<li>进程管理：进程状态管理、进程调度和分派、创建与撤销进程控制块等</li>
+<li>存储器管理：存储器的空间分配和回收、内存信息保护程序、代码对换程序等</li>
+<li>设备管理：缓冲区管理、设备分配和回收等</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>中断和异常的概念</h3>
+<ol>
+<li>
+<p>发生中断或异常时，运行用户态的CPU会立即进入核心态，这是通过硬件实现的。</p>
+<ul>
+<li>
+<p>中断也称为外中断，是指来自CPU执行指令外部的事件，通常用于信息的输入/输出</p>
+</li>
+<li>
+<p>异常也称为内中断，是指来自CPU执行指令内部的事件。异常不能被屏蔽，一旦出现，就应立即处理</p>
+</li>
+<li>
+<p>中断与异常的分类：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>中断<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>内部异常<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>外部中断<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>故障fault<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>自陷trap<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>终止abort<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>软件中断<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>硬件中断<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>可屏蔽中断<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>不可屏蔽中断<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span>
+	<span class="pl-ent">D</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">E</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">F</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">I</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">J</span><span class="pl-k">-.-&gt;</span><span class="pl-ent">H</span></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>中断处理和子程序调用的区别：</p>
+<ul>
+<li>中断处理程序与被中断的程序是相互独立的，而子程序和主程序是同一个程序的两部分</li>
+<li>中断的产生是随机的，而子程序的调用是通过程序设计者事先设计的CALL指令引起的</li>
+<li>调用子程序的过程完全属于软件处理过程，而中断处理的过程需要专门的硬件电路实现</li>
+<li>中断处理程序的入口地址可由中断向量法给出，而子程序的入口地址由CALL指令直接给出</li>
+<li>两者都需要保护PC的内容，前者由中断隐指令完成，后者由CALL指令完成</li>
+<li>响应中断时，需要同时检测到多个中断请求进行裁决，而调用子程序不需要</li>
+</ul>
+</li>
+<li>
+<p>外部中断处理过程中，PC的值由中断隐指令自动保存，而通用寄存器内容由操作系统保存。TLB和Cache中的内容则由硬件机构保存</p>
+</li>
+</ol>
+<h3>系统调用</h3>
+<ol>
+<li>系统调用是指用户在程序中调用操作系统所提供的一些子程序，它可被视为特殊的公共子程序。</li>
+<li>系统中各种共享资源都有操作系统统一掌管，因此在用户程序中，凡是与资源有关的操作都需要通过系统调用方式向操作系统提出服务请求，并由操作系统代为完成</li>
+<li>系统调用按功能大致可分为如下几类：
+<ul>
+<li>设备管理：完成设备的请求获释放，以及设备启动等功能</li>
+<li>文件管理：完成文件读、写、创建、删除等功能</li>
+<li>进程控制：完成进程的创建、撤销、阻塞、唤醒等功能</li>
+<li>进程通信：完成进程之间的消息传递或信号传递等功能</li>
+<li>内存管理：完成内存的分配、回收以及获取作业占用内存区大小和起始地址等功能</li>
+</ul>
+</li>
+<li>系统调用处理过程：
+<ul>
+<li>将系统调用号和所需的参数压入堆栈</li>
+<li>调用实际的调用指令，执行陷入指令，将CPU状态转为核心态</li>
+<li>保护被中断进程的现场</li>
+<li>分析系统调用类型，转入相应的系统调用处理子程序</li>
+<li>执行结束后，恢复现场，返回被中断进程，继续执行</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>下列关于操作系统的说法，错误的是(  )</p>
+<p>I. 在通用操作系统管理的计算机上运行程序，需要向操作系统预定运行时间</p>
+<p>II. 在通用操作系统管理的计算机上运行程序，需要确定起始地址，并从这个地址开始执行</p>
+<p>III. 操作系统需要提供高级程序设计语言的编译器</p>
+<p>IV. 管理计算机系统资源是操作系统关心的主要问题</p>
+<p>A. I</p>
+<p>B. I、III</p>
+<p>C. II、III</p>
+<p>D. I、II、III、IV</p>
+</li>
+<li>
+<p>(  )是操作系统必须提供的功能。</p>
+<p>A. GUI</p>
+<p>B. 为进程提供系统调用命令</p>
+<p>C. 中断处理</p>
+<p>D. 编译源程序</p>
+</li>
+<li>
+<p>用户程序在用户态下要使用特权指令引起的中断属于(  )</p>
+<p>A. 故障异常</p>
+<p>B. 终止异常</p>
+<p>C. 外部中断</p>
+<p>D. 陷入中断</p>
+</li>
+<li>
+<p>“访管”指令(  )使用</p>
+<p>A. 仅在用户态下</p>
+<p>B. 仅在核心态下</p>
+<p>C. 在规定时间内</p>
+<p>D. 在调入时间内</p>
+</li>
+<li>
+<p>在操作系统中，只能在核心态下执行的指令是(  )</p>
+<p>A. 读时钟</p>
+<p>B. 取数</p>
+<p>C. 系统调用命令</p>
+<p>D. 寄存器清零</p>
+</li>
+<li>
+<p>下列选项中，必须在核心态下执行的指令是(  )</p>
+<p>A. 从内存中取数</p>
+<p>B. 将运算结果装入内存</p>
+<p>C. 算术运算</p>
+<p>D. 输入/输出</p>
+</li>
+<li>
+<p>下列关于库函数和系统调用的说法中，不正确的是(  )</p>
+<p>A. 库函数运行在用户态，系统调用运行在内核态</p>
+<p>B. 使用库函数时开销较小，使用系统调用时开销较大</p>
+<p>C. 库函数不方便替换，系统调用通常很方便被替换</p>
+<p>D. 库函数可以很方便地调试，而系统调用很麻烦</p>
+</li>
+<li>
+<p>下列关于系统调用和一般过程调用的说法中，正确的是(  )</p>
+<p>A. 两者都需要将当前CPU中的PSW和PC的值压栈，以保存现场信息</p>
+<p>B. 系统调用的被调用过程一定运行在内核态</p>
+<p>C. 一般过程调用的被调用过程一定运行在用户态</p>
+<p>D. 两者的调用过程与被调用过程一定都运行在用户态</p>
+</li>
+<li>
+<p>下列选项中，不可能在用户态发生的事件是(  )</p>
+<p>A. 系统调用</p>
+<p>B. 外部中断</p>
+<p>C. 进程切换</p>
+<p>D. 缺页</p>
+</li>
+<li>
+<p>中断处理和子程序调用都需要压栈，中断处理一定会保存而子程序调用不需要保存的内容是(  )</p>
+<p>A. 程序计数器</p>
+<p>B. 程序状态字寄存器</p>
+<p>C. 通用数据寄存器</p>
+<p>D. 通用地址寄存器</p>
+</li>
+<li>
+<p>处理外部中断时，应该由操作系统保存的是(  )</p>
+<p>A. PC的内容</p>
+<p>B. 通用寄存器的内容</p>
+<p>C. TLB的内容</p>
+<p>D. Cache的内容</p>
+</li>
+<li>
+<p>定时器产生时钟中断后，由时钟中断服务程序更新的部分内容是(  )</p>
+<p>I. 内核中时钟变量的值</p>
+<p>II. 当前进程占用CPU的时间</p>
+<p>III. 当前进程在时间片内的剩余执行时间</p>
+<p>A. 仅I、II</p>
+<p>B. 仅II、III</p>
+<p>C. 仅I、III</p>
+<p>D. I、II、III</p>
+</li>
+<li>
+<p>下列关于系统调用的叙述中，正确的是(  )</p>
+<p>I. 在执行系统调用服务程序的过程中，CPU处于内核态</p>
+<p>II. 操作系统通过提供系统调用避免用户程序直接访问外设</p>
+<p>III. 不同的操作系统为应用程序提供统一的系统调用接口</p>
+<p>IV. 系统调用是操作系统内核为应用程序提供服务的接口</p>
+<p>A. 仅I、IV</p>
+<p>B. 仅II、III</p>
+<p>C. 仅I、II、IV</p>
+<p>D. 仅I、III、IV</p>
+</li>
+<li>
+<p>下列与中断相关的操作中，由操作系统完成的是(  )</p>
+<p>I. 保存被中断程序的中断点</p>
+<p>II. 提供中断服务</p>
+<p>III. 初始化中断向量表</p>
+<p>IV. 保存中断屏蔽字</p>
+<p>A. 仅I、II</p>
+<p>B. 仅I、II、IV</p>
+<p>C. 仅III、IV</p>
+<p>D. 仅II、III、IV</p>
+</li>
+<li>
+<p>下列指令中，只能在内核态执行的是(  )</p>
+<p>A. trap指令</p>
+<p>B. I/O指令</p>
+<p>C. 数据传送指令</p>
+<p>D. 设置断点指令</p>
+</li>
+<li>
+<p>下列选项中，通过系统调用完成的操作是(  )</p>
+<p>A. 页置换</p>
+<p>B. 进程调度</p>
+<p>C. 创建新进程</p>
+<p>D. 生成随机数</p>
+</li>
+<li>
+<p>执行系统调用涉及下列操作，其中由操作系统完成的是(  )</p>
+<p>I. 保存断点和程序状态字</p>
+<p>II. 保存通用寄存器的内容</p>
+<p>III. 执行系统调用服务例程</p>
+<p>IV. 将CPU模式改为内核态</p>
+<p>A. 仅I、III</p>
+<p>B. 仅II、III</p>
+<p>C. 仅II、IV</p>
+<p>D. 仅II、III、IV</p>
+</li>
+</ol>
+<h2>操作系统结构</h2>
+<h3>分层法</h3>
+<ol>
+<li>
+<p>将操作系统分为若干层，底层(层0)为硬件，顶层(层N)为用户接口，每层只能调用紧邻它的低层的功能和服务。</p>
+</li>
+<li>
+<p>分层法的优缺点：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>分层法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>优点<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>缺点<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>便于系统的调试和验证，简化了系统的设计和实现<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>易扩充和易维护<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>合理定义各层比较困难<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>效率较差<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span></pre></div>
+</li>
+</ol>
+<h3>模块化</h3>
+<ol>
+<li>
+<p>将操作系统按功能划分为若干具有一定独立性的模块。</p>
+</li>
+<li>
+<p>每个模块具有某方面的管理功能，并规定好各模块间的接口，使各模块之间通过接口进行通信。</p>
+</li>
+<li>
+<p>还可以将模块进一步细分为若干具有一定功能的子模块，同样也规定好各子模块之间的接口。</p>
+</li>
+<li>
+<p>结构模型举例：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TB</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>操作系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程管理<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>内存管理<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>文件管理<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程控制<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>……<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>内存分配<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>……<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>磁盘管理<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>……<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span></pre></div>
+</li>
+<li>
+<p>衡量模块的独立性主要有两个标准：</p>
+<ul>
+<li>内聚性：模块内部各部分间联系的紧密程度。</li>
+<li>耦合度：模块间相互联系和相互影响的程度。</li>
+</ul>
+</li>
+<li>
+<p>模块化的优缺点：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>模块化<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>优点<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>缺点<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>提高了操作系统设计的正确性、可理解性和可维护性<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>增强了操作系统的可适应性<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>加速了操作系统的开发进程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>模块间的接口规定很难满足对接口的实际要求<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>各模块设计无法找到一个可靠的决定顺序<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span></pre></div>
+</li>
+</ol>
+<h3>宏内核</h3>
+<ol>
+<li>宏内核/单内核/大内核：将系统的主要功能模块都作为一个紧密联系的整体运行在核心态，从而为用户程序提供高性能的系统服务</li>
+</ol>
+<h3>微内核</h3>
+<ol>
+<li>微内核架构：将内核中最基本的功能保留在内核，而将那些不需要在核心态执行的功能移到用户态执行，从而降低内核的设计复杂性</li>
+<li>移出内核的操作系统代码的执行相互独立，交互借助于微内核进行通信</li>
+<li>微内核将操作系统分为两大部分：<strong>微内核</strong>和<strong>多个服务器</strong></li>
+<li>微内核包括：
+<ul>
+<li>与硬件处理紧密相关的部分</li>
+<li>一些较基本的功能</li>
+<li>客户和服务器之间的通信</li>
+</ul>
+</li>
+<li>在微内核结构中，为了实现可靠性，只有微内核运行在内核态，其余模块都运行在用户态</li>
+<li>微内核的基本功能：
+<ul>
+<li>进程管理</li>
+<li>低级存储器管理</li>
+<li>中断和陷入处理</li>
+</ul>
+</li>
+<li>微内核的特点：
+<ul>
+<li>扩展性和灵活性</li>
+<li>可靠性和安全性</li>
+<li>可移植性</li>
+<li>分布式计算</li>
+</ul>
+</li>
+</ol>
+<h3>外核</h3>
+<ol>
+<li>外核的任务：为虚拟机分配资源，并检查这些资源使用的安全性，以确保没有机器会使用他人的资源。</li>
+<li>外核机制的优点：
+<ul>
+<li>减少了资源的“映射层”：外核只需要记录已分配给各个虚拟机的有关资源即可</li>
+<li>将多道程序与用户操作系统代码加以分离</li>
+</ul>
+</li>
+</ol>
+<h3>小节</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">mindmap</span>
+	<span class="pl-ent">操作系统的体系结构</span>
+		<span class="pl-ent">分层法</span>
+			<span class="pl-ent">优点</span>
+				<span class="pl-ent">便于调试，简化了系统设计，易扩充和维护</span>
+			<span class="pl-ent">缺点</span>
+				<span class="pl-ent">合理定义各层比较困难</span>
+				<span class="pl-ent">效率较差</span>
+		<span class="pl-ent">模块化</span>
+			<span class="pl-ent">标准</span>
+				<span class="pl-ent">内聚性</span>
+				<span class="pl-ent">耦合性</span>
+			<span class="pl-ent">优点</span>
+				<span class="pl-ent">提高了系统设计的正确性、可理解性和可维护性</span>
+				<span class="pl-ent">增强了操作系统的可适应性，加速了操作系统的开发进程</span>
+			<span class="pl-ent">缺点</span>
+				<span class="pl-ent">接口很难满足实际需求，设计无法建立在一个基础之上</span>
+		<span class="pl-ent">大内核</span>
+			<span class="pl-ent">特点</span>
+				<span class="pl-ent">将操作系统的主要功能模块作为系统内核，运行在核心态</span>
+			<span class="pl-ent">优点</span>
+				<span class="pl-ent">高性能</span>
+			<span class="pl-ent">缺点</span>
+				<span class="pl-ent">内核代码庞大，结构混乱，难以维护</span>
+		<span class="pl-ent">微内核</span>
+			<span class="pl-ent">特点</span>
+				<span class="pl-ent">只把最基本的功能保留在内核</span>
+			<span class="pl-ent">优点</span>
+				<span class="pl-ent">扩展性、灵活性、可靠性、安全性、可移植性、分布式计算</span>
+			<span class="pl-ent">缺点</span>
+				<span class="pl-ent">需要频繁地在核心态和用户态之间切换，性能低</span>
+		<span class="pl-ent">外核</span>
+			<span class="pl-ent">特点</span>
+				<span class="pl-ent">为虚拟机分配资源，检查资源使用的安全性</span>
+			<span class="pl-ent">优点</span>
+				<span class="pl-ent">减少了资源的映射层</span></pre></div>
+<h2>操作系统引导</h2>
+<ol>
+<li>
+<p>操作系统引导是指计算机利用CPU运行特定程序，通过程序识别硬盘，识别硬盘分区，识别硬盘分区上的操作系统，最后通过程序启动操作系统。</p>
+</li>
+<li>
+<p>操作系统引导流程如下：</p>
+<ul>
+<li>激活CPU：跳转至BIOS第一条指令，然后依次执行</li>
+<li>硬件自检：先创建中断向量表，再进行通电自检</li>
+<li>加载带有操作系统的硬盘：BIOS读取Boot Sequence，将控制权交给启动顺序排在第一位的存储设备，然后CPU将该存储设备引导扇区的内容加载到内存中</li>
+<li>加载主引导记录(MBR)：主引导记录MBR的作用就是告诉CPU去哪个主分区去找操作系统。</li>
+<li>扫描硬盘分区表，并加载硬盘活动分区：MBR扫描并识别含有操作系统的硬盘分区/活动分区，加载并将控制权交给硬盘活动分区。</li>
+<li>加载分区引导记录(PBR)：寻找并激活分区根目录下用于引导操作系统的程序。</li>
+<li>加载启动管理器</li>
+<li>加载操作系统</li>
+</ul>
+</li>
+<li>
+<p>流程图</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TB</span>
+	激活<span class="pl-ent">CPU</span><span class="pl-k">--&gt;</span>硬件自检<span class="pl-k">--&gt;</span>加载带有操作系统的硬盘<span class="pl-k">--&gt;</span>加载主引导记录<span class="pl-ent">MBR</span><span class="pl-k">--&gt;</span>扫描硬盘分区表并加载硬盘活动分区<span class="pl-k">--&gt;</span>加载分区引导记录<span class="pl-ent">PBR</span><span class="pl-k">--&gt;</span>加载启动管理器<span class="pl-k">--&gt;</span>加载操作系统
+
+    <span class="pl-k">subgraph</span> 激活<span class="pl-ent">CPU</span>
+        <span class="pl-k">direction</span> <span class="pl-c1">LR</span>
+        <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>CPU<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>ROM中的boot程序<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>准备执行<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">读取</span><span class="pl-k">|</span><span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">加载至指令寄存器</span><span class="pl-k">|</span><span class="pl-ent">C</span>
+    <span class="pl-k">end</span>
+    <span class="pl-k">style</span> <span class="pl-s1">激活<span class="pl-c1">CPU</span> <span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">none</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">black</span></span>
+
+    <span class="pl-k">subgraph</span> 硬件自检
+        <span class="pl-k">direction</span> <span class="pl-c1">LR</span>
+        <span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>BIOS构建中断向量表<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>通电自检<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+    <span class="pl-k">end</span>
+    <span class="pl-k">style</span> <span class="pl-s1">硬件自检 <span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">none</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">black</span></span>
+
+    <span class="pl-k">subgraph</span> 加载带有操作系统的硬盘
+        <span class="pl-k">direction</span> <span class="pl-c1">LR</span>
+        <span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>BIOS<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>Boot Sequence<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>存储设备获取控制权<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>CPU将引导内容加载至内存<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+        <span class="pl-ent">F</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">读取</span><span class="pl-k">|</span><span class="pl-ent">G</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span>
+    <span class="pl-k">end</span>
+    <span class="pl-k">style</span> <span class="pl-s1">加载带有操作系统的硬盘 <span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">none</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">black</span></span>
+    
+    <span class="pl-k">subgraph</span> 加载主引导记录<span class="pl-ent">MBR</span>
+    	<span class="pl-k">direction</span> <span class="pl-c1">LR</span>
+    	<span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">{</span></span>引导硬盘？<span class="pl-pds"><span class="pl-sg">}</span></span></span>
+    	<span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>加载硬盘中的MBR<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    	<span class="pl-ent">L</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>加载下一块硬盘<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    	<span class="pl-ent">J</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">是</span><span class="pl-k">|</span><span class="pl-ent">K</span>
+    	<span class="pl-ent">J</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">否</span><span class="pl-k">|</span><span class="pl-ent">L</span>
+    	<span class="pl-ent">L</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span>
+    <span class="pl-k">end</span>
+    <span class="pl-k">style</span> <span class="pl-s1">加载主引导记录<span class="pl-c1">MBR</span> <span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">none</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">black</span></span>
+    
+    <span class="pl-k">subgraph</span> 扫描硬盘分区表并加载硬盘活动分区
+    	<span class="pl-k">direction</span> <span class="pl-c1">LR</span>
+    	<span class="pl-ent">M</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>MBR<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    	<span class="pl-ent">N</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>硬盘分区表<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    	<span class="pl-ent">O</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>活动分区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    	<span class="pl-ent">M</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">扫描</span><span class="pl-k">|</span><span class="pl-ent">N</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">识别并加载</span><span class="pl-k">|</span><span class="pl-ent">O</span>
+    <span class="pl-k">end</span>
+    <span class="pl-k">style</span> <span class="pl-s1">扫描硬盘分区表并加载硬盘活动分区 <span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">none</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">black</span></span></pre></div>
+</li>
+</ol>
+<h2>虚拟机</h2>
+<h3>第一类虚拟机/裸金属架构</h3>
+<ol>
+<li>
+<p>虚拟机作为用户的一个进程运行，不允许执行敏感指令。</p>
+</li>
+<li>
+<p>虚拟机上的操作系统认为自己运行在内核态，称为<strong>虚拟内核态</strong>。</p>
+</li>
+<li>
+<p>虚拟机结构：</p>
+<p>WindowsLinux控制域第一类虚拟管理程序硬件（CPU、硬盘、网络、中断等）</p>
+</li>
+</ol>
+<h3>第二类虚拟机/寄居架构</h3>
+<ol>
+<li>运行在两类虚拟机管理程序上的操作系统都称为<strong>客户操作系统</strong>。</li>
+<li>对于第二类虚拟机管理程序，运行在底层硬件上的操作系统称为<strong>宿主操作系统</strong>。</li>
+<li>虚拟机结构：<br>
+宿主操作系统（如Linux）硬件（CPU、硬盘、网络、中断等）第二类虚拟管理程序客户操作系统（如Windows）客户操作系统进程宿主操作系统进程</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>下列选项中，(  )不属于模块化操作系统的特点</p>
+<p>A. 很多模块化的操作系统，可以支持动态加载新模块到内核，适应性强</p>
+<p>B. 内核中的某个功能模块出错不会导致整个系统崩溃，可靠性高</p>
+<p>C. 内核中的各个模块可以相互调用，无需通过消息传递进行通信，效率高</p>
+<p>D. 各模块间相互依赖，相比于分层式操作系统，模块化操作系统更难调试和验证</p>
+</li>
+<li>
+<p>存放操作系统自举程序的芯片是(  )</p>
+<p>A. SRAM</p>
+<p>B. DRAM</p>
+<p>C. ROM</p>
+<p>D. CMOS</p>
+</li>
+<li>
+<p>计算机操作系统的引导程序位于(  )</p>
+<p>A. 主板BIOS</p>
+<p>B. 片外Cache</p>
+<p>C. 主存ROM区</p>
+<p>D. 硬盘</p>
+</li>
+<li>
+<p>计算机的启动过程是(  )。</p>
+<p>I. CPU加电，CS:IP指向FFFF0H</p>
+<p>II. 进行操作系统引导</p>
+<p>III. 执行JMP指令跳转到BIOS</p>
+<p>IV. 登记BIOS中断程序入口地址</p>
+<p>V. 硬件自检</p>
+<p>A. I、II、III、IV、V</p>
+<p>B. I、III、V、IV、II</p>
+<p>C. I、III、IV、V、II</p>
+<p>D. I、V、III、IV、II</p>
+</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://wlkla.github.io/onebuaaer.github.io">我在人世间踽踽独行</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/02/2024"!=""){
+    var startSite=new Date("09/02/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","wlkla/onebuaaer.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
