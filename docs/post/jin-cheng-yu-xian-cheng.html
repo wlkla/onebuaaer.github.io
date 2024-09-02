@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 进程与线程
+
+## 进程与线程
+
+### 进程的概念和特征
+
+1. 为了使参与并发执行的每个程序都能独立地运行，必须为之配置一个专门的数据结构，称为进程控制块(PCB)
+
+2. 创建进程，就是创建进程的PCB；撤销进程，就是撤销进程的PCB
+
+3. 进程是进程实体的运行过程，是系统进行资源分配和调度的一个独立单位
+
+4. 进程是动态的，程序是静态的
+
+5. 进程的基本特征：
+
+   ```mermaid
+   graph LR
+   	A(进程)
+   	B(动态性)
+   	C(并发性)
+   	D(独立性)
+   	E(异步性)
+   	F(进程是动态地产生、变化和消亡的)
+   	G(多个进程同存于内存中，能在一段时间内同时运行)
+   	H(进程是一个能独立运行、独立获得资源和独立接收调度的基本单位)
+   	I(由于进程的相互制约，使得进程按各自独立的、不可预知的速度向前推进)
+   	A-->B-->F
+   	A-->C-->G
+   	A-->D-->H
+   	A-->E-->I
+   ```
+
+### 进程的组成
+
+1. 进程控制块
+
+   - PCB是进程实体的一部分，是进程存在的唯一标志
+
+   - PCB主要包括进程描述信息、进程控制和管理信息、资源分配清单和CPU相关信息。">
+<meta property="og:title" content="进程与线程">
+<meta property="og:description" content="# 进程与线程
+
+## 进程与线程
+
+### 进程的概念和特征
+
+1. 为了使参与并发执行的每个程序都能独立地运行，必须为之配置一个专门的数据结构，称为进程控制块(PCB)
+
+2. 创建进程，就是创建进程的PCB；撤销进程，就是撤销进程的PCB
+
+3. 进程是进程实体的运行过程，是系统进行资源分配和调度的一个独立单位
+
+4. 进程是动态的，程序是静态的
+
+5. 进程的基本特征：
+
+   ```mermaid
+   graph LR
+   	A(进程)
+   	B(动态性)
+   	C(并发性)
+   	D(独立性)
+   	E(异步性)
+   	F(进程是动态地产生、变化和消亡的)
+   	G(多个进程同存于内存中，能在一段时间内同时运行)
+   	H(进程是一个能独立运行、独立获得资源和独立接收调度的基本单位)
+   	I(由于进程的相互制约，使得进程按各自独立的、不可预知的速度向前推进)
+   	A-->B-->F
+   	A-->C-->G
+   	A-->D-->H
+   	A-->E-->I
+   ```
+
+### 进程的组成
+
+1. 进程控制块
+
+   - PCB是进程实体的一部分，是进程存在的唯一标志
+
+   - PCB主要包括进程描述信息、进程控制和管理信息、资源分配清单和CPU相关信息。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wlkla.github.io/onebuaaer.github.io/post/jin-cheng-yu-xian-cheng.html">
+<meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
+<title>进程与线程</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">进程与线程</h1>
+<div class="title-right">
+    <a href="https://wlkla.github.io/onebuaaer.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/wlkla/onebuaaer.github.io/issues/3" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>进程与线程</h1>
+<h2>进程与线程</h2>
+<h3>进程的概念和特征</h3>
+<ol>
+<li>
+<p>为了使参与并发执行的每个程序都能独立地运行，必须为之配置一个专门的数据结构，称为进程控制块(PCB)</p>
+</li>
+<li>
+<p>创建进程，就是创建进程的PCB；撤销进程，就是撤销进程的PCB</p>
+</li>
+<li>
+<p>进程是进程实体的运行过程，是系统进行资源分配和调度的一个独立单位</p>
+</li>
+<li>
+<p>进程是动态的，程序是静态的</p>
+</li>
+<li>
+<p>进程的基本特征：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>动态性<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>并发性<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>独立性<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>异步性<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程是动态地产生、变化和消亡的<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多个进程同存于内存中，能在一段时间内同时运行<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程是一个能独立运行、独立获得资源和独立接收调度的基本单位<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>由于进程的相互制约，使得进程按各自独立的、不可预知的速度向前推进<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span></pre></div>
+</li>
+</ol>
+<h3>进程的组成</h3>
+<ol>
+<li>
+<p>进程控制块</p>
+<ul>
+<li>
+<p>PCB是进程实体的一部分，是进程存在的唯一标志</p>
+</li>
+<li>
+<p>PCB主要包括进程描述信息、进程控制和管理信息、资源分配清单和CPU相关信息。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">进程描述信息</th>
+<th align="center">进程控制和管理信息</th>
+<th align="center">资源分配清单</th>
+<th align="center">处理机相关信息</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">进程标识符PID</td>
+<td align="center">进程当前状态</td>
+<td align="center">代码段指针</td>
+<td align="center">通用寄存器值</td>
+</tr>
+<tr>
+<td align="center">用户标识符UID</td>
+<td align="center">进程优先级</td>
+<td align="center">数据段指针</td>
+<td align="center">地址寄存器值</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">代码运行入口地址</td>
+<td align="center">堆栈段指针</td>
+<td align="center">控制寄存器值</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">程序的外存地址</td>
+<td align="center">文件描述符</td>
+<td align="center">标志寄存器值</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">进入内存时间</td>
+<td align="center">键盘</td>
+<td align="center">状态字</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">CPU占用时间</td>
+<td align="center">鼠标</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">信号量使用</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>PID用于标志各个进程，每个进程都有一个唯一的标识号</p>
+<p>UID用于标识所归属的用户，主要用于共享和保护服务</p>
+</li>
+<li>
+<p>为了方便进程的管理和调度，需要将各个进程的PCB用适当的方法组织起来，常用的组织方式由<strong>链接方式</strong>和<strong>索引方式</strong>两种。</p>
+<ul>
+<li>链接方式：将同一状态的PCB链接成一个队列，也可以将处于阻塞态的进程的PCB按照原因的不同，排成多个阻塞队列。</li>
+<li>索引方式：将同一状态的进程组织在一个索引表中，索引表的表项指向相应的PCB，不同状态对应不同的索引表。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>程序段</p>
+<ul>
+<li>能被进程调度程序调度到CPU执行的程序代码段</li>
+<li>程序可被多个进程共享</li>
+</ul>
+</li>
+<li>
+<p>数据段</p>
+</li>
+</ol>
+<h3>进程的状态和转换</h3>
+<ol>
+<li>
+<p>进程的状态</p>
+<ul>
+<li>运行态</li>
+<li>就绪态</li>
+<li>阻塞态</li>
+<li>创建态</li>
+<li>终止态</li>
+</ul>
+</li>
+<li>
+<p>进程的转换</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>创建态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>就绪态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>阻塞态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>运行态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>终止态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">创建</span><span class="pl-k">|</span><span class="pl-ent">B</span>
+    <span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">调度</span><span class="pl-k">|</span><span class="pl-ent">D</span>
+    <span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">退出</span><span class="pl-k">|</span><span class="pl-ent">E</span>
+    <span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">时间到</span><span class="pl-k">|</span><span class="pl-ent">B</span>
+    <span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">事件等待</span><span class="pl-k">|</span><span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">事件发生</span><span class="pl-k">|</span><span class="pl-ent">B</span></pre></div>
+<ul>
+<li>就绪态$\longrightarrow$运行态：处于就绪态的进程被调度后，获得CPU资源</li>
+<li>运行态$\longrightarrow$就绪态：处于运行态的进程在时间片用完后，让出CPU资源</li>
+<li>运行态$\longrightarrow$阻塞态：进程请求某一资源的使用和分配或等待某一事件的发生，是主动行为</li>
+<li>阻塞态$\longrightarrow$就绪态：进程等待的事件到来，是被动行为</li>
+</ul>
+</li>
+</ol>
+<h3>进程控制</h3>
+<ol>
+<li>
+<p>在操作系统中，一般将进程控制用的程序段称为<strong>原语</strong>，原语的特点是在执行期间不允许中断，它是一个不可分割的基本单位。</p>
+</li>
+<li>
+<p>进程的创建</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程的创建<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>创建原语<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>引起进程创建的事件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>申请空白PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>为新进程分配资源<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>初始化PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将PCB插入就绪队列<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>用户登录<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>作业调度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>提供服务<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>应用请求<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">K</span></pre></div>
+<ul>
+<li>允许一个进程创建另一个进程，此时创建者称为父进程，被创建的进程称为子进程。子进程可以继承父进程所拥有的资源。当子进程被撤销时，应将其从父进程获得的资源归还；在撤销父进程时，通常也会同时撤销其所有的子进程</li>
+<li>创建原语
+<ul>
+<li>为新进程分配一个唯一的进程标识号，并申请一个空白的PCB(PCB是有限的)，若PCB申请失败，则创建失败</li>
+<li>为进程分配其运行所需的资源，如果资源不足，则处于创建态，等待相应资源</li>
+<li>初始化PCB，主要包括初始化标志信息，初始化CPU状态信息和初始化CPU控制信息，以及设置进程的优先级等</li>
+<li>若进程就绪队列能够接纳新进程，则将新进程插入就绪队列，等待被调度运行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>进程的终止</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程的终止<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>终止原语<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>引起进程终止的事件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>从PCB集合中找到终止进程的PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>若进程正在运行，立即剥夺CPU，将CPU分配给其他进程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>终止其所有子进程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将该进程拥有的所有资源归还给父进程或操作系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>删除PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>正常结束<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>异常结束<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>外界干预<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">K</span></pre></div>
+<ul>
+<li>引起进程终止的事件主要有：正常结束、异常结束和外界干预</li>
+<li>终止原语：
+<ul>
+<li>根据被终止进程的标识符，检索出该进程的PCB，从中读出该进程的状态</li>
+<li>若被终止进程处于运行状态，立即终止该进程的执行，将CPU资源分配给其他进程</li>
+<li>若该进程还有子孙进程，则通常需要将其所有子孙进程终止</li>
+<li>将该进程所拥有的全部资源，或归还给其父进程，或归还给操作系统</li>
+<li>将该PCB从所在队列中删除</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>进程的阻塞和唤醒</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程的阻塞和唤醒<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程的阻塞<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程的唤醒<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>阻塞原语<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>引起进程阻塞的事件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>唤醒原语<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>引起进程唤醒的事件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>找到要阻塞的进程对应的PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>保护进程运行现场，将PCB状态信息置为“阻塞态”，暂停进程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将PCB插入相应事件的等待队列<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>需要等待系统分配某种资源<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">L</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>需要等待相互合作的其他进程完成工作<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">M</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>在事件等待队列中找到PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">N</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将PCB从等待队列移除，设置进程为就绪态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">O</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将PCB插入就绪队列，等待被调度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">P</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>等待事件的发生<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span>
+	<span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span>
+	<span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">K</span>
+	<span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">L</span>
+	<span class="pl-ent">F</span><span class="pl-k">--&gt;</span><span class="pl-ent">M</span>
+	<span class="pl-ent">F</span><span class="pl-k">--&gt;</span><span class="pl-ent">N</span>
+	<span class="pl-ent">F</span><span class="pl-k">--&gt;</span><span class="pl-ent">O</span>
+	<span class="pl-ent">G</span><span class="pl-k">--&gt;</span><span class="pl-ent">P</span></pre></div>
+<ul>
+<li>正在执行的进程，由于期待的某些事件未发生，进程便通过调用阻塞原语，使自己由运行态变为阻塞态</li>
+<li>阻塞原语：
+<ul>
+<li>找到将要被阻塞的PID对应的PCB</li>
+<li>若该进程为运行态，则保护其现场，将其状态转为阻塞态，停止运行</li>
+<li>将该PCB插入相应事件的等待队列，将CPU资源调度给其他就绪进程</li>
+</ul>
+</li>
+<li>当被阻塞进程所期待的事件出现时，由相关进程调用唤醒原语，将等待该事件的进程唤醒</li>
+<li>唤醒原语：
+<ul>
+<li>在该事件的等待队列中找出相应进程的PCB</li>
+<li>将其从等待队列中移出，并致其状态为就绪态</li>
+<li>将该PCB插入就绪队列，等待调度程序调度</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>进程的切换</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程的切换<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>切换原语<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>引起进程切换的事件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将运行环境信息存入PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>PCB移入相应队列<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>选择另一个进程执行，并更新其PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>根据PCB恢复新进程所需的运行环境<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>当前进程时间片到<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>有更高优先级的进程到达<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>当前进程主动阻塞<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">K</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>当前进程终止<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">K</span></pre></div>
+</li>
+</ol>
+<h3>进程的通信</h3>
+<ol>
+<li>
+<p>进程通信是指进程之间的信息交换</p>
+</li>
+<li>
+<p>高级通信方式是指以较高的效率传输大量数据的通信方式</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TB</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>高级通信方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>共享存储<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>消息传递<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>管道通信<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span></pre></div>
+</li>
+<li>
+<p>共享存储：在通信的进程之间存在一块可直接访问的共享空间，通过对这片共享空间进行读/写操作实现进程之间的信息交换</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程A<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程B<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">((</span></span>共享空间<span class="pl-pds"><span class="pl-sg">))</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">&lt;--&gt;</span><span class="pl-ent">C</span><span class="pl-k">&lt;--&gt;</span><span class="pl-ent">B</span></pre></div>
+<ul>
+<li>在对共享空间进行读/写操作时，需要使用同步互斥工具对共享空间的读/写进行控制</li>
+<li>共享存储又分为两种：
+<ul>
+<li>低级方式的共享是基于数据结构的共享</li>
+<li>高级方式的共享是基于存储区的共享</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>消息传递：利用操作系统提供的消息传递方法实现进程通信</p>
+<ul>
+<li>进程间的数据交换以格式化的消息为单位</li>
+<li>进程通过操作系统提供的发送消息和接收消息两个原语进行数据交换</li>
+<li>消息传递又可分为：
+<ul>
+<li>直接通信方式：发送进程直接将消息发送给接收进程，并将它挂在接收进程的消息缓冲队列上，接收进程从消息缓冲队列中取到消息</li>
+<li>间接通信方式：发送进程发送到某个中间实体(信箱)，接收进程从中间实体取到消息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>管道通信</p>
+<ul>
+<li>管道是一个特殊的共享文件，又称pipe文件，数据在管道中是先进先出的，只能实现半双工通信</li>
+<li>只要管道不满，写进程就能向管道的一段写入数据；只要管道非空，读进程就能从管道的一段读出数据</li>
+<li>管道机制必须提供三方面的协调能力：
+<ul>
+<li>互斥：当一个进程对管道进行读写操作是，其他进程必须等待</li>
+<li>同步：写进程向管道写入一定数量的数据后，写进程阻塞，直到读进程取走数据后将它唤醒；读进程将管道中的数据取空后，读进程阻塞，直到写进程将数据写入管道后将它唤醒</li>
+<li>确定对方的存在</li>
+</ul>
+</li>
+<li>管道只能由创建进程所访问，当父进程创建一个管道后，子进程会继承管道，可用于与父进程通信</li>
+<li>一个管道允许多个写进程，一个读进程</li>
+</ul>
+</li>
+</ol>
+<h3>线程和多线程模型</h3>
+<ol>
+<li>
+<p>引入进程的目的：更好地使多道程序并发执行<br>
+引入线程的目的：减少程序在并发执行时所付出的时空开销，提高操作系统的并发性能</p>
+</li>
+<li>
+<p>线程使程序执行流的最小单元，由线程ID、程序计数器、寄存器集合和堆栈组成</p>
+</li>
+<li>
+<p>线程是被系统独立调度和分派的基本单位</p>
+</li>
+<li>
+<p>线程不拥有系统资源，但是同一进程的线程共享所有资源</p>
+</li>
+<li>
+<p>一个线程可以创建和撤销另一个线程，同一进程的多个线程之间可以并发执行</p>
+</li>
+<li>
+<p>线程有就绪态、阻塞态和运行态三种基本状态</p>
+</li>
+<li>
+<p>引入线程后，进程只作为除CPU外的系统资源的分配单元，而线程则作为CPU的分配单元</p>
+</li>
+<li>
+<p>线程和进程的比较</p>
+<ul>
+<li>调度：线程切换的代价远低于进程切换。同一进程中线程切换不会引起进程切换，不同进程间线程切换会引起进程切换</li>
+<li>并发性：进程之间可以并发执行，一个进程的线程之间可以并发执行，不同进程之间的线程也可以并发执行</li>
+<li>拥有资源：线程不拥有系统资源，但可以访问其隶属进程的系统资源</li>
+<li>独立性：每个进程都拥有独立的地址空间和资源，不允许其他进程访问。同一进程的不同线程共享进程的地址空间和资源</li>
+<li>系统开销：在创建和撤销过程中，系统都要分配或回收PCB以及其他资源，开销明显大于线程的创建和撤销。进程切换涉及进程上下文的切换，而线程切换只需要保存和设置少量寄存器的内容。由于同一进程的多个线程共享地址空间和资源，因此它们的同步和通信非常容易实现</li>
+<li>支持多处理器系统：进程只能运行在一个CPU上，而对于多线程进程，进程可以将线程分配到多个CPU上</li>
+</ul>
+</li>
+<li>
+<p>线程的特性：</p>
+<ul>
+<li>线程不拥有系统资源，但每个线程都拥有一个唯一的标识符和一个线程控制块TCB，TCB记录线程执行的寄存器和栈等现场状态</li>
+<li>不同的线程可以执行相同的程序，即同一服务程序被不同的用户调用时，操作系统将他们创建成不同的线程</li>
+<li>同一进程中的各个线程共享该进程所拥有的资源</li>
+<li>线程是CPU的独立调度单位，多个线程是可以并发执行的</li>
+<li>线程在生命周期中会经历阻塞态、就绪态和运行态等各种状态变化</li>
+</ul>
+</li>
+<li>
+<p>线程的状态与转换</p>
+<ul>
+<li>运行态：线程已获得CPU而正在运行</li>
+<li>就绪态：线程已具备各种执行条件，只需要再获得CPU便可立即执行</li>
+<li>阻塞态：线程在执行中因某事件受阻而处于暂停状态</li>
+</ul>
+</li>
+<li>
+<p>系统为每个线程配置一个线程控制块TCB，用于记录控制和管理线程的信息</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>TCB<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>线程标识符<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>一组寄存器<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>线程运行状态<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>优先级<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>线程专有存储区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>堆栈指针<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>线程切换时用于保存现场<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>用于过程调用时保存局部变量及返回地址等<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span></pre></div>
+</li>
+<li>
+<p>线程的终止</p>
+<ul>
+<li>有些线程一旦被建立便会一直运行而不会被终止</li>
+<li>线程被终止后不会立即释放它所占有的资源，只有当进程中的其他线程执行了分离函数后，被终止线程才与资源分离，此时资源才能被其他线程利用</li>
+<li>被终止但尚未释放资源的线程仍可被其他线程调用，以使被终止线程恢复运行</li>
+</ul>
+</li>
+<li>
+<p>线程的分类</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>线程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>用户级线程ULT<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>内核级线程KLT<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span></pre></div>
+</li>
+<li>
+<p>用户级线程</p>
+<ul>
+<li>有关线程管理的工作由应用程序在用户空间内完成，无须操作系统干预，内核意识不到线程的存在</li>
+<li>应用程序从单线程开始，在该线程中开始运行，在其运行的任何时刻，可以通过调用线程库中的派生例程创建一个在相同进程中运行的新线程</li>
+<li>对于设置了用户级线程的系统，其调度依然以进程为单位进行，各个进程轮流执行一个时间片</li>
+<li>优点：
+<ul>
+<li>线程切换不需要转化到内核空间，节省了开销</li>
+<li>调度算法可以是进程专用的，不同的进程可根据自身需求选择不同的线程调度算法</li>
+<li>用户级线程的实现与操作系统无关，对线程管理的代码属于用户程序的一部分</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>当线程执行一个系统调用时，不仅该线程被阻塞，进程中所有线程都会被阻塞</li>
+<li>不能发挥多CPU的优势，内核每次分配给一个进程一个CPU，因此进程中只有一个线程能执行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>内核级线程</p>
+<ul>
+<li>操作系统为每个内核级线程设置一个TCB，内核根据该控制块感知某线程的存在，并对其加以控制</li>
+<li>优点：
+<ul>
+<li>能发挥多CPU的优势，内核能同时调度同一进程中的多个线程并行执行</li>
+<li>如果进程中的一个线程被阻塞，内核可以调度该进程中的其他线程占用CPU，也可运行其他进程中的线程</li>
+<li>内核支持线程具有很小的数据结构和堆栈，线程切换比较快，开销小</li>
+<li>内核本身也可以采用多线程技术，可以提高系统的执行速度和效率</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>同一进程中线程切换需要从用户态转到核心态运行，开销较大</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>内核支持多个内核级线程的建立、调度和管理，同时允许用户程序建立、调度和管理用户级线程。</p>
+</li>
+<li>
+<p>一些内核级线程对应多个用户级线程，这是用户级线程通过时分多路复用内核级线程实现</p>
+</li>
+<li>
+<p>多线程模型</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多线程模型<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多对一模型<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>一对一模型<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多对多模型<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将多个用户级线程映射到一个内核级线程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将每个用户级线程映射到一个内核级线程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将n个用户级线程映射到m个内核级线程，n≥m<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span></pre></div>
+<ul>
+<li>
+<p>多对一模型</p>
+<ul>
+<li>
+<p>每个进程只被分配一个内核级线程，线程的调度和管理在用户空间完成。当用户线程需要访问内核时，将其映射到一个内核级线程上，但每次只允许一个线程进行映射</p>
+</li>
+<li>
+<p>优点：线程管理是在用户空间中进行的，无需切换到核心态，因此效率高</p>
+</li>
+<li>
+<p>缺点：如果一个线程在访问内核时发生阻塞，则整个线程都会被阻塞；在任何时刻，只有一个线程能够访问内核，多个线程不能同时在多个CPU上运行</p>
+</li>
+</ul>
+</li>
+<li>
+<p>一对一模型</p>
+<ul>
+<li>每个进程有与用户级线程数量相同的内核级线程，线程切换由内核完成，需要切换到核心态</li>
+<li>优点：当一个线程被阻塞后，允许调度另一个线程运行，所以并发能力较强</li>
+<li>缺点：每创建一个用户线程，就需要创建一个内核线程，开销较大</li>
+</ul>
+</li>
+<li>
+<p>多对多模型</p>
+<ul>
+<li>既克服了多对一模型并发度不高的缺点，又克服了一对一模型的一个用户进程占用太多内核级线程而开销太大的缺点</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>下列关于并发进程特性的叙述中，正确的是(  )</p>
+<p>A. 进程是一个动态过程，其生命周期是连续的</p>
+<p>B. 并发进程执行完毕后，一定能够得到相同的结果</p>
+<p>C. 并发进程对共享变量的操作结果与执行速度无关</p>
+<p>D. 并发进程的运行结果具有不可再现性</p>
+</li>
+<li>
+<p>下列选项中，导致创建新进程的操作是(  )</p>
+<p>I. 用户登录</p>
+<p>II. 高级调度发生时</p>
+<p>III. 操作系统响应用户提出的请求</p>
+<p>IV. 用户打开了一个浏览器程序</p>
+<p>A. 仅I和IV</p>
+<p>B. 仅II和IV</p>
+<p>C. I、II和IV</p>
+<p>D. 全部</p>
+</li>
+<li>
+<p>速度最快的进程通信方式是(  )</p>
+<p>A. 消息传递</p>
+<p>B. Socket</p>
+<p>C. 共享内存</p>
+<p>D. 管道通信</p>
+</li>
+<li>
+<p>下列几种关于进程的叙述中，(  )最不符合操作系统对进程的理解</p>
+<p>A. 进程是在多程序环境中的完整程序</p>
+<p>B. 进程可以由程序、数据和PCB描述</p>
+<p>C. 线程是一种特殊的进程</p>
+<p>D. 进程是程序在一个数据集合上的运行过程，它是系统进行资源分配和调度的一个独立单元</p>
+</li>
+<li>
+<p>PCB是进程存在的唯一标识，下列(  )不属于PCB</p>
+<p>A. 进程ID</p>
+<p>B. CPU状态</p>
+<p>C. 堆栈指针</p>
+<p>D. 全局变量</p>
+</li>
+<li>
+<p>在具有通道设备的单处理器系统中实现并发技术后，(  )</p>
+<p>A. 各个进程在某一时刻并发运行，CPU与I/O设备间并行工作</p>
+<p>B. 各个进程在某一时间段内并行运行，CPU与I/O设备间串行工作</p>
+<p>C. 各个进程在某一时间段内并发运行，CPU与I/O设备间并行工作</p>
+<p>D. 各个进程在某一时刻并发运行，CPU与I/O设备间串行工作</p>
+</li>
+<li>
+<p>在以下描述中，(  )并不是多线程系统的特长<br>
+A. 利用线程并行地执行矩阵乘法运算</p>
+<p>B. Web服务器利用线程响应HTTP请求</p>
+<p>C. 键盘驱动程序为每个正在运行的应用配备一个线程，用以响应该应用的键盘输入</p>
+<p>D. 基于GUI的调试应用用不同的线程分别处理用户输入、计算和跟踪等操作</p>
+</li>
+<li>
+<p>下列选项中，可能导致用户级线程切换的事件是(  )</p>
+<p>A. 系统调用</p>
+<p>B. I/O请求</p>
+<p>C. 异常处理</p>
+<p>D. 线程同步</p>
+</li>
+<li>
+<p>下列关于用户级线程的描述中，错误的是(  )</p>
+<p>A. 用户级线程由线程库进行管理</p>
+<p>B. 用户级线程只有在创建和调度时需要内核的干预</p>
+<p>C. 操作系统无法直接调度用户级线程</p>
+<p>D. 线程库中线程的切换不会导致进程切换</p>
+</li>
+<li>
+<p>下列关于父进程和子进程的叙述中，错误的是(  )</p>
+<p>A. 父进程和子进程可以并发执行</p>
+<p>B. 父进程和子进程共享虚拟地址空间</p>
+<p>C. 父进程和子进程有不同的进程控制块</p>
+<p>D. 父进程和子进程不能同时使用同一临界资源</p>
+</li>
+<li>
+<p>下列操作完成时，导致CPU从内核态转为用户态的是(  )</p>
+<p>A. 阻塞进程</p>
+<p>B. 执行CPU调度</p>
+<p>C. 唤醒进程</p>
+<p>D. 执行系统调用</p>
+</li>
+</ol>
+<h2>CPU调度</h2>
+<h3>调度</h3>
+<ol>
+<li>
+<p>一个作业从提交开始到完成，往往需要经历以下三级调度</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>调度的层次<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>高级调度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>中级调度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>低级调度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span></pre></div>
+<ul>
+<li>高级调度(作业调度)：内存与外存之间的调度，每个作业只调入一次，调出一次。作业调入时创建PCB，调出时撤销PCB</li>
+<li>中级调度：将暂时不能运行的进程调入外存等待，此时进程的状态为<strong>挂起态</strong>。当它们已具备运行条件且内存又稍有空闲时，由中级调度来决定将外存上哪些已具备运行条件的挂起进程再重新调入内存，并修改其状态为就绪态，挂在就绪队列上等待</li>
+<li>低级调度(进程调度)：按照某种算法从就绪队列中选取一个进程，将CPU分配给它</li>
+</ul>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>挂起与阻塞的区别：两种状态都是暂时不能获取CPU服务，但挂起态是将进程映像调到外存，而阻塞态下进程映像还在内存中。</p>
+</blockquote>
+</li>
+<li>
+<p>三级调度的联系：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">调度类型</th>
+<th align="center">调度方向</th>
+<th align="center">发生频率</th>
+<th align="center">对进程状态的影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">高级调度</td>
+<td align="center">外存$\longrightarrow$内存</td>
+<td align="center">最低</td>
+<td align="center">无$\longrightarrow$创建态$\longrightarrow$就绪态</td>
+</tr>
+<tr>
+<td align="center">中级调度</td>
+<td align="center">外存$\longrightarrow$内存</td>
+<td align="center">中等</td>
+<td align="center">挂起态$\longrightarrow$就绪态</td>
+</tr>
+<tr>
+<td align="center">低级调度</td>
+<td align="center">内存$\longrightarrow$CPU</td>
+<td align="center">最高</td>
+<td align="center">就绪态$\longrightarrow$运行态</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<ul>
+<li>作业调度为进程活动做准备，进程调度使进程正常活动起来</li>
+<li>中级调度将暂时不能运行的进程挂起，中级调度处于作业调度和进程调度之间</li>
+<li>作业调度次数少，中级调度次数略多，进程调度频率最高</li>
+<li>进程调度是最基本的，不可或缺的</li>
+</ul>
+</li>
+</ol>
+<h3>调度的实现</h3>
+<ol>
+<li>
+<p>用于调度和分配CPU的组件称为调度程序，它通常由三部分组成</p>
+<ul>
+<li>排队器：将系统中的所有就绪进程按照一定的策略排成一个或多个队列，以便于调度程序选择。每当有一个进程转变为就绪态时，排队器便将它插入对应的就绪队列</li>
+<li>分派器：依据调度程序所选的进程，将其从就绪队列中取出，为其分配CPU</li>
+<li>上下文切换器：在对CPU进行切换时，会发生两对上下文的切换操作：将当前进程的上下文保存到其PCB中，再装入分派程序的上下文，以便分派程序运行；移出分派程序的上下文，将新选进程的CPU现场信息装入CPU的各个相应寄存器</li>
+</ul>
+</li>
+<li>
+<p>进程切换往往在调度完成后立即发生</p>
+</li>
+<li>
+<p>需要进行进程调度与切换的情况：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>情况<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>主动放弃<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>被动放弃<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程正常终止<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>运行过程中发生异常而终止<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程主动请求阻塞<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>分给进程的时间片用完<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>有更紧急的事需要处理<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>有更高优先级的进程进入就绪队列<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span></pre></div>
+</li>
+<li>
+<p>不能进行进程的调度与切换的情况：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>情况<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>处理中断的过程中<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程在操作系统内核程序临界区中<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>在原子操作过程中<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span></pre></div>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>进程在操作系统内核程序临界区中不能进行调度与切换。(√)</p>
+<p>进程处于临界区时不能进行处理机调度。(×)</p>
+</blockquote>
+</li>
+<li>
+<p>进程调度方式</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程调度方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>非抢占调度方式/非剥夺方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>抢占调度方式/剥夺方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span></pre></div>
+<ul>
+<li>非剥夺方式：当一个进程正在CPU上执行时，即使有某个更为重要或紧迫的进程进入就绪队列，仍然让正在执行的进程继续执行，直到该进程运行完成或发生某种时间而进入阻塞态时，才将CPU分配给其他进程</li>
+<li>剥夺方式：当一个进程正在CPU上执行时，若有某个更为重要或紧迫的进程需要使用CPU，则允许调度程序根据某种原则去暂停正在执行的进程，将CPU分配给这个更为重要或紧迫的进程</li>
+</ul>
+</li>
+<li>
+<p>在进程切换时，如果系统中没有就绪程序，就会调度<strong>闲逛进程</strong>运行，不需要CPU之外的资源，它不会被阻塞</p>
+</li>
+<li>
+<p>两种线程的调度</p>
+<ul>
+<li>用户级线程的调度：由于内核不知道线程的存在，所以内核会选择一个进程给予时间控制，由进程中的调度程序决定哪个线程运行</li>
+<li>内核级线程的调度：内核选择一个特定线程运行，通常不用考虑该线程属于哪个进程。对被选择的线程赋予一个时间片，如果超出了时间片，就会强制挂起该线程</li>
+</ul>
+</li>
+</ol>
+<h3>调度的目标</h3>
+<ol>
+<li>
+<p>CPU利用率<br>
+$$<br>
+CPU的利用率=\frac{CPU有效工作时间}{CPU有效工作时间+CPU空闲等待时间}<br>
+$$</p>
+</li>
+<li>
+<p>系统吞吐量：单位时间内CPU完成作业的数量</p>
+</li>
+<li>
+<p>周转时间：从作业提交到作业完成所经历的时间<br>
+$$<br>
+周转时间=作业完成时间-作业提交时间<br>
+$$</p>
+<p>$$
+平均周转时间=\sum_1^n\frac1n周转时间_{作业 \ i}
+$$</p>
+<p>$$
+带权周转时间=\frac{作业周转时间}{作业实际运行时间}
+$$</p>
+<p>$$
+平均带权周转时间=\sum_1^n\frac1n带权周转时间_{作业 \ i}
+$$</p>
+</li>
+<li>
+<p>等待时间：进程处于等待CPU的时间之和</p>
+</li>
+<li>
+<p>响应时间：从用户提交请求到系统首次产生响应所用的时间</p>
+</li>
+</ol>
+<h3>进程切换</h3>
+<ol>
+<li>
+<p>上下文切换：切换CPU到另一个进程需要保存当前进程状态并恢复另一个进程的状态<br>
+上下文切换的流程：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TB</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>挂起一个进程，将CPU上下文保存到PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将进程的PCB移入相应的队列<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>选择另一个进程执行，并更新其PCB<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>恢复新进程的CPU上下文<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>跳转到新进程PCB中程序计数器所指向的位置执行<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+<li>
+<p>用户态和内核态之间的切换称为<strong>模式切换</strong></p>
+</li>
+</ol>
+<h3>典型的调度算法</h3>
+<ol>
+<li>
+<p>先来先服务调度算法</p>
+<ul>
+<li>既可用于作业调度，又可用于进程调度</li>
+<li>在作业调度中，FCFS调度算法每次从后备作业队列中选择最先进入该队列的一个或几个作业将它们调入内存，分配必要的资源，创建进程并放入就绪队列；在进程调度中，FCFS调度算法每次从就绪队列中选择最先进入该队列的进程，将CPU分配给它，使之投入运行，直到运行完成或因某种原因而阻塞时才释放CPU</li>
+<li>优点：算法简单，对长作业有利，有利于CPU繁忙型作业</li>
+<li>缺点：效率低，对短作业不利，不利于I/O繁忙型作业</li>
+</ul>
+</li>
+<li>
+<p>短作业优先调度算法</p>
+<ul>
+<li>既可用于作业调度，又可用于进程调度</li>
+<li>SJF调度算法从后备队列中选择一个或几个估计运行时间最短的作业，将它们调入内存运行；SPF调度算法从就绪队列中选择一个估计运行时间最短的进程，将CPU分配给它，使之立即执行，直到完成或发生某事件而阻塞时才释放CPU</li>
+<li>缺点：对长作业不利，未考虑作业的紧迫程度，不一定真正做到短作业优先调度</li>
+<li>在所有进程集合同时到达时，短作业优先调度算法的平均等待时间、平均周转时间是最优的</li>
+</ul>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>若未作说明，则默认为非抢占式的。</p>
+</blockquote>
+</li>
+<li>
+<p>高响应比有限调度算法</p>
+<ul>
+<li>
+<p>主要用于作业调度</p>
+</li>
+<li>
+<p>在每次进行作业调度时，先计算后备作业队列中每个作业的相应比，从中选择响应比最高的作业投入运行<br>
+$$<br>
+响应比R_P=\frac{等待时间+要求服务时间}{要求服务时间}<br>
+$$</p>
+</li>
+<li>
+<p>对长作业而言，作业的响应比随等待时间的增加而提高，克服了“<strong>饥饿</strong>”现象</p>
+</li>
+</ul>
+</li>
+<li>
+<p>FCFS、SJF/SPF、HRRN调度算法的比较</p>
+<table role="table">
+<thead>
+<tr>
+<th align="center">算法</th>
+<th align="center">是否可抢占</th>
+<th align="center">是否考虑到等待<br>时间&amp;运行时间</th>
+<th align="center">饥饿现象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">FCFS</td>
+<td align="center">否</td>
+<td align="center">等待时间√<br>运行时间×</td>
+<td align="center">不会出现</td>
+</tr>
+<tr>
+<td align="center">SJF/SPF</td>
+<td align="center">默认否</td>
+<td align="center">等待时间×<br>运行时间√</td>
+<td align="center">会出现</td>
+</tr>
+<tr>
+<td align="center">HRRN</td>
+<td align="center">是</td>
+<td align="center">等待时间√<br>运行时间√</td>
+<td align="center">不会出现</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>优先级调度算法</p>
+<ul>
+<li>既可用于作业调度，又可用于进程调度</li>
+<li>在作业调度中，优先级调度算法每次从后备队列中选择优先级最高的一个或几个作业，将它们调入内存，分配必要的资源，创建进程并放入就绪队列；在进程调度中，优先级调度算法每次从就绪队列中选择优先级最高的进程，将CPU分配给它，使之投入运行</li>
+<li>优先级调度算法分类：
+<ul>
+<li>非抢占式优先级调度算法</li>
+<li>抢占式优先级调度算法</li>
+</ul>
+</li>
+<li>进程优先级的分类：
+<ul>
+<li>静态优先级</li>
+<li>动态优先级</li>
+</ul>
+</li>
+<li>进程优先级的设置可以参照以下原则：
+<ul>
+<li>系统进程＞用户进程</li>
+<li>交互型进程＞非交互型进程</li>
+<li>I/O型进程＞计算型进程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>时间片轮转调度算法</p>
+<ul>
+<li>系统将所有的就绪进程按FCFS策略排成一个就绪队列。系统可设置每隔一定时间便产生一次时钟中断，激活调度程序进行调度，将CPU分配给就绪队列的队首进程，并令其执行一个时间片</li>
+<li>若一个世间片尚未用完当前进程已运行完成，则调度程序会被立即激活；若一个时间片被用完，则产生一个时钟中断，由时钟中断处理程序来激活调度程序</li>
+</ul>
+</li>
+<li>
+<p>多级队列调度算法</p>
+<ul>
+<li>在系统中设置多个就绪队列，将不同类型或性质的进程固定分配到不同的就绪队列。每个队列可实施不同的调度算法。</li>
+<li>同一队列中的进程可以设置不同的优先级，不同队列本身也可以设置不同的优先级。</li>
+<li>在多CPU系统中，可以很方便为每个CPU设置一个独立的就绪队列，每个CPU可实施各自不同的调度策略，这样就能根据用户需求将多个线程分配到一个或多个CPU上运行</li>
+</ul>
+</li>
+<li>
+<p>多级反馈队列调度算法</p>
+<ul>
+<li>
+<p>通过动态调整进程优先级和时间片大小，多级反馈队列调度算法可以兼顾多方面系统目标</p>
+</li>
+<li>
+<p>调度算法实现思想：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TB</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>设置多个就绪队列，并为每个队列赋予不同的优先级<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>赋予各个队列的进程运行时间片的大小各不相同<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>每个队列都采用FCFS算法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>按队列优先级调度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>优先级调度算法、时间片轮换调度算法、多级反馈队列调度算法的比较</p>
+<table role="table">
+<thead>
+<tr>
+<th align="center">算法</th>
+<th align="center">是否可抢占</th>
+<th align="center">饥饿现象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">优先级调度算法</td>
+<td align="center">均存在</td>
+<td align="center">会出现</td>
+</tr>
+<tr>
+<td align="center">时间片轮换调度算法</td>
+<td align="center">是</td>
+<td align="center">不会出现</td>
+</tr>
+<tr>
+<td align="center">多级反馈队列调度算法</td>
+<td align="center">是</td>
+<td align="center">会出现</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<h3>小节总结</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">mindmap</span>
+	<span class="pl-ent">root</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">)</span></span>调度算法(</span>
+		(先来先服务调度算法)
+			<span class="pl-ent">对长作业有利，有利于CPU繁忙型作业</span>
+			<span class="pl-ent">对短作业不利，不利于I/O繁忙型作业</span>
+		(短作业优先调度算法)
+			<span class="pl-ent">对长作业不利</span>
+		(高响应比优先调度算法)
+			<span class="pl-ent">克服了饥饿现象</span>
+			<span class="pl-ent">兼顾长短作业</span>
+		(优先级调度算法)
+		(时间片轮转调度算法)
+			<span class="pl-ent">兼顾长短作业</span>
+		(多级队列调度算法)
+		(多级反馈队列调度算法)</pre></div>
+<h3>错题</h3>
+<ol>
+<li>
+<p>设计调度算法时应该考虑(  )</p>
+<p>I. 公平性</p>
+<p>II. 资源利用率</p>
+<p>III. 互斥性</p>
+<p>IV. 平均周转时间</p>
+<p>A. I、II</p>
+<p>B. I、II、IV</p>
+<p>C. I、III、IV</p>
+<p>D. 全部</p>
+</li>
+<li>
+<p>(  )有利于CPU繁忙型的作业，而不利于I/O繁忙型的作业</p>
+<p>A. 时间片轮转算法</p>
+<p>B. 先来先服务调度算法</p>
+<p>C. 短作业(进程)优先算法</p>
+<p>D. 优先级调度算法</p>
+</li>
+<li>
+<p>下列调度算法中，(  )调度算法是绝对可抢占的</p>
+<p>A. 先来先服务</p>
+<p>B. 时间片轮转</p>
+<p>C. 优先级</p>
+<p>D. 短进程优先</p>
+</li>
+<li>
+<p>多级反馈队列调度算法不具备的特性是(  )</p>
+<p>A. 资源利用率高</p>
+<p>B. 响应速度快</p>
+<p>C. 系统开销小</p>
+<p>D. 并行度高</p>
+</li>
+<li>
+<p>下列选项中，降低进程优先级的合理时机是(  )</p>
+<p>A. 进程时间片用完</p>
+<p>B. 进程刚完成I/O操作，进入就绪队列</p>
+<p>C. 进程长期处于就绪队列</p>
+<p>D. 进程从就绪态转为运行态</p>
+</li>
+<li>
+<p>假设某计算机系统有四个进程，各进程的预计运行时间和到达就绪队列的时刻见下表。试用时间片轮转调度算法进行调度(时间配额为2)。分别计算各个进程的调度次序及平均周转时间。</p>
+<table role="table">
+<thead>
+<tr>
+<th align="center">进程</th>
+<th align="center">到达就绪队列时刻</th>
+<th align="center">预计运行时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">$P_1$</td>
+<td align="center">0</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td align="center">$P_2$</td>
+<td align="center">1</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">$P_3$</td>
+<td align="center">2</td>
+<td align="center">9</td>
+</tr>
+<tr>
+<td align="center">$P_4$</td>
+<td align="center">3</td>
+<td align="center">5</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<h2>同步和互斥</h2>
+<h3>同步和互斥的基本概念</h3>
+<ol>
+<li>
+<p>临界资源：一次仅能允许一个进程使用的资源</p>
+</li>
+<li>
+<p>临界区：在每个进程中，访问临界资源的那段代码</p>
+</li>
+<li>
+<p>临界资源的访问过程分为四部分：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>访问过程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进入区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>临界区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>退出区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>剩余区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>检查是否能进入临界区，进入后设置标志阻止其他进程进入<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>进程中访问临界资源的代码<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>将正在访问临界区的标志清除<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>代码中剩余部分<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+<li>
+<p>同步/直接制约关系：为完成某种任务而建立的两个或多个进程，这些进程因为需要协调它们的运行次序而等待、传递信息所产生的制约关系</p>
+</li>
+<li>
+<p>互斥/间接制约关系：当一个进程进入临界区使用临界资源时，另一个进程必须等待，当占用临界资源的进程退出临界区后，另一进程才允许去访问此临界资源</p>
+</li>
+<li>
+<p>同步机制应遵循以下准则：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>准则<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>空闲让进<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>临界区空闲时，可以允许一个请求进入临界区的进程立即进入临界区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>忙则等待<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>当已有进程进入临界区时，其他试图进入临界区的进程必须等待<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>有限等待<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>对请求访问的进程，应保证能在有限时间内进入临界区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>让权等待<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>当进程不能进入临界区时，应立即释放处理器，防止进程忙等待<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+</ol>
+<h3>实现临界区互斥的基本方法</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>基本方法<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>软件实现方法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>硬件实现方法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>单标志法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>双标志先检查法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>双标志后检查法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>Peterson算法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>中断屏蔽法<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>TestAndSet指令<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">J</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>Swap指令<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+<ol>
+<li>
+<p>单标志法</p>
+<ul>
+<li>该算法设置一个公用整型变量turn，指示允许进入临界区的进程编号。当turn=j(j=0, 1)时表示允许进程$P_j$进入临界区。进程退出临界区时，设置turn=(1-j)(j=0, 1)</li>
+<li>该算法可以实现只允许一个进程进入临界区，但是两个进程必须交替进入临界区，若某个进程不再进入临界区，则另一个进程也将无法进入临界区</li>
+</ul>
+</li>
+<li>
+<p>双标志先检查法</p>
+<ul>
+<li>该算法设置一个布尔型数组flag[2]，用来标记各个进程想进入临界区的意愿，flag[j]=true(j=0, 1)表示$P_j$想要进入临界区。$P_j$进入临界区之前先检查对方是否想进入临界区，若想，则等待；否则，将flag[j]设为true后再进入临界区，当$P_j$退出临界区时，将flag[j]设置为false</li>
+<li>该算法支持进程不用交替进入，可连续使用；但$P_0$和$P_1$可能同时进入临界区</li>
+</ul>
+</li>
+<li>
+<p>双标志后检查法</p>
+<ul>
+<li>先设置自己的表示，再检查对方的标志，若对方的标志为true，则等待；否则，进入临界区</li>
+<li>两个进程依此设置自己的标志，并依此检查对方的标志，如果双方都想进入临界区，会出现都无法访问的现象</li>
+</ul>
+</li>
+<li>
+<p>Peterson算法</p>
+<ul>
+<li>在每个进程进入临界区之前，先设置自己的flag标志，在设置允许进入的turn标志；之后再同时检测双方的flag和turn表示，以保证双方同时要求进入临界区时，只允许一个进程进入</li>
+<li>Peterson算法很好地遵循了前三条准则，但是未能遵循“让权等待”准则</li>
+</ul>
+</li>
+<li>
+<p>中断屏蔽法</p>
+<ul>
+<li>当一个进程正在执行它的临界区代码时，防止其他进程进入临界区最简单的方法是关中断</li>
+<li>缺点：限制了CPU交替执行程序的能力；只适用于操作系统内核进程，不适用于用户进程；不适用于多处理器操作系统</li>
+</ul>
+</li>
+<li>
+<p>TestAndSet指令</p>
+<ul>
+<li>为每个临界资源设置一个共享布尔变量lock(true表示资源正在被占用，false表示资源未被占用，初始值为false)。在进入临界区之前，先用TS指令检查lock值，若为false，则表示没有进程在临界区，可以进入，并将lock置为true；若为true，则表示有进程在临界区，进入循环等待，直到当前访问临界区的进程退出时解锁</li>
+<li>该方法适用于多处理器系统，缺点是不能实现“让权等待”</li>
+</ul>
+</li>
+<li>
+<p>Swap指令</p>
+<ul>
+<li>在每个进程中设置一个局部布尔变量key，初始值为true。先记录此时临界区是否已加锁，再将锁标志lock置为true，最后检查key，若key为false，则说明没有其他进程对临界区进行访问，于是跳出循环，进入临界区</li>
+</ul>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>Swap指令<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>优点<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>简单、容易验证正确性<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>适用于任意数目的进程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>支持多处理器系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">B</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>支持系统中有多个临界区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>缺点<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>不能实现“让权等待”<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">G</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>可能导致饥饿现象<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+</ol>
+<h3>互斥锁</h3>
+<ol>
+<li>解决临界区最简单的工具是互斥锁/自旋锁，常用于所处理器系统</li>
+<li>互斥锁缺点是不能实现“让权等待”，优点是进程再等待锁期间，没有上下文切换，若上锁的时间较短，则等待代价不高</li>
+</ol>
+<h3>信号量</h3>
+<ol>
+<li>
+<p>信号量机制是一种功能较强的机制，只能被两个标准的原语wait()和signal()访问，也可以简写为P()和V()，或者简称P操作和V操作</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>信号量<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>整型信号量<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>记录型信号量<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+<li>
+<p>整型信号量</p>
+<ul>
+<li>一个用于表示资源数目的整型量S，相比于普通型变量，对整形信号量的操作只有三种：初始化、wait操作和signal操作</li>
+<li>在wait操作中，只要信号量S ≤ 0，就会不断循环测试，因此不能满足“让权等待”准则</li>
+</ul>
+</li>
+<li>
+<p>记录型信号量</p>
+<ul>
+<li>是一种不存在“忙等”现象的进程同步机制</li>
+<li>除了一个表示资源数目的整型变量value外，还增加一个进程链表L，用于链接所有等待该资源的进程</li>
+<li>对信号量S进行一次P操作，表示进程请求一个该类资源，因此执行S.value--。当S.value &lt; 0时，表示该类资源已分配完毕，因此应调用block原语进行自我阻塞，主动放弃CPU，并插入该类资源的等待队列S.L</li>
+<li>对信号量S进行一次V操作，表示进程释放一个该类资源，因此执行S.value++。若加一后仍S.value ≤ 0，则调用wakeup原语将S.L中的第一个进程唤醒</li>
+</ul>
+</li>
+<li>
+<p>利用信号量实现进程互斥：</p>
+<ul>
+<li>为了使多个进程能互斥地访问某个临界资源，需要为该资源设置一个互斥信号量S，其初始值为1，然后将各个进程访问该资源的临界区置于P(S)与V(S)之间.</li>
+<li>每个要访问该资源的进程在进入临界区之前，都要先对S执行P操作，若该资源此刻未被访问，则本次P操作必然成功，进程便可进入自己的临界区。这时，其他进程对该资源执行P操作必然失败，保证了该资源地互斥访问。当访问该资源的进程退出临界区后，要对S执行V操作，以便释放该临界资源</li>
+</ul>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>S<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>1<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>两个进程都未进入临界区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>0<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>有一个进程已进入临界区，另一个不访问临界区<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>－1<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>一个进程进入临界区，另一个进程因等待而阻塞<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+</ol>
+<h3>经典同步问题</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>经典同步问题<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>生产者-消费者问题<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>读者-写者问题<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>哲学家进餐问题<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>吸烟者问题<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+<ol>
+<li>生产者-消费者问题</li>
+<li>读者-写者问题</li>
+<li>哲学家进餐问题</li>
+<li>吸烟者问题</li>
+</ol>
+<h3>管程</h3>
+<ol>
+<li>
+<p>管程定义了一个数据结构和能为并发进程所执行的一组操作，这组操作能同步进程和改变管程中的数据</p>
+</li>
+<li>
+<p>管程的组成</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>管程<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>管程的名称<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>局部于管程内部的共享数据结构说明<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>对该数据结构进行操作的一组过程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>对局部于管程内部的共享数据设置初始值的语句<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+<li>
+<p>当一个进程进入管程后被阻塞，直到阻塞的原因解除时，在此期间，如果该进程不释放管程，那么其他进程无法进入管程，为此，将阻塞原因定义为条件变量condition</p>
+</li>
+<li>
+<p>一个进程被阻塞的原因可能有多个，因此在管程中设置了多个条件变量，每个条件变量保存了一个等待队列</p>
+</li>
+<li>
+<p>对条件变量只能进行两种操作，即wait和signal</p>
+</li>
+<li>
+<p>条件变量和信号量的比较</p>
+<ul>
+<li>条件变量的wait/signal操作类似于信号量的P/V操作，可以实现进程的阻塞/唤醒</li>
+<li>条件变量没有值，仅实现排队等待功能；而信号量有值，反映了剩余资源数。在管程中，剩余资源数用共享数据结构记录</li>
+</ul>
+</li>
+<li>
+<p>小节总结</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">mindmap</span>
+	<span class="pl-ent">root</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>管程<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+		<span class="pl-ent">为什么引入管程</span>
+			<span class="pl-ent">解决信号量机制编程麻烦、易出错的问题</span>
+		<span class="pl-ent">组成</span>
+			<span class="pl-ent">名称</span>
+			<span class="pl-ent">共享数据结构</span>
+			<span class="pl-ent">对数据结构初始化的语句</span>
+			<span class="pl-ent">一组用来访问数据结构的过程</span>
+		<span class="pl-ent">基本特征</span>
+			<span class="pl-ent">各外部进程/线程只能通过管程提供的特定入口访问共享数据</span>
+			<span class="pl-ent">每次仅允许一个进程在管程内执行某个内部过程</span>
+		<span class="pl-ent">补充</span>
+			<span class="pl-ent">各进程必须互斥访问管程的特性是由编译器实现的</span>
+			<span class="pl-ent">可在管程中设置条件变量及等待/唤醒操作以解决同步问题</span></pre></div>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>一个进程映像由程序、数据及PCB组成，其中(  )必须用可重入编码编写</p>
+<p>A. PCB</p>
+<p>B. 程序</p>
+<p>C. 数据</p>
+<p>D. 共享程序段</p>
+</li>
+<li>
+<p>以下关于管程的叙述中，错误的是(  )</p>
+<p>A. 管程是进程同步工具，解决信号量机制大量同步操作分散的问题</p>
+<p>B. 管程每次只允许一个进程进入管程</p>
+<p>C. 管程中signal操作的作用和信号量机制中的V操作相同</p>
+<p>D. 管程是被进程调用的，管程是语法范围，无法创建和撤销</p>
+</li>
+<li>
+<p>下列关于PV操作的说法中，正确的是(  )</p>
+<p>I. PV操作是一种系统调用命令</p>
+<p>II. PV操作是一种低级进程通信原语</p>
+<p>III. PV操作是由一个不可被中断的过程组成</p>
+<p>IV. PV操作是由两个不可被中断的过程组成</p>
+<p>A. I、III</p>
+<p>B. II、IV</p>
+<p>C. I、II、IV</p>
+<p>D. I、IV</p>
+</li>
+<li>
+<p>下列关于临界区和临界资源的说法中，正确的是(  )</p>
+<p>I. 银行家算法可以用来解决临界区问题</p>
+<p>II. 临界区是指进程中用于实现进程互斥的那段代码</p>
+<p>III. 共用队列属于临界资源</p>
+<p>IV. 私用数据属于临界资源</p>
+<p>A. I、II</p>
+<p>B. I、IV</p>
+<p>C. 仅III</p>
+<p>D. 以上答案都错误</p>
+</li>
+<li>
+<p>进程$P_1$和$P_2$均包含并发执行的线程，部分伪代码描述如下所示：</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 进程P1</span>
+<span class="pl-k">int</span> x = <span class="pl-c1">0</span>;
+
+<span class="pl-k">void</span> <span class="pl-en">Thread1</span>(  ) {
+    <span class="pl-k">int</span> a = <span class="pl-c1">1</span>;
+    x += <span class="pl-c1">1</span>;
+}
+
+<span class="pl-k">void</span> <span class="pl-en">Thread2</span>(  ) {
+    <span class="pl-k">int</span> a = <span class="pl-c1">2</span>;
+    x +=<span class="pl-c1">2</span>;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 进程P2</span>
+<span class="pl-k">int</span> x = <span class="pl-c1">0</span>;
+
+<span class="pl-k">void</span> <span class="pl-en">Thread3</span>(  ) {
+    <span class="pl-k">int</span> a = x;
+    x += <span class="pl-c1">3</span>;
+}
+
+<span class="pl-k">void</span> <span class="pl-en">Thread4</span>(  ) {
+    <span class="pl-k">int</span> b = x;
+    x += <span class="pl-c1">4</span>;
+}</pre></div>
+<p>下列选项中，需要互斥执行的操作是(  )</p>
+<p>A. a = 1 &amp; a = 2</p>
+<p>B. a = x &amp; b = x</p>
+<p>C. x += 1 &amp; x += 2</p>
+<p>D. x += 1 &amp; x += 3</p>
+</li>
+</ol>
+<h2>死锁</h2>
+<h3>死锁的概念</h3>
+<ol>
+<li>
+<p>死锁：多个进程因竞争资源而造成的一种僵局，使得各个进程都被阻塞</p>
+</li>
+<li>
+<p>一组进程处于死锁状态是指组内得每个进程都在等待一个事件，而该事件只可能由该组内的另一个进程产生</p>
+</li>
+<li>
+<p>饥饿：进程在信号量内无穷等待</p>
+</li>
+<li>
+<p>产生饥饿的主要原因：当系统中有多个进程同时申请某类资源时，由分配策略确定资源分配给进程的次序，有的分配策略可能是不公平的，即不能保证等待时间上界的存在</p>
+</li>
+<li>
+<p>死锁与饥饿的共同点都是进程无法顺利向前推进</p>
+</li>
+<li>
+<p>死锁与饥饿的主要差别：</p>
+<ul>
+<li>发生饥饿的主要进程可以只有一个，而发生死锁的进程必然大于等于两个</li>
+<li>发生饥饿的进程可能处于就绪态或阻塞态，而发生死锁的进程必定处于阻塞态</li>
+</ul>
+</li>
+<li>
+<p>产生死锁的原因</p>
+<ul>
+<li>系统的竞争：系统中拥有的不可剥夺资源数量不足以满足多个进程运行的需要，使得进程在运行过程中，因争夺资源而陷入僵局</li>
+<li>进程推进顺序非法：请求和释放顺序不当，会导致进程死锁；进程间彼此等待对方发来的消息也会使进程无法继续向前推进</li>
+</ul>
+</li>
+<li>
+<p>产生死锁的必要条件</p>
+<ul>
+<li>互斥条件：进程要求对所分配的资源进行排他性使用</li>
+<li>不可剥夺条件：进程所获得的资源在未使用完之前不能被其他进程强行夺走</li>
+<li>请求并保持条件：进程已经保持了至少一个资源，又申请了一个被其他进程占用的资源</li>
+<li>循环等待条件：存在一种进程资源的循环等待链，链中每个进程已获得的资源同时被链中下一进程请求</li>
+</ul>
+<p>资源分配图含圈而系统不一定死锁的原因：同类资源数大于1</p>
+<p>若系统中每类资源都只有一个资源，则资源分配图含圈就变成了系统出现死锁的充分必要条件</p>
+</li>
+<li>
+<p>死锁的处理策略</p>
+<ul>
+<li>死锁预防：设置某些限制条件，破坏产生死锁的必要条件</li>
+<li>避免死锁：在资源的动态分配过程中，用某种方法防止系统进入不安全状态</li>
+<li>死锁的检测及解除：允许在运行过程中发生死锁，但可以及时检测并采取措施解除死锁</li>
+</ul>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">资源分配策略</th>
+<th align="center">各种可能模式</th>
+<th align="center">主要优点</th>
+<th align="center">主要缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">死锁<br>预防</td>
+<td align="center">保守，宁可资源闲置</td>
+<td align="center">一次请求所有资源，资源剥夺，<br>资源按序分配</td>
+<td align="center">适用于突发式处理的进程<br>不必进行剥夺</td>
+<td align="center">效率低，初始化时间延长；剥夺<br>次数过多，不变灵活申请新资源</td>
+</tr>
+<tr>
+<td align="center">死锁<br>避免</td>
+<td align="center">在运行时判断是否可能死锁</td>
+<td align="center">寻找可能的安全允许顺序</td>
+<td align="center">不必进行剥夺</td>
+<td align="center">必须知道将来的请求<br>进程不能被长时间阻塞</td>
+</tr>
+<tr>
+<td align="center">死锁<br>检测</td>
+<td align="center">宽松，只要允许就分配资源</td>
+<td align="center">定期检查死锁是否发生</td>
+<td align="center">不延长进程初始化时间<br>允许对死锁进行现场处理</td>
+<td align="center">通过剥夺解锁死锁<br>造成损失</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+</li>
+</ol>
+<h3>死锁预防</h3>
+<ol>
+<li>
+<p>破坏互斥条件</p>
+<ul>
+<li>将只能互斥使用的资源改造为允许共享使用的资源</li>
+<li>缺点：有些资源不能同时访问，且为了系统安全，很多时候还必须保护这种互斥性</li>
+</ul>
+</li>
+<li>
+<p>破坏不可剥夺条件</p>
+<ul>
+<li>当一个已经保持了某些不可剥夺资源的进程请求新的资源而得不到满足时，它必须释放已经保持的所有资源，待以后需要时再重新申请。常用于状态易于保存和恢复的资源</li>
+<li>缺点：实现起来比较麻烦，反复申请和释放资源既影响进程推进速度，又增加系统开销，进而降低系统吞吐量</li>
+</ul>
+</li>
+<li>
+<p>破坏请求并保持条件</p>
+<ul>
+<li>
+<p>要求进程在请求资源时不能持有不可剥夺资源，实现方式：</p>
+<ul>
+<li>采用预先静态分配方法，即进程在运行前一次申请完它所需要的全部资源。但是可能会造成资源的严重浪费，还会导致饥饿现象</li>
+<li>允许进程只获得运行初期所需要的资源后便开始运行。进程在运行过程中再逐步释放已分配给自己且已使用完毕的全部资源后，才能申请新的资源</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>破环循环等待条件</p>
+<ul>
+<li>顺序资源分配法：首先给系统中的各类资源编号，规定每个进程必须按编号递增的顺序请求资源，同类资源一次申请完。已持有大编号资源的进程不可能再逆向申请小编号的资源，因此不会产生循环等待的现象</li>
+<li>缺点：编号相对稳定，不利于增加新类型设备；进程实际使用资源的顺序可能和编号次序不一致，造成资源浪费；对编程带来麻烦</li>
+</ul>
+</li>
+</ol>
+<h3>死锁避免</h3>
+<ol>
+<li>
+<p>安全状态：系统能按某种进程推进顺序($P_1,P_2,\dots,P_n$)为每个进程$P_i$分配其所需的资源，直到满足每个进程对资源的最大需求，是每个进程都可顺利进程。此时$P_1,P_2,\dots,P_n$称为安全序列</p>
+</li>
+<li>
+<p>允许进程动态申请资源，但系统在进行资源分配之前，应先计算此次分配的安全性。若此次分配不会导致系统进入不安全状态，则允许分配，否则让进程等待</p>
+</li>
+<li>
+<p>银行家算法</p>
+<ul>
+<li>进程运行之前先声明对各种资源的最大需求量，其数目不应超过系统的资源总量。当进程在运行中申请资源时，系统必须先确定是否有足够的资源分配给该进程。若有，再进一步试探在将该资源分配给该进程后，是否会使系统处于不安全状态。如果不会，才将资源分配给它，否则让进程等待</li>
+</ul>
+<ol>
+<li>
+<p>数据结构描述：设系统中有n个进程，m类资源</p>
+<ul>
+<li>可利用资源向量Available：Available[j]=K表示系统中有K个$R_j$类资源可用</li>
+<li>最大需求矩阵Max(n$\times$m)：Max[i, j]=K表示进程$P_i$需要$R_j$类资源的最大数目为K</li>
+<li>分配矩阵Allocation(n$\times$m)：Allocation[i, j]=K表示进程$P_i$当前已分得$R_j$类资源的数目为K</li>
+<li>需求矩阵need(n$\times$m)：need[i, j]=K表示进程$P_i$还需要$R_j$类资源的数目为K</li>
+</ul>
+<pre lang="math" class="notranslate"><code class="notranslate">Need=Max-Allocation
+</code></pre>
+</li>
+<li>
+<p>算法描述：设$Request_i$使进程$P_i$的请求向量，$Request_i[j]=K$表示进程$P_i$需要j类资源K个</p>
+<ol>
+<li>
+<p>若$Reques_i[j]\leqslant Need[i,j]$，则进行下一步，否则认为出错</p>
+</li>
+<li>
+<p>若$Request_i[j]\leqslant Available[i.j]$，则进行下一步，否则表示尚无足够资源，$P_i$必须等待</p>
+</li>
+<li>
+<p>系统尝试将资源分配给进程$P_i$，并修改下面数据机构中的数值：</p>
+<pre lang="math" class="notranslate"><code class="notranslate">Available=Available-Request\\
+Allocation[i,j]=Allocation[i,j]+Requset_i[j]\\
+Need[i,j]=Need[i,j]-Request_i[j]
+</code></pre>
+</li>
+<li>
+<p>系统执行安全性算法，检查资源分配后系统是否处于安全状态</p>
+</li>
+</ol>
+</li>
+<li>
+<p>安全性算法：设置工作向量Work=Available，表示剩余可用资源数目</p>
+<ol>
+<li>初始化安全序列为空</li>
+<li>从Need矩阵找出符合下面条件的行：改行对应的进程不在安全序列中，而且该行小于或等于Work向量，找到后，将对应的进程加入安全序列；若找不到，则执行步骤四</li>
+<li>进程$P_i$进入安全序列后，可顺利执行，直至完成，并释放分配给它的资源，执行Work+=Allocation[i]，返回步骤二</li>
+<li>若此时安全序列已有所有进程，则系统处于安全状态，否则系统处于不安全状态</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3>死锁检测与解除</h3>
+<ol>
+<li>
+<p>可用资源分配图来检测系统所处的状态是否为死锁状态。从进程到资源的有向边称为<strong>请求边</strong>，表示该进程申请一个单位的该类资源；从资源到进程的边称为<strong>分配边</strong>，表示该类资源已有一个资源分配给了该进程</p>
+</li>
+<li>
+<p>死锁检测方法：</p>
+<ol>
+<li>在资源分配图中找出既不阻塞又不孤立的进程$P_i$(找出一条有向边与它相连，且该有向边对应资源的申请数量小于或等于系统中已有的空闲资源数量)。消除它所有的请求边和分配边，使之成为一个孤立的节点</li>
+<li>进程$P_i$所释放的资源，可以唤醒某些因等待这些资源而阻塞的进程，原来的阻塞进程可能变为非阻塞进程。再根据第一步对资源分配图进行简化。</li>
+</ol>
+<p>如果最后能消去图中所有的边，则称该图是可<strong>完全简化</strong>的</p>
+</li>
+<li>
+<p>死锁解除</p>
+<ul>
+<li>资源剥夺法：挂起某些死锁进程，并抢占它的资源，将这些资源分配给其他的死锁进程，但应防止进程出现饥饿现象</li>
+<li>撤销进程法：强制撤销部分、设置全部死锁进程并剥夺这些资源的进程的资源</li>
+<li>进程回退法：让一个或多个死锁进程回退到足以回避死锁的地步，进程回退时资源释放资源而非被剥夺</li>
+</ul>
+</li>
+<li>
+<p>小节总结</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">mindmap</span>
+	<span class="pl-ent">root</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>死锁的检测和解除<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+		<span class="pl-ent">如何检测</span>
+			<span class="pl-ent">数据结构：资源分配图</span>
+				<span class="pl-ent">两种节点</span>
+					<span class="pl-ent">进程节点</span>
+					<span class="pl-ent">资源节点</span>
+				<span class="pl-ent">两种边</span>
+					<span class="pl-ent">请求边：进程节点</span>--&gt;资源节点
+					<span class="pl-ent">分配边：资源节点</span>--&gt;进程节点
+			<span class="pl-ent">死锁检测算法</span>
+				<span class="pl-ent">依此消除与不阻塞进程相连的边，直到无边可消</span>
+				<span class="pl-ent">若资源分配图是不可完全简化的，说明发生了死锁</span>
+		<span class="pl-ent">如何解除</span>
+			<span class="pl-ent">资源剥夺法</span>
+			<span class="pl-ent">撤销进程法</span>
+			<span class="pl-ent">进程回退法</span></pre></div>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>系统死锁的可能原因是(  )</p>
+<p>A. 独占资源分配不当</p>
+<p>B. 系统资源不足</p>
+<p>C. 进程运行太快</p>
+<p>D. CPU内核太多</p>
+</li>
+<li>
+<p>三个进程共享四个同类资源，这些资源的分配与释放只能一次一个，已知每个进程最多需要两个该类资源，则该系统(  )</p>
+<p>A. 有些进程可能永远得不到该类资源</p>
+<p>B. 必须有死锁</p>
+<p>C. 进程请求该类资源必然能得到</p>
+<p>D. 必然是死锁</p>
+</li>
+<li>
+<p>下列关于死锁的叙述中，正确的是(  )</p>
+<p>I. 可以通过剥夺进程资源解除死锁</p>
+<p>II. 死锁的预防方法能确保系统不发生死锁</p>
+<p>III. 银行家算法可以判断系统是否处于死锁状态</p>
+<p>IV. 当系统出现死锁时，必然有两个或两个以上的进程处于阻塞态</p>
+<p>A. 仅II、III</p>
+<p>B. 仅I、II、IV</p>
+<p>C. 仅I、II、III</p>
+<p>D. 仅I、III、IV</p>
+</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://wlkla.github.io/onebuaaer.github.io">我在人世间踽踽独行</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/02/2024"!=""){
+    var startSite=new Date("09/02/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","wlkla/onebuaaer.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script>MathJax = {tex: {inlineMath: [["$", "$"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</html>
