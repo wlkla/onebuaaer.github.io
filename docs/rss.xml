@@ -1,5 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 14:25:47 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>计算机系统概述</title><link>https://wlkla.github.io/onebuaaer.github.io/post/ji-suan-ji-xi-tong-gai-shu.html</link><description># 第一章：计算机系统概述&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 14:26:54 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>数据的表示与运算</title><link>https://wlkla.github.io/onebuaaer.github.io/post/shu-ju-de-biao-shi-yu-yun-suan.html</link><description># 第二章：数据的表示与运算&#13;
+&#13;
+## 数制与编码&#13;
+&#13;
+### 进位计数制及其相互转换&#13;
+&#13;
+1. 在进位计数法中，每个数位所用到的不同数码的个数称为`基数`。</description><guid isPermaLink="true">https://wlkla.github.io/onebuaaer.github.io/post/shu-ju-de-biao-shi-yu-yun-suan.html</guid><pubDate>Mon, 02 Sep 2024 14:26:31 +0000</pubDate></item><item><title>计算机系统概述</title><link>https://wlkla.github.io/onebuaaer.github.io/post/ji-suan-ji-xi-tong-gai-shu.html</link><description># 第一章：计算机系统概述&#13;
 &#13;
 ## 计算机发展历程&#13;
 &#13;
