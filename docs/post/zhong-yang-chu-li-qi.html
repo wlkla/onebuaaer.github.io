@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 第五章：中央处理器
+
+## CPU的功能和基本结构
+
+### CPU的功能
+
+1. 中央处理器由`运算器`和`控制器`组成。">
+<meta property="og:title" content="中央处理器">
+<meta property="og:description" content="# 第五章：中央处理器
+
+## CPU的功能和基本结构
+
+### CPU的功能
+
+1. 中央处理器由`运算器`和`控制器`组成。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wlkla.github.io/onebuaaer.github.io/post/zhong-yang-chu-li-qi.html">
+<meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
+<title>中央处理器</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">中央处理器</h1>
+<div class="title-right">
+    <a href="https://wlkla.github.io/onebuaaer.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/wlkla/onebuaaer.github.io/issues/17" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>第五章：中央处理器</h1>
+<h2>CPU的功能和基本结构</h2>
+<h3>CPU的功能</h3>
+<ol>
+<li>中央处理器由<code class="notranslate">运算器</code>和<code class="notranslate">控制器</code>组成。
+<ul>
+<li><code class="notranslate">控制器</code>的功能是负责协调并控制计算机各部分执行程序的指令序列。</li>
+<li><code class="notranslate">运算器</code>的功能是对数据进行加工。</li>
+</ul>
+</li>
+<li>中央处理器的具体功能包括：
+<ul>
+<li>指令控制：完成取指令、分析指令和执行指令的操作，即程序的顺序控制。</li>
+<li>操作控制：产生完成一条指令所需的操作信号，把各种操作信号送到相应的不见，从而控制这些部件按指令的要求正确执行。</li>
+<li>时间控制：严格控制各种操作信号的出现时间、持续时间及出现的时间顺序。</li>
+<li>数据加工：对数据进行算术和逻辑运算。</li>
+<li>中断处理：对运行过程中出现的异常情况和中断请求进行处理。</li>
+</ul>
+</li>
+</ol>
+<h3>CPU​的基本结构</h3>
+<ol>
+<li>
+<p>运算器</p>
+<ul>
+<li>
+<p>组成：算术逻辑单元(ALU)、暂存寄存器、累加寄存器(ACC)、通用寄存器组(GPRs)、程序状态寄存器(PSW)、移位寄存器(SR)、计数器(CT)等。</p>
+</li>
+<li>
+<p>功能：根据控制器送来的命令，对数据进行算术运算、逻辑运算或条件测试。</p>
+</li>
+<li>
+<p>通路方式：<br>
+专用数据通路方式：根据指令执行过程中地数据和地址地流动方向安排连接线路。</p>
+<p>CPU内部总单线方式：将所有寄存器的输入端和输出端都连接到一条公共的通路上。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>控制器</p>
+<ul>
+<li>组成：程序计数器(PC)、指令寄存器(IR)、指令译码器(ID)、存储器地址寄存器(MAR)、存储器数据寄存器(MDR)、时序电路、微操做信号发生器等。</li>
+<li>功能：执行指令，每条指令的执行是由控制器发出的一组微操作实现的。</li>
+</ul>
+</li>
+</ol>
+<h3>CPU的寄存器</h3>
+<ol>
+<li>CPU中的寄存器按汇编语言或机器语言程序是否可访问，分为两类：
+<ul>
+<li>用户可见寄存器：可对这类寄存器进行编程。如通用寄存器组、程序状态寄存器、程序计数器、累加寄存器、移位寄存器。</li>
+<li>用户不可见寄存器：不可对这类寄存器进行编程。存储器地址寄存器、存储器数据寄存器、指令寄存器、暂存寄存器。</li>
+</ul>
+</li>
+<li>CPU运算器中寄存器的作用：
+<ul>
+<li>通用寄存器组：用于存放操作数和各种地址信息等</li>
+<li>累加寄存器：用于暂存ALU运算的结果</li>
+<li>移位寄存器：不但可以存放操作数，还可以对数据进行移位</li>
+<li>暂存寄存器：用于暂存从数据总线或通用寄存器送来的操作数，以便在取出下一个操作数时将其同时送入ALU。</li>
+<li>程序状态字寄存器：保留由算术/逻辑运算指令或测试指令的运行结果而建立的各种状态信息。每个标志位通常由一位触发器来保存，这些标志位组合在一起称为程序状态字。</li>
+</ul>
+</li>
+<li>CPU控制器中寄存器的作用：
+<ul>
+<li>程序计数器：用于指出欲执行指令在主存储器中的存放地址</li>
+<li>指令寄存器：用于保存当前正在执行的指令，IR的位数等于指令字长</li>
+<li>存储器地址寄存器：用于存放要访问的主存储器单元的地址，MAR的位数等于主存储器地址线数，反映了最多可寻址的存储单元的个数</li>
+<li>存储器数据寄存器：用于存放向主存储器写入的信息或从主存储器读出的信息，MDR的位数等于存储字长。</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>下列关于程序计数器的叙述中，错误的是(  )<br>
+A. PC中总是存放指令地址</p>
+<p>B. PC的值由CPU在执行指令过程中进行修改</p>
+<p>C. 在执行转移指令时，PC总是修改为转移指令的目标地址<br>
+D. PC的位数一般和MAR的位数一样</p>
+</li>
+<li>
+<p>程序计数器可以使用字节地址或字地址，其位数取决于(  )</p>
+<p>I.  存储器的容量</p>
+<p>II. 机器字长</p>
+<p>III. 指令字长</p>
+<p>A. I</p>
+<p>B. I和III</p>
+<p>C. II和III</p>
+<p>D. I、II和III</p>
+</li>
+<li>
+<p>下列关于程序计数器的叙述中，错误的是(  )</p>
+<p>A. 机器指令中不能显式地使用PC</p>
+<p>B. 指令顺序执行后，PC值总是自动加1</p>
+<p>C. 调用执行指令后，PC值一定是被调用过程地入口地址</p>
+<p>D. 无条件转移指令执行后，PC值一定是转移目标地址</p>
+</li>
+<li>
+<p>间址周期结束后，CPU内寄存器MDR中的内容为(  )</p>
+<p>A. 指令</p>
+<p>B. 操作数地址</p>
+<p>C. 操作数</p>
+<p>D. 无法确定</p>
+</li>
+</ol>
+<h2>指令执行过程</h2>
+<h3>指令周期</h3>
+<ol>
+<li>CPU每取出并执行一条指令所需的全部时间称为<code class="notranslate">指令周期</code>，不同指令的指令周期可能不同，指令周期通常可以用若干机器周期表示，每个指令周期内的机器周期数可以不等。</li>
+<li>若指令不需要访问主存，只包含取指阶段和执行阶段，所以其指令周期仅包含<code class="notranslate">取指周期</code>和<code class="notranslate">执行周期</code>。</li>
+<li>对于间接寻址的指令，为了取操作数，需要先访问一次主存，取出有效地址，然后访问主存，取出操作数，所以还需要包含<code class="notranslate">间址周期</code>。</li>
+<li>当CPU采用中断方式实现主机和I/O设备的信息交换时，CPU在每条指令执行结束前都要发中断查询信号，若有中断请求，则CPU进入中断响应阶段，也称<code class="notranslate">中断周期</code>。</li>
+</ol>
+<h3>指令周期的数据流</h3>
+<ol>
+<li>数据流是根据指令要求依此访问的数据序列。在指令执行的不同阶段，要求依此访问的数据序列是不同的。而且对于不同的指令，它们地数据流往往也是不同的。</li>
+<li>取指周期(FE)：
+<ul>
+<li>取指周期的任务是根据PC中的内容从主存中取出指令代码并放到IR中。</li>
+</ul>
+</li>
+<li>间址周期(IND)：
+<ul>
+<li>间址周期的任务是取操作数的有效地址。将指令中的地址码送到MAR并送至地址总线，此后CU向存储器发出读指令，以获取有效地址并存至MDR。</li>
+</ul>
+</li>
+<li>执行周期(EX)：
+<ul>
+<li>执行周期的主要任务是取操作数，并根据IR中的指令字的操作码通过ALU操作产生执行结果。</li>
+<li>不同指令的执行周期操作不同，因此没有统一的数据流向。</li>
+</ul>
+</li>
+<li>中断周期(INT)：
+<ul>
+<li>中断周期的任务是处理中断请求。</li>
+</ul>
+</li>
+<li>四个工作周期都有CPU访存操作，只是访存的目的不同。
+<ul>
+<li>取指周期：取指令</li>
+<li>间址周期：取有效地址</li>
+<li>执行周期：取操作数</li>
+<li>中断周期：保存程序断点</li>
+</ul>
+</li>
+</ol>
+<h3>指令执行方案</h3>
+<ol>
+<li>一个指令周期通常包括几个执行步骤，每个执行步骤完成指令的一部分功能，几个依次执行的步骤完成这条指令的全部功能。</li>
+<li>单周期处理器：对所有指令都采用相同的执行时间来完成。此时每条执行都在一个时钟周期内完成，指令之间串行执行。因此指令周期取决于执行时间最长的指令的执行时间。</li>
+<li>多周期处理器：对不同类型的指令选用不同的执行步骤。指令需要几个周期就为其分配几个周期，因此可选用不同个数的时钟周期来完成不同指令的执行过程。各指令之间依然是串行执行。</li>
+<li>流水线处理器：指令之间并行执行。每个时钟周期完成一条指令的执行过程。这种方案通过在每个周期启动一条指令，尽量让多条指令同时运行，但各自处于不同的执行步骤中。</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>计算机工作的最小时间周期是(  )</p>
+<p>A. 时钟周期</p>
+<p>B. 指令周期</p>
+<p>C. CPU周期</p>
+<p>D. 总线周期</p>
+</li>
+<li>
+<p>采用DMA方式传递数据时，每传送一个数据就要占用(  )</p>
+<p>A. 指令周期</p>
+<p>B. 时钟周期</p>
+<p>C. 机器周期</p>
+<p>D. 存取周期</p>
+</li>
+<li>
+<p>下列关于指令执行过程的叙述中，错误的是(  )</p>
+<p>A. 指令周期的第一个操作是取指令</p>
+<p>B. 为了进行取指操作，控制器需要得到相应的指令</p>
+<p>C. 取指操作是控制器自动进行的</p>
+<p>D. 指令执行时有些操作是相同或相似的</p>
+</li>
+<li>
+<p>下列关于机器周期的叙述中，错误的是(  )</p>
+<p>A. 通常把通过一次总线事务访问一次主存或I/O的时间定为一个机器周期</p>
+<p>B. 一个指令周期通常包括多个机器周期</p>
+<p>C. 不同的指令周期所包含的机器周期数可能不同</p>
+<p>D. 每个指令周期都包含一个中断机器周期</p>
+</li>
+<li>
+<p>下列关于各种字长的说法中，正确的是(  )</p>
+<p>I. 指令字长等于机器字长的前提下，取指周期等于机器周期</p>
+<p>II. 指令字长等于存储字长的前提下，取指周期等于机器周期</p>
+<p>III. 指令字长和机器字长没有任何关系</p>
+<p>IV. 为了硬件设计方便，指令字长都和存储字长一样大</p>
+<p>A. II、III</p>
+<p>B. II、III、IV</p>
+<p>C. I、III、IV</p>
+<p>D. I、IV</p>
+</li>
+<li>
+<p>下列关于单周期CPU和多周期CPU的描述中，错误的是(  )</p>
+<p>A. 执行任何指令，单周期CPU的时间都要小于多周期CPU</p>
+<p>B. 单周期CPU部件冗余大，时间利用率低，多周期CPU则刚好相反</p>
+<p>C. 单周期CPU在一个时钟周期内执行一条指令，CPI=1</p>
+<p>D. 多周期CPU至少需要两个时钟周期才能执行一条指令，CPI &gt; 1</p>
+</li>
+<li>
+<p>冯·诺依曼计算机中指令和数据均以二进制形式存放在存储器中，CPU区分它们的依据是(  )</p>
+<p>A. 指令操作码的译码结果</p>
+<p>B. 指令和数据的寻址方式</p>
+<p>C. 指令周期的不同阶段</p>
+<p>D. 指令和数据所在的存储单元</p>
+</li>
+</ol>
+<h2>数据通路的功能和基本结构</h2>
+<h3>数据通路的功能</h3>
+<ol>
+<li>CPU可视为由<code class="notranslate">数据通路</code>和<code class="notranslate">控制部件</code>两大部分组成。</li>
+<li>数据通路由控制部件控制，根据每条指令的不同，生成对数据通路的控制信号。</li>
+<li>数据在指令执行过程中所经过的路径，包括路径上的部件，称为数据通路。</li>
+<li>ALU、通用寄存器、状态寄存器、异常和中断处理逻辑等都是指令执行时数据流经的部件。</li>
+</ol>
+<h3>数据通路的组成</h3>
+<ol>
+<li>组成数据通路的原件主要分为<code class="notranslate">组合逻辑元件</code>和<code class="notranslate">时序逻辑元件</code>。</li>
+<li>组合逻辑元件：
+<ul>
+<li>任何时刻的输出仅取决于当前的输入。</li>
+<li>组合电路不包含存储信号的记忆单元，也不受时钟信号的控制，输出与输入之间无反馈通路，信号是单向传输的。</li>
+<li>数据通路中常用的组合逻辑元件有加法器、算术逻辑单元、译码器、多路选择器、三态门等。</li>
+</ul>
+</li>
+<li>时序逻辑元件：
+<ul>
+<li>任何时刻的输出不仅与该时刻的输入有关，还与该时刻之前的输入有关。</li>
+<li>时序电路包含存储信号的记忆单元，同时，时序电路必须在时钟节拍下工作。</li>
+<li>各类寄存器和存储器，如通用寄存器组、程序计数器、状态/移位/暂存/锁存寄存器等都属于时序逻辑元件。</li>
+</ul>
+</li>
+</ol>
+<h3>数据通路的基本结构</h3>
+<ol>
+<li>CPU内部单总线方式
+<ul>
+<li>将ALU及所有寄存器都连接到一条内部公共总线上</li>
+<li>优点：结构比较简单</li>
+<li>缺点：数据传输存在较多的冲突现象，性能较低</li>
+</ul>
+</li>
+<li>CPU内部多总线方式
+<ul>
+<li>CPU内部有两条或更多的总线时，构成双总线结构或多总线结构。</li>
+<li>优点：结构比较简单，相比单总线提高了效率</li>
+</ul>
+</li>
+<li>专用数据通路方式
+<ul>
+<li>根据指令执行过程中数据和地址的流动方向安排连接电路，避免使用共享的总线。</li>
+<li>优点：性能较高</li>
+<li>缺点：硬件量大</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>CPU内部电路通常采用总线连接方式，总线上信号流动的原则是(  )</p>
+<p>I. 每个时刻只有一个器件发出信息</p>
+<p>II. 每个时刻有一个或多个器件发出信息</p>
+<p>III. 每个时刻只有一个器件接收信息</p>
+<p>IV. 每个时刻有一个或多个器件接收信息</p>
+<p>A. I、III</p>
+<p>B. I、IV</p>
+<p>C. II、III</p>
+<p>D. II、IV</p>
+</li>
+<li>
+<p>下列关于单周期数据通路和多周期数据通路的说法中，正确的是(  )</p>
+<p>A. 单周期CPU的CPI总比多周期CPU的CPI大</p>
+<p>B. 单周期CPU的时钟周期通常比多周期CPU的时钟周期短</p>
+<p>C. 在一条指令执行过程中，单周期CPU中的每个控制信号取值一直不变，而多周期CPU中的控制信号可能会发生改变</p>
+<p>D. 在一条指令执行过程中，单周期数据通路和多周期数据通路中的每个部件都可使用多次</p>
+</li>
+<li>
+<p>下列关于单周期处理器的叙述中，错误的是(  )</p>
+<p>A. 可以采用单总线结构数据通路</p>
+<p>B. 处理器时钟频率较低</p>
+<p>C. 在指令执行过程中控制信号不变</p>
+<p>D. 每条指令的CPI为1</p>
+</li>
+</ol>
+<h2>控制器的功能和工作原理</h2>
+<h3>控制器的结构和功能</h3>
+<ol>
+<li>控制器的主要功能有：
+<ul>
+<li>从主存中取出一条指令，并指出下一条指令在主存中的位置；</li>
+<li>对指令进行译码或测试，产生相应的操作控制信号，以便启动规定的工作；</li>
+<li>指挥并控制CPU、主存、输入设备和输出设备之间的数据流动方向。</li>
+</ul>
+</li>
+<li>根据控制器产生微操作控制信号的方式不同，控制器可分为<code class="notranslate">硬布线控制器</code>和<code class="notranslate">微程序控制器</code>，两类控制器中的PC和IR是相同的，但是确定和表示指令执行步骤的方法以及给出的控制各部件运行所需要的控制信号的方案不同</li>
+</ol>
+<h3>硬布线控制器</h3>
+<ol>
+<li>
+<p>硬布线控制器</p>
+<ul>
+<li>组成：复杂的组合逻辑门电路和触发器，因此也称<code class="notranslate">组合逻辑控制器</code></li>
+<li>原理：根据指令的要求、当前的时序和内外部的状态，按时间的顺序发送一系列微操作的控制信号。</li>
+</ul>
+</li>
+<li>
+<p>控制单元(CU)的输入来自：</p>
+<ul>
+<li>经指令译码器译码产生的指令信息</li>
+<li>时序系统产生的机器周期信号和节拍信号</li>
+<li>来自执行单元的反馈信息</li>
+</ul>
+</li>
+<li>
+<p>硬布线控制的功能由逻辑门组合实现，其速度主要取决于电路延迟。</p>
+</li>
+<li>
+<p>硬布线控制器的控制信号先用逻辑式列出，经简化后用电路实现，因此当需要修改或增加指令时就必须重新设计电路。</p>
+</li>
+<li>
+<p>指令系统功能越全，微操作命令就越多，电路就越庞杂，调试就越困难。</p>
+</li>
+</ol>
+<h3>微程序控制器</h3>
+<ol>
+<li>
+<p>微程序的设计思想就是将每条机器指令编写成一个微程序，每个微程序包含若干微指令，每条微指令对应一个或几个微操作命令。执行一条指令的过程就是执行一个微程序的过程。</p>
+</li>
+<li>
+<p>微命令：控制部件向执行部件发出的各种控制命令，它是构成控制序列的最小单元。</p>
+</li>
+<li>
+<p>微操作：执行部件收到微命令后所进行的操作。(微命令和微操作是一一对应的)</p>
+</li>
+<li>
+<p>微指令：若干微命令的集合。<br>
+一条微指令通常包含两大部分信息：</p>
+<ul>
+<li>操作控制字段/微操作码字段：用于产生某一步操作所需要的各种操作控制信号</li>
+<li>顺序控制字段微地址码字段：用于控制产生下一条要执行的微指令地址</li>
+</ul>
+</li>
+<li>
+<p>微周期：从控制存储器中取出并执行一条微指令所需要的全部时间，通常为一个时钟周期。</p>
+</li>
+<li>
+<p>微地址：存放微指令的控制存储器的单元地址。</p>
+</li>
+<li>
+<p>主存储器和控制存储器的区别</p>
+<table role="table">
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">用途</th>
+<th align="center">位置</th>
+<th align="center">实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">主存储器</td>
+<td align="center">存放程序和数据</td>
+<td align="center">CPU外部</td>
+<td align="center">RAM</td>
+</tr>
+<tr>
+<td align="center">控制存储器</td>
+<td align="center">存放微程序</td>
+<td align="center">CPU内部</td>
+<td align="center">ROM</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>一些寄存器之间的区别：</p>
+<p>地址寄存器(MAR)：用于存放主存的读/写地址。</p>
+<p>微指令地址寄存器($\mu $PC/CMAR)：用于存放待执行的微指令在控制存储器中的微地址。</p>
+<p>指令寄存器(IR)：用于存放从主存中读出的指令。</p>
+<p>微指令寄存器($\mu $IR/CMDR)：用于存放从控制存储器中读出的微指令。</p>
+</li>
+<li>
+<p>微程序控制器的基本结构：</p>
+<ul>
+<li>起始和转移地址形成部件/微地址形成部件：用于产生初始和后序微地址，以保证微指令的连续执行。</li>
+<li>微指令地址寄存器：接受微地址形成部件送来的微地址，为读取微指令做准备。</li>
+<li>控制存储器：微程序寄存器的核心部件，用于存放各指令对应的微程序。</li>
+<li>微指令寄存器：其位数等于微指令字长。</li>
+</ul>
+</li>
+<li>
+<p>微程序控制器的工作过程：</p>
+<ul>
+<li>执行取指令公共操作：将取指微程序的入口地址送至$\mu $PC，并从CM中读出相应的微指令并送入$\mu $IR。</li>
+<li>由机器指令的操作码字段通过微地址形成部件产生该机器指令所对应的微程序的入口地址并送入$\mu $PC。</li>
+<li>从CM中逐条取出对应的微指令并执行。</li>
+<li>返回取指阶段。</li>
+</ul>
+</li>
+<li>
+<p>微指令的编码方式：</p>
+<ul>
+<li>
+<p>直接编码方式：直接编码法无须进行译码，微指令的操作控制字段中的每一位都代表一个微命令。优点是简单、直观，执行速度快，操作并行性好；缺点是微指令字长过长。</p>
+</li>
+<li>
+<p>字段直接编码方式：将微指令的操作控制字段分为若干小字段，把互斥性微指令放在同一字段中，把相容性微指令放在不同字段中，每个字段独立编码，每种编码代表一个为命令且各字段编码含义单独定义，与其他字段无关。优点是可以缩短微指令字长，缺点是需要经过译码才能发出微命令。</p>
+<blockquote>
+<p>注：一般每个小段还要留出一个状态，表示本字段不发出任何微命令。</p>
+</blockquote>
+</li>
+<li>
+<p>字段间接编码方式：一个字段的某些微命令需要另一个字段中的某些为命令解释。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>微命令的地址形成方式：</p>
+<ul>
+<li>断定方式：由微指令的后继地址字段指出。</li>
+<li>根据机器指令的操作码形成。</li>
+<li>增量计数器法：即($\mu $PC)+1$\rightarrow$PC，适用于后继微指令地址是连续的情况。</li>
+<li>根据各种标志决定下一条微指令分支转移的地址。</li>
+<li>由硬件直接产生程序入口地址。</li>
+</ul>
+</li>
+<li>
+<p>微指令的格式：通常分为水平型微指令和垂直型微指令。</p>
+<ul>
+<li>水平型微指令：一条水平型微指令定义并执行多个并行操作的微命令。<br>
+优点是微程序短，并行能力强，执行速度快；缺点是微指令长，编写微程序较麻烦。</li>
+<li>垂直型微指令：一条垂直型微指令通常只能定义并执行一种微命令。<br>
+优点是微指令短，简单，规整，便于编写微程序；缺点是微程序长，执行速度慢，效率低。</li>
+</ul>
+</li>
+<li>
+<p>硬布线控制器和微程序控制器的比较</p>
+<table role="table">
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">硬布线控制器</th>
+<th align="center">微程序控制器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">工作原理</td>
+<td align="center">微操作控制信号由组合逻辑电路根据当前的<br>指令码、状态和时序即时产生</td>
+<td align="center">微操作控制信号以微程序的形式存放在控制存储器中<br>执行指令时读出即可</td>
+</tr>
+<tr>
+<td align="center">执行速度</td>
+<td align="center">快</td>
+<td align="center">慢</td>
+</tr>
+<tr>
+<td align="center">规整性</td>
+<td align="center">繁琐、不规整</td>
+<td align="center">较规整</td>
+</tr>
+<tr>
+<td align="center">应用场合</td>
+<td align="center">RISC \ CPU</td>
+<td align="center">CISC \ CPU</td>
+</tr>
+<tr>
+<td align="center">易扩充性</td>
+<td align="center">扩充修改困难</td>
+<td align="center">易扩充修改</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>在组合逻辑控制器中，微操作控制信号的形成主要与(  )信号有关</p>
+<p>A. 指令操作码和地址码</p>
+<p>B. 指令译码信号和时钟</p>
+<p>C. 操作码和条件码</p>
+<p>D. 状态信息和条件</p>
+</li>
+<li>
+<p>硬布线控制器和微程序控制器相比(  )</p>
+<p>A. 硬布线控制器的时序系统比较简单</p>
+<p>B. 微程序控制器的时序系统比较简单</p>
+<p>C. 两者的时序系统复杂程度相同</p>
+<p>D. 可能是硬布线控制器的时序系统比较简单，也可能是微程序控制器的时序系统比较简单</p>
+</li>
+<li>
+<p>通常一条指令对应一个微程序，一个微程序的周期对应一个(  )</p>
+<p>A. 指令周期</p>
+<p>B. 主频周期</p>
+<p>C. 机器周期</p>
+<p>D. 工作周期</p>
+</li>
+<li>
+<p>下列部件中属于控制部件的是(  )</p>
+<p>I. 指令寄存器</p>
+<p>II. 操作控制器</p>
+<p>III. 程序计数器</p>
+<p>IV. 状态条件寄存器</p>
+<p>A. I、III、IV</p>
+<p>B. I、II、III</p>
+<p>C. I、II、IV</p>
+<p>D. I、II、III、IV</p>
+</li>
+<li>
+<p>为了确定下一条微指令的地址，通常采用断定方式，其基本思想为(  )</p>
+<p>A. 用程序计数器来产生后继微指令地址</p>
+<p>B. 用微程序计数器来产生后继微指令地址</p>
+<p>C. 通过微指令后继地址字段由设计者指定或转移控制字段产生后继微指令地址</p>
+<p>D. 通过指令中指定一个专门字段来控制产生后继微指令地址</p>
+</li>
+<li>
+<p>某指令的功能位R[r<del>2</del>]$\leftarrow$R[r<del>1</del>]+M[R[r<del>0</del>]]，其两个源操作数分别采用寄存器、寄存器间接寻址方式。对于下列给定部件，该指令在取数及执行过程中需要用到的是(  )</p>
+<p>I. 通用寄存器组</p>
+<p>II. 算术逻辑单元</p>
+<p>III. 存储器</p>
+<p>IV. 指令译码器</p>
+<p>A. I、II</p>
+<p>B. I、II、III</p>
+<p>C. II、III、IV</p>
+<p>D.  I、III、IV</p>
+</li>
+<li>
+<p>下列寄存器中，汇编语言程序员可见的是(  )</p>
+<p>I. 指令寄存器</p>
+<p>II. 微指令寄存器</p>
+<p>III. 基址寄存器</p>
+<p>IV. 状态/标志寄存器</p>
+<p>A. I、II</p>
+<p>B. I、IV</p>
+<p>C. II、IV</p>
+<p>D. III、IV</p>
+</li>
+</ol>
+<h2>异常和中断机制</h2>
+<h3>异常和中断的基本概念</h3>
+<ol>
+<li>由CPU内部产生的意外事件被称为异常/内中断；由CPU外部的设备向CPU发出的中断请求被称为中断/外中断。</li>
+<li>异常是CPU执行一条指令时，由CPU在其内部检测到的，与正在执行的指令相关的同步事件；中断是由外部设备触发的、与当前正在执行的指令无关的异步指令。</li>
+</ol>
+<h3>异常和中断的分类</h3>
+<ol>
+<li>异常分为硬故障中断和程序性异常。
+<ul>
+<li>硬故障中断：由硬连线出现异常引起的，如存储器校验错、总线错误等</li>
+<li>程序性异常：在CPU内部因执行指令而引起的异常事件，如整除0、溢出、断点等</li>
+</ul>
+</li>
+<li>按异常发生原因和返回方式不同，可分为
+<ul>
+<li>故障：在引起故障的指令启动后、执行结束前被检测到的异常事件。</li>
+<li>自陷：预先设计的异常事件。</li>
+<li>终止：在执行指令的过程中发生了使计算机无法继续执行的硬件故障，导致程序无法继续执行</li>
+</ul>
+</li>
+<li>终止异常和外中断属于硬件中断。</li>
+<li>中断可分为可屏蔽中断和不可屏蔽中断
+<ul>
+<li>可屏蔽中断：通过可屏蔽中断请求线INTR向CPU发出的中断请求</li>
+<li>不可屏蔽中断：通过专门的不可屏蔽中断请求线NMI向CPU发出的中断请求</li>
+</ul>
+</li>
+<li>中断和异常的不同：
+<ul>
+<li>“缺页”或“溢出”等异常事件是由特定指令在执行过程中产生的，而中断不和任何指令相关联，也不阻止任何指令的完成。</li>
+<li>异常的检测由CPU自身完成，不必通过外部的某个信号通知CPU，而对于中断，CPU需要通过中断请求线获取中断源的信息。</li>
+</ul>
+</li>
+</ol>
+<h3>异常和中断的响应过程</h3>
+<ol>
+<li>CPU对异常和中断相应的过程可分为关中断、保存断点和程序状态、识别异常和中断并转到相应的处理程序。</li>
+<li>异常大多采用软件识别方式，中断可以采用软件识别方式和硬件识别方式。
+<ul>
+<li>软件识别方式：CPU设置一个异常状态寄存器，用于记录异常原因。操作系统使用统一的异常或中断查询程序，按优先级查询异常状态寄存器，以检测异常和中断类型。</li>
+<li>硬件识别方式/向量中断。</li>
+</ul>
+</li>
+</ol>
+<h2>指令流水线</h2>
+<h3>指令流水线的基本概念</h3>
+<ol>
+<li>流水线技术(时间上的并行技术)：将一个任务分解为几个不同的子阶段，每个子阶段在不同的功能部件上并行执行，以便在同一时刻能够同时执行多个任务。</li>
+<li>超标量处理机(空间上的并行技术)：在一个处理机内设置多个执行相同任务的功能部件，并让这些功能部件并行工作。</li>
+<li>一般将指令分为五个阶段：
+<ul>
+<li>取指：从指令存储器或Cache中取指令</li>
+<li>译码/读寄存器：操作控制器对指令进行译码，同时从寄存器堆中取操作数</li>
+<li>执行/计算地址：执行运算操作或计算地址</li>
+<li>访存：对存储器进行读/写操作</li>
+<li>写回：将指令执行结果写回寄存器堆</li>
+</ul>
+</li>
+<li>为了实现指令流水线，指令集应具有如下特征：
+<ul>
+<li>指令长度应尽量一致，有利于简化取指令和指令译码操作</li>
+<li>指令格式应尽量规整，尽量保证源寄存器的位置相同，有利于在指令未知时就可取寄存器操作数</li>
+<li>采用LOAD/STORE型指令，其他指令都不能访存，有利于减少操作步骤</li>
+<li>数据和指令在存储器中按边界对齐方式存放</li>
+</ul>
+</li>
+</ol>
+<h3>流水线的基本实现</h3>
+<ol>
+<li>流水线的设计原则：
+<ul>
+<li>指令流水段个数以最复杂指令所用的功能段个数为准</li>
+<li>流水段的长度以最复杂的操作所花的时间为准</li>
+</ul>
+</li>
+<li>每个流水段后面都要增加一个流水段寄存器，用于锁存本段处理完的所有数据，以保证本段的执行结果能在下一个时钟周期给下一流水段使用</li>
+<li>在时空图中，横坐标表示时间，被分割为长度相等的时间段T，纵坐标为空间，表示当前指令所处的功能部件</li>
+</ol>
+<h3>流水线的冒险与处理</h3>
+<ol>
+<li>流水线冒险：在指令流水线中，可能会遇到一些情况使得后序指令无法正确执行而引起的流水线阻塞</li>
+<li>根据导致冒险的原因不同，可分为结构冒险、数据冒险和控制冒险</li>
+<li>结构冒险/资源冲突：
+<ul>
+<li>起因：由不同指令在同一时刻争用同一功能部件而形成的冲突</li>
+<li>解决方法：前一指令访存时，后一条指令暂停一个时钟周期；设置多个独立的部件。</li>
+</ul>
+</li>
+<li>数据冒险/数据相关/写后读冲突：
+<ul>
+<li>起因：后面指令用到前面指令的结果，但是前面指令的结果还没产生</li>
+<li>解决方法：延迟执行相关指令(插入空操作<code class="notranslate">nop</code>或硬件阻塞)；采用转发技术/旁路技术(设置通路，将中间数据直接转发给下一条指令)</li>
+</ul>
+</li>
+<li>控制冒险/控制冲突
+<ul>
+<li>起因：遇到改变指令执行顺序的情况，会改变PC值，从而造成断流</li>
+<li>解决方法：对于由转移指令引起的冲突，可插入<code class="notranslate">nop</code>指令和硬件阻塞；对转移指令进行分支预测，尽早生成目标地址(静态预测/动态预测)</li>
+</ul>
+</li>
+</ol>
+<h3>流水线的性能指标</h3>
+<ol>
+<li>
+<p>吞吐率：</p>
+<ul>
+<li>
+<p>定义：单位时间内流水线完成的任务数量，或输出结果的数量</p>
+</li>
+<li>
+<p>基本公式：<br>
+$$<br>
+TP=\frac{n}{T_k}<br>
+$$</p>
+</li>
+<li>
+<p>设k为流水段的段数，$\Delta $t为时钟周期。在输入流水线中的任务连续的情况下，一条k段流水线能在k+n-1个时钟周期内完成n个任务，得出流水线的吞吐率为：<br>
+$$<br>
+TP=\frac{n}{(k+n-1)\Delta t}<br>
+$$</p>
+</li>
+</ul>
+</li>
+<li>
+<p>加速比：</p>
+<ul>
+<li>
+<p>定义：完成同样一批任务，不使用流水线与使用流水线所用的时间之比</p>
+</li>
+<li>
+<p>基本公式：<br>
+$$<br>
+S=\frac{T_0}{T_k}<br>
+$$</p>
+</li>
+<li>
+<p>设k为流水段的段数，$\Delta$t为时钟周期。在输入流水线中的任务连续的情况下，一条k段流水线能在k+n-1个时钟周期内完成n个任务，得出流水线的加速比为：<br>
+$$<br>
+S=\frac{kn\Delta t}{(k+n-1)\Delta t}=\frac{kn}{(k+n-1)}<br>
+$$</p>
+</li>
+</ul>
+</li>
+<li>
+</li></ol>
+<h3>高级流水线技术</h3>
+<ol>
+<li>增加指令集并行的策略：
+<ul>
+<li>多发射技术：采用多个内部功能部件，使流水线功能段能同时处理多条指令，处理机一次可以发射多条指令进入流水线执行。</li>
+<li>超流水线技术：通过增加流水线技术来使更多的指令同时在流水线中重叠执行。</li>
+</ul>
+</li>
+<li>超标量流水线技术/动态多发射技术：每个时钟周期内可以并发多条独立指令，以并行操作方式将两条或多条指令编译并执行，为此需要配置多个功能部件。</li>
+<li>超长指令字技术/静态多发射技术：由编译程序挖掘指令间潜在的并行性，将多条能并行操作的指令组合成一条具有多个操作码字段的超长指令字，为此需要配置多个处理部件。</li>
+<li>超流水线技术：通过提高流水线主频的方式来提高流水线的性能。</li>
+</ol>
+<h2>多处理器的基本概念</h2>
+<h3>SISD、SIMD、MISD、MIMD的基本概念</h3>
+<ol>
+<li>
+<p>基于指令流和数据流的数量，将计算机体系结构分为：</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多处理器<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>单指令流单数据流结构<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>采用流水线方式<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>单指令流多数据流结构<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多指令流单数据流结构<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>不存在<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多指令流多数据流结构<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">H</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多计算机系统<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">E</span><span class="pl-k">--&gt;</span><span class="pl-ent">I</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>多处理器系统<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+</li>
+</ol>
+<h3>硬件多线程的基本概念</h3>
+<ol>
+<li>细粒度多线程：多个线程之间轮流交叉执行指令，多个线程之间的指令是不相关的，可以乱序并行执行。处理器能在每个时钟周期切换线程</li>
+<li>粗粒度多线程：连续几个时钟周期都执行同一线程的指令序列，仅在当前线程出现了较大开销的阻塞时，才切换线程。线程切换的开销比较大</li>
+<li>同时多线程(SMT)：在实现指令级并行的同时，实现线程级并行，在同一时钟周期中，发射多个不同线程中的多条指令执行</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>下列关于并行处理技术的叙述中，不正确的是(  )</p>
+<p>A. 多核处理器属于MIMD结构</p>
+<p>B. 向量处理器属于SIMD结构</p>
+<p>C. 硬件多线程技术只可用于多核处理器</p>
+<p>D. SMP中所有处理器共享单一物理地址空间</p>
+</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://wlkla.github.io/onebuaaer.github.io">我在人世间踽踽独行</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("09/02/2024"!=""){
+    var startSite=new Date("09/02/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","wlkla/onebuaaer.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script>MathJax = {tex: {inlineMath: [["$", "$"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</html>
