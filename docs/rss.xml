@@ -1,5 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 13:48:16 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>计算机网络体系结构</title><link>https://wlkla.github.io/onebuaaer.github.io/post/ji-suan-ji-wang-luo-ti-xi-jie-gou.html</link><description># 计算机网络体系结构&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://wlkla.github.io/onebuaaer.github.io</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://wlkla.github.io/onebuaaer.github.io</link></image><lastBuildDate>Mon, 02 Sep 2024 13:50:03 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>物理层</title><link>https://wlkla.github.io/onebuaaer.github.io/post/wu-li-ceng.html</link><description># 物理层&#13;
+&#13;
+## 通信基础&#13;
+&#13;
+### 基本概念&#13;
+&#13;
+1. 数据、信号与码元&#13;
+&#13;
+   - 数据：传送信息的实体，分为模拟数据与数字数据&#13;
+   - 信号：数据在传输过程中的存在形式，分为模拟信号与数字信号&#13;
+   - 码元：在通信系统中，固定时长的代表不同离散数值的基本波形。</description><guid isPermaLink="true">https://wlkla.github.io/onebuaaer.github.io/post/wu-li-ceng.html</guid><pubDate>Mon, 02 Sep 2024 13:49:40 +0000</pubDate></item><item><title>计算机网络体系结构</title><link>https://wlkla.github.io/onebuaaer.github.io/post/ji-suan-ji-wang-luo-ti-xi-jie-gou.html</link><description># 计算机网络体系结构&#13;
 &#13;
 ## 计算机网络概述&#13;
 &#13;
