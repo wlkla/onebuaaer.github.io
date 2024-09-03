@@ -33,7 +33,7 @@
 <meta property="og:url" content="https://onebuaaer.us.kg//post/ying-yong-ceng.html">
 <meta property="og:image" content="https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg">
 <title>应用层</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -57,7 +57,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 
 
@@ -190,14 +200,209 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ol>
 <h2>文件传输协议FTP</h2>
 <h3>工作原理</h3>
+<ol>
+<li>文件传输协议/FTP提供交互式的访问，允许客户指明文件的类型与格式，并允许文件具有存取权限</li>
+<li>FTP提供的功能：
+<ul>
+<li>提供不同种类主机系统之间的文件传输能力</li>
+<li>以用户权限管理的方式提供用户对远程FTP服务器上的文件管理能力</li>
+<li>以匿名FTP的方式提供共用文件共享的能力</li>
+</ul>
+</li>
+<li>FTP采用C/S的工作方式，使用TCP可靠的传输服务。一个FTP服务器进程可同时为多个客户进程提供服务</li>
+<li>FTP的服务器进程有两大部分组成
+<ul>
+<li>一个主进程：用于接收新的请求</li>
+<li>若干个从属进程：用于处理单个请求</li>
+</ul>
+</li>
+<li>FTP工作步骤：
+<ul>
+<li>打开熟知端口21，使客户进程能够连接上</li>
+<li>等待客户进程发起连接</li>
+<li>启动从属进程处理客户进程发来的请求。从属进程对客户进程的请求处理完毕后就终止</li>
+<li>回到等待状态，继续接受其他客户进程的请求</li>
+</ul>
+</li>
+<li>FTP服务器必须在整个会话期间保留用户的状态信息</li>
+</ol>
 <h3>控制连接与数据连接</h3>
+<ol>
+<li>FTP在工作时使用两个并行的TCP链接，一个是控制连接(服务器端口号是21)，一个是数据连接(服务器端口号是20)。使用两个不同的端口号可以使协议更容易实现</li>
+<li>控制连接：
+<ul>
+<li>服务器监听21号端口，等待客户连接，建立在这个端口上的连接称为控制连接，用来传输控制信息</li>
+<li>FTP客户发出的传送请求通过控制连接发给服务器的控制进程，控制连接不能用来传送文件</li>
+</ul>
+</li>
+<li>数据连接：
+<ul>
+<li>服务器端的控制进程在接收到FTP客户发送来的文件传输请求后，就创建“数据传送进程”和“数据连接”</li>
+<li>数据连接用来连接客户端和服务器端的数据传送进程</li>
+<li>数据传送进程实际完成文件的传送，在传送完毕后关闭连接</li>
+<li>数据连接有两种传输模式：
+<ul>
+<li>主动模式PORT：服务器20端口连接客户端端口</li>
+<li>被动模式PASV：客户端连接服务器随机端口</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>FTP客户发起对FTP服务器连接的第一阶段是建立(  )</p>
+<p>A. 传输连接</p>
+<p>B. 数据连接</p>
+<p>C. 会话连接</p>
+<p>D. 控制连接</p>
+</li>
+</ol>
 <h2>电子邮件</h2>
 <h3>电子邮件系统的组成结构</h3>
+<ol>
+<li>电子邮件是一种异步通信方式，通信时不需要双方同时在场</li>
+<li>一个电子邮件系统应具有三个最主要的组成构件：
+<ul>
+<li>用户代理：用户与电子邮件系统的接口</li>
+<li>邮件服务器：发送和接收邮件，同时还要向发件人报告邮件发送的情况</li>
+<li>邮件发送协议和读取协议：邮件发送协议用于用户代理向邮件服务器发送邮件或在邮件服务器之间发送邮件；邮件读取协议用于用户代理从邮件服务器读取邮件</li>
+</ul>
+</li>
+</ol>
 <h3>电子邮件格式与MIME</h3>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+	<span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>电子邮件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>信封<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">A</span><span class="pl-k">--&gt;</span><span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>内容<span class="pl-pds"><span class="pl-sg">)</span></span></span><span class="pl-k">--&gt;</span><span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>首部<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+	<span class="pl-ent">C</span><span class="pl-k">--&gt;</span><span class="pl-ent">E</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>主体<span class="pl-pds"><span class="pl-sg">)</span></span></span></pre></div>
+<ol>
+<li>邮件内容的首部部分关键字：
+<ul>
+<li>To：一个或多个收件人电子邮件地址，必须</li>
+<li>Subject：主题，可选</li>
+</ul>
+</li>
+<li>多用途因特网邮件扩展/MIME：解决SMTP只能传送7位ASCII码文本邮件的短处
+<ul>
+<li>当发送端发送的邮件中包含非ASCII码数据时，不能直接使用SMTP传输</li>
+<li>MIME对非ASCII码数据进行转换，转为ASCII数据</li>
+<li>使用SMTP对邮件进行传输</li>
+<li>接收方使用MIME反转换</li>
+</ul>
+</li>
+</ol>
 <h3>SMTP和POP3</h3>
+<ol>
+<li>简单邮件传输协议/SMTP：一种提供可靠且有效的电子邮件传输的协议，控制两个相互通信的SMTP进程交换信息，使用TCP连接，端口号是25</li>
+<li>SMTP通信的阶段：
+<ul>
+<li>连接建立
+<ul>
+<li>发件人的邮件发送到发送方邮箱服务器的邮件缓存后，服务器定时扫描缓存，若有邮件则于接收方SMTP服务器建立TCP连接</li>
+<li>连接建立后，接收方服务器发送就绪信息，客户服务器向接收方服务器发送HELO命令，附上发送方的主机名</li>
+<li>SMTP不适用中间的邮件服务器，发送方与接受方直接连接</li>
+</ul>
+</li>
+<li>邮件传送
+<ul>
+<li>连接建立后，开始传送右键</li>
+<li>邮件的传送从MAIL命令开始，MAIL后跟随发件人的地址，若服务器准备好接收邮件，返回特定响应信息</li>
+<li>客户发送一个或多个RCPT命令，每发送一个RCPT命令，都有相应的信息从服务器返回。RCPT作用是确认接收方系统做好接收邮件的准备，避免浪费通信资源</li>
+<li>客户端发送DATA命令，传送邮件的内容</li>
+</ul>
+</li>
+<li>连接释放
+<ul>
+<li>邮件发送完毕，客户发送QUIT命令。SMTP服务器返回信息同意释放TCP连接</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>POP3和IMAP
+<ul>
+<li>POP在传输层使用TCP，端口号为110</li>
+<li>POP有两种工作方式：
+<ul>
+<li>下载并保留：用户从服务器上读取邮件后，邮件依然保留在服务器上</li>
+<li>下载并删除：用户从服务器上读取邮件后，邮件被删除</li>
+</ul>
+</li>
+<li>因特网报文存取协议/IMAP：
+<ul>
+<li>为用户提供了创建文件夹、在不同文件夹之间移动邮件及在远程文件夹中查询邮件等命令</li>
+<li>IMAP服务器需要维护会话用户的状态信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
 <h2>万维网WWW</h2>
 <h3>概念与组成结构</h3>
-<h3>超长传输协议</h3></div>
+<ol>
+<li>万维网WWW是一个分布式、联机式的信息存储空间，有用的事物称为资源，并有一个“统一资源定位符”(URL)表示</li>
+<li>资源通过超文本传输协议HTTP传送给使用者</li>
+<li>万维网的内核部分由三个标准构成：
+<ul>
+<li>统一资源定位符URL：负责表示万维网上的各种资源</li>
+<li>超文本传输协议HTTP：应用层协议，使用TCP连接进行可靠传输</li>
+<li>超文本标记语言HTML</li>
+</ul>
+</li>
+<li>URL的一般形式是：URL::=&lt;协议&gt;://&lt;主机&gt;:&lt;端口&gt;/&lt;路径&gt;</li>
+</ol>
+<h3>超长传输协议</h3>
+<ol>
+<li>每个万维网站点都有一个服务器进程，不断监听TCP的80端口，当监听到连接请求后便于浏览器建立TCP连接</li>
+<li>特点：
+<ul>
+<li>使用TCP作为传输层协议，保证了数据的可靠传输</li>
+<li>HTTP是无连接的</li>
+<li>HTTP是无状态的，同一个客户每次访问同一服务器上的页面时，服务器的响应与第一次被访问时相同</li>
+</ul>
+</li>
+<li>HTTP既可以使用非持续连接，也可以使用持续连接
+<ul>
+<li>非持续连接：每个网页元素对象的传输都需要单独建立一个TCP连接。请求一个万维网文档所需的时间是该文档的传输时间+2RTT</li>
+<li>持续连接：万维网服务器在发送响应后仍然持续保持连接，使同一客户和该服务器可以继续在这个连接上传送后续报文
+<ul>
+<li>非流水线方式：客户在收到前一个响应后才能发出下一个请求</li>
+<li>流水线：客户可以连续发出对各个对象的请求，服务器连续响应请求</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>HTTP报文分类：
+<ul>
+<li>请求报文：从客户向服务器发送的请求报文</li>
+<li>响应报文：从服务器到客户的回答</li>
+</ul>
+</li>
+<li>两种报文的结构：开始行+首部行+实体主体
+<ul>
+<li>请求报文的开始行：请求行，包含方法、请求资源的URL、HTTP的版本</li>
+<li>响应报文的开始行：状态行，包含HTTP的版本、状态码、解释短语</li>
+</ul>
+</li>
+</ol>
+<h3>错题</h3>
+<ol>
+<li>
+<p>假设主机浏览器使用HTTP/1.1协议以持续的非流水线方式工作，向Web服务器请求包含有3个JPEG小图像的demo.html页面，一次请求-响应时间为RTT，则从发出第一个Web请求开始到收到全部内容为止，经过RTT的数量为(  )</p>
+<p>A. 3</p>
+<p>B. 4</p>
+<p>C. 5</p>
+<p>D. 6</p>
+</li>
+<li>
+<p>假设主机H通过HTTP/1.1请求浏览某Web服务器S上的Web页index.html，index.html引用了同目录下的一副图像，html大小为1MSS，图像大小为3MSS，H访问S的RTT=10ms，忽略HTTP响应报文的首部开销和TCP传输时延。若H已完成域名解析，则从H请求与S建立TCP连接开始，到接受全部内容为止，所需的时间至少是(  )</p>
+<p>A. 30ms</p>
+<p>B. 40ms</p>
+<p>C. 50ms</p>
+<p>D. 60ms</p>
+</li>
+</ol></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -222,7 +427,7 @@ if("09/02/2024"!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -295,7 +500,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 <script src='https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs'></script><script src='https://onebuaaer.us.kg/lightbox.js'></script><script src='https://onebuaaer.us.kg/articletoc.js'></script><script src='https://onebuaaer.us.kg/backtotop.js'></script><script src='https://onebuaaer.us.kg/lazyload.js'></script>
