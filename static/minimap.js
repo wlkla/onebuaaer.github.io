@@ -120,10 +120,11 @@ function loadMinimapStyles() {
         }
         .minimap-toggle {
             position: fixed;
-            bottom: 140;
+            bottom: 130px;
             right: 20px;
             width: 40px;
             height: 40px;
+            border: 2px solid black;
             background-color: rgba(240, 240, 240, 0.9);
             cursor: pointer;
             display: flex;
