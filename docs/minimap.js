@@ -86,7 +86,7 @@ function loadMinimapStyles() {
             width: 100px;
             height: calc(100% - 20px);
             background-color: rgba(240, 240, 240, 0.9);
-            z-index: 1000;
+            z-index: 99;
             overflow: hidden;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);

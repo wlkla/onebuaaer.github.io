@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
             padding: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             overflow-y: auto;
-            z-index: 1000;
+            z-index: 100;
             opacity: 0;
             visibility: hidden;
             transform: translateY(20px) scale(0.9);
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
             align-items: center;
             justify-content: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-            z-index: 1001;
+            z-index: 101;
             transition: all 0.3s ease;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
