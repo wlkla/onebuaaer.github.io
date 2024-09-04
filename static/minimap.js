@@ -12,10 +12,15 @@ function createMinimap() {
     slider.className = 'minimap-slider';
     minimapContainer.appendChild(slider);
 
+    const toggleButton = document.createElement('div');
+    toggleButton.className = 'minimap-toggle';
+    toggleButton.innerHTML = '&rarr;'; // 初始为→
+    document.body.appendChild(toggleButton); // 将按钮添加到body，使其位置固定
+
     const contentContainer = document.querySelector('.markdown-body');
     updateMinimap(contentContainer, minimap, slider);
 
-    return { minimapContainer, minimap, slider };
+    return { minimapContainer, minimap, slider, toggleButton };
 }
 
 // 更新minimap内容
@@ -90,6 +95,10 @@ function loadMinimapStyles() {
             overflow: hidden;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .minimap-container.hidden {
+            transform: translateX(calc(100% + 10px));
         }
         .minimap {
             position: absolute;
@@ -109,6 +118,28 @@ function loadMinimapStyles() {
             background-color: rgba(0, 0, 0, 0.2);
             cursor: pointer;
         }
+        .minimap-toggle {
+            position: fixed;
+            bottom: 140;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(240, 240, 240, 0.9);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(-50%) rotate(0deg);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 100;
+            transition: transform 0.3s ease-in-out;
+        }
+        .minimap-toggle.rotate {
+            transform: translateY(-50%) rotate(-180deg);
+        }
     `;
     const style = document.createElement('style');
     style.textContent = css;
@@ -118,7 +149,7 @@ function loadMinimapStyles() {
 // 主函数
 document.addEventListener("DOMContentLoaded", function() {
     loadMinimapStyles();
-    const { minimapContainer, minimap, slider } = createMinimap();
+    const { minimapContainer, minimap, slider, toggleButton } = createMinimap();
     const contentContainer = document.querySelector('.markdown-body');
 
     window.addEventListener('scroll', () => updateSliderPosition(contentContainer, slider));
@@ -129,6 +160,11 @@ document.addEventListener("DOMContentLoaded", function() {
     
     minimapContainer.addEventListener('mousedown', (e) => {
         handleDrag(e, contentContainer, slider, minimap);
+    });
+
+    toggleButton.addEventListener('click', () => {
+        minimapContainer.classList.toggle('hidden');
+        toggleButton.classList.toggle('rotate');
     });
 
     // 初始更新
