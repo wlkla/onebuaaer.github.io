@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 在短暂延迟后检查现有的SVG，以确保Mermaid有时间渲染
-    setTimeout(checkExistingSVGs, 15000);
+    setTimeout(checkExistingSVGs, 3000);
 
     function enhanceSVG(svg) {
         console.log('Enhancing SVG');
