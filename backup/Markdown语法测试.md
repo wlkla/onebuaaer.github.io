@@ -128,34 +128,7 @@ mindmap
       Pen and paper
       Mermaid
 ```
-11. ZenUML
-```mermaid
-zenuml
-    title Order Service
-    @Actor Client #FFEBE6
-    @Boundary OrderController #0747A6
-    @EC2 <<BFF>> OrderService #E3FCEF
-    group BusinessService {
-      @Lambda PurchaseService
-      @AzureFunction InvoiceService
-    }
-
-    @Starter(Client)
-    // `POST /orders`
-    OrderController.post(payload) {
-      OrderService.create(payload) {
-        order = new Order(payload)
-        if(order != null) {
-          par {
-            PurchaseService.createPO(order)
-            InvoiceService.createInvoice(order)      
-          }      
-        }
-      }
-    }
-    
-```
-12. QuardrantChart
+11. QuardrantChart
 ```mermaid
 quadrantChart
     title Reach and engagement of campaigns
@@ -172,7 +145,7 @@ quadrantChart
     Campaign E: [0.40, 0.34]
     Campaign F: [0.35, 0.78]
 ```
-13. XYChart
+12. XYChart
 ```mermaid
 
     xychart-beta
@@ -182,7 +155,7 @@ quadrantChart
     bar [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
     line [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
 ```
-14. Block
+13. Block
 ```mermaid
 block-beta
     columns 3
@@ -204,7 +177,7 @@ block-beta
     style m fill:#d6d,stroke:#333,stroke-width:4px
     
 ```
-15. Packet
+14. Packet
 ```mermaid
 ---
 title: "TCP Packet"
