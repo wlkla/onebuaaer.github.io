@@ -7,6 +7,8 @@ btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xml
 
 // 按钮CSS
 btn.style.display = "none"; // 默认隐藏
+btn.style.width = "40px"; // 按钮宽度
+btn.style.height = "40px"; // 按钮高度
 btn.style.position = "fixed"; // 固定在页面
 btn.style.bottom = "130px"; // 距离底部80像素
 btn.style.right = "20px"; // 距离右侧20像素
@@ -15,7 +17,6 @@ btn.style.border = "2px solid black"; // 黑色边框
 btn.style.backgroundColor = "white"; // 按钮白色背景
 btn.style.borderRadius = "20px"; // 按钮圆角
 btn.style.cursor = "pointer"; // 鼠标悬停时光标变为指针
-btn.style.padding = "7px"; // 按钮内边距
 btn.style.outline = "none"; // 无外边框
 btn.style.transition = "background-color 0.5s, color 0.5s"; // 渐变效果
 
