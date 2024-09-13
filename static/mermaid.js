@@ -1,13 +1,11 @@
 // 等待DOM完全加载
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM content loaded');
+document.addEventListener('DOMContentLoaded', function () {
 
     // 查找所有包含Mermaid代码的元素
     var mermaidDivs = document.querySelectorAll('.highlight-source-mermaid');
     console.log('Found ' + mermaidDivs.length + ' Mermaid divs');
 
-    mermaidDivs.forEach(function(div, index) {
-        console.log('Processing Mermaid div ' + (index + 1));
+    mermaidDivs.forEach(function (div) {
         // 提取Mermaid代码
         var codeElement = div.querySelector('code');
         if (codeElement) {
@@ -39,19 +37,16 @@ document.addEventListener('DOMContentLoaded', function() {
             var preElement = div.querySelector('pre');
             if (preElement) {
                 preElement.parentNode.replaceChild(containerDiv, preElement);
-                console.log('Replaced pre element with container div');
             }
         }
     });
 
-    // 初始化Mermaid
-    mermaid.initialize({ startOnLoad: true });
 
     // 使用MutationObserver监听Mermaid渲染完成
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
+    var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
             if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(function(node) {
+                mutation.addedNodes.forEach(function (node) {
                     if (node.tagName === 'SVG' && node.closest('.mermaid')) {
                         console.log('SVG added to DOM');
                         enhanceSVG(node);
@@ -62,13 +57,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 观察整个文档的变化
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {childList: true, subtree: true});
 
     // 检查现有的SVG
     function checkExistingSVGs() {
         console.log('Checking for existing SVGs');
         var existingSVGs = document.querySelectorAll('.mermaid svg');
-        existingSVGs.forEach(function(svg) {
+        existingSVGs.forEach(function (svg) {
             console.log('Found existing SVG');
             enhanceSVG(svg);
         });
@@ -136,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 添加复位功能
         var resetButton = container.parentNode.querySelector('.reset');
         if (resetButton) {
-            resetButton.addEventListener('click', function() {
+            resetButton.addEventListener('click', function () {
                 translateX = 0;
                 translateY = 0;
                 currentScale = 1;
