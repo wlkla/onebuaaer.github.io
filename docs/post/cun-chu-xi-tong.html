@@ -902,8 +902,8 @@ A. 00000H，01000H</p>
 </li>
 <li>
 <p>有如下的C语言程序段：</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">for</span>(k = <span class="pl-c1">0</span>; k &lt; <span class="pl-c1">1000</span>; k++)
-    a[k] = a[k] + <span class="pl-c1">32</span>;</pre></div>
+<div class="highlight highlight-source-c++"><pre class="notranslate">for(k = 0; k &lt; 1000; k++)
+    a[k] = a[k] + 32;</pre></div>
 <p>若数组a和变量k均为int型，int型数据占4B，数据Cache采用直接映射方式，数据区大小为1KB、块大小为16B，该程序段执行前Cache为空，则该程序段执行过程中访问数组a的Cache缺失率约为(  )</p>
 <p>A. 1.25%</p>
 <p>B. 2.5%</p>
@@ -912,9 +912,9 @@ A. 00000H，01000H</p>
 </li>
 <li>
 <p>某C语言程序段如下：</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt;= <span class="pl-c1">9</span>; i++) {
-    <span class="pl-k">int</span> temp = <span class="pl-c1">1</span>;
-    <span class="pl-k">for</span> (<span class="pl-k">int</span> j = <span class="pl-c1">0</span>; j &lt;= i; j++) {
+<div class="highlight highlight-source-c++"><pre class="notranslate">for (int i = 0; i &lt;= 9; i++) {
+    int temp = 1;
+    for (int j = 0; j &lt;= i; j++) {
         temp *= a[j];
     }
     sum += temp;
