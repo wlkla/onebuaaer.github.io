@@ -1482,30 +1482,30 @@ $$</p>
 </li>
 <li>
 <p>进程$P_1$和$P_2$均包含并发执行的线程，部分伪代码描述如下所示：</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate">// 进程P1
-int x = 0;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 进程P1</span>
+<span class="pl-k">int</span> x = <span class="pl-c1">0</span>;
 
-void Thread1(  ) {
-    int a = 1;
-    x += 1;
+<span class="pl-k">void</span> <span class="pl-en">Thread1</span>(  ) {
+    <span class="pl-k">int</span> a = <span class="pl-c1">1</span>;
+    x += <span class="pl-c1">1</span>;
 }
 
-void Thread2(  ) {
-    int a = 2;
-    x +=2;
+<span class="pl-k">void</span> <span class="pl-en">Thread2</span>(  ) {
+    <span class="pl-k">int</span> a = <span class="pl-c1">2</span>;
+    x +=<span class="pl-c1">2</span>;
 }
 
-// 进程P2
-int x = 0;
+<span class="pl-c"><span class="pl-c">//</span> 进程P2</span>
+<span class="pl-k">int</span> x = <span class="pl-c1">0</span>;
 
-void Thread3(  ) {
-    int a = x;
-    x += 3;
+<span class="pl-k">void</span> <span class="pl-en">Thread3</span>(  ) {
+    <span class="pl-k">int</span> a = x;
+    x += <span class="pl-c1">3</span>;
 }
 
-void Thread4(  ) {
-    int b = x;
-    x += 4;
+<span class="pl-k">void</span> <span class="pl-en">Thread4</span>(  ) {
+    <span class="pl-k">int</span> b = x;
+    x += <span class="pl-c1">4</span>;
 }</pre></div>
 <p>下列选项中，需要互斥执行的操作是(  )</p>
 <p>A. a = 1 &amp; a = 2</p>

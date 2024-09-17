@@ -735,13 +735,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </li>
 <li>
 <p>对修改后的RIP报文中的每个项目，执行步骤：</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate">if (原来路由表中没有目的网络N)
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">if</span> (原来路由表中没有目的网络N)
     将项目添加到路由表
-else if (原来路由表中有目的网络N，且下一跳地址是X)
+<span class="pl-k">else</span> <span class="pl-k">if</span> (原来路由表中有目的网络N，且下一跳地址是X)
     用收到的项目替换原来路由表中的项目
-else if (原来路由表中有目的网络N，下一跳地址不是X，且收到的距离d小于源路由表中的距离)
+<span class="pl-k">else</span> <span class="pl-k">if</span> (原来路由表中有目的网络N，下一跳地址不是X，且收到的距离d小于源路由表中的距离)
     用收到的项目替换原来路由表中的项目
-else
+<span class="pl-k">else</span>
     pass</pre></div>
 </li>
 <li>
