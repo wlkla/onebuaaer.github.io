@@ -1,18 +1,2 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://onebuaaer.us.kg/</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://onebuaaer.us.kg/</link></image><lastBuildDate>Wed, 23 Oct 2024 06:22:07 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>百度实习第一天</title><link>https://onebuaaer.us.kg//post/bai-du-shi-xi-di-yi-tian.html</link><description>今天入职百度了，记录一下今天的流程&#13;
-&#13;
-```mermaid&#13;
-graph TB&#13;
-    A(坐地铁🚇到百度大厦)&#13;
-    B(听宣讲，领取人生第一台Mac)&#13;
-    C(坐🚌达到办公地点)&#13;
-    D(了解百度楼宇🏢结构)&#13;
-    E(找到自己工位)&#13;
-    F(到B1吃饭)&#13;
-    G(……)&#13;
-    A --&gt; B --&gt; C --&gt; D --&gt; E --&gt; F --&gt; G&#13;
-```&#13;
-&#13;
-今天没有学习太多东西，主要学习内容如下：&#13;
-- 了解新人培养要求&#13;
-- 了解一些内部文档（内容不便透露哦）。</description><guid isPermaLink="true">https://onebuaaer.us.kg//post/bai-du-shi-xi-di-yi-tian.html</guid><pubDate>Mon, 02 Sep 2024 12:11:04 +0000</pubDate></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>我在人世间踽踽独行</title><link>https://onebuaaer.us.kg/</link><description>世界并不美好，但我暂时不想离开</description><copyright>我在人世间踽踽独行</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://telegraph-image-6b4.pages.dev/file/3a89e862ad5a60a260608.jpg</url><title>avatar</title><link>https://onebuaaer.us.kg/</link></image><lastBuildDate>Wed, 23 Oct 2024 06:42:53 +0000</lastBuildDate><managingEditor>我在人世间踽踽独行</managingEditor><ttl>60</ttl><webMaster>我在人世间踽踽独行</webMaster><item><title>百度实习第一天</title><link>https://onebuaaer.us.kg//post/bai-du-shi-xi-di-yi-tian.html</link><description>今天是入职百度的第一天，记录一下今天的历程。</description><guid isPermaLink="true">https://onebuaaer.us.kg//post/bai-du-shi-xi-di-yi-tian.html</guid><pubDate>Mon, 02 Sep 2024 12:11:04 +0000</pubDate></item></channel></rss>
