@@ -83,7 +83,6 @@ function createWrapper(codeBlock) {
     // 创建 sourceButton 并设置图标
     const sourceButton = document.createElement('button');
     sourceButton.style.backgroundImage = "url('https://onebuaaer.us.kg/code.png')";
-    sourceButton.className = 'active';
     sourceButton.style.backgroundRepeat = 'no-repeat';
     sourceButton.style.backgroundPosition = 'center';
     sourceButton.style.backgroundSize = 'contain';
@@ -92,6 +91,7 @@ function createWrapper(codeBlock) {
 
     // 创建 diagramButton 并设置图标
     const diagramButton = document.createElement('button');
+    diagramButton.className = 'active';
     diagramButton.style.backgroundImage = "url('https://onebuaaer.us.kg/image.png')";
     diagramButton.style.backgroundRepeat = 'no-repeat';
     diagramButton.style.backgroundPosition = 'center';
@@ -109,20 +109,18 @@ function createWrapper(codeBlock) {
 
     // 源码区域
     const sourceDiv = document.createElement('div');
-    sourceDiv.className = 'mermaid-source';
+    sourceDiv.className = 'mermaid-source hidden'; // 默认隐藏源码区域
 
     // 图表区域
     const diagramDiv = document.createElement('div');
-    diagramDiv.className = 'mermaid-diagram hidden';
+    diagramDiv.className = 'mermaid-diagram'; // 默认显示渲染后的图像区域
 
     // 将原始代码块移动到源码区域
     sourceDiv.appendChild(codeBlock.cloneNode(true));
 
+    // 将源码和图表区域添加到内容区域
     content.appendChild(sourceDiv);
     content.appendChild(diagramDiv);
-
-    wrapper.appendChild(toolbar);
-    wrapper.appendChild(content);
 
     // 添加切换功能
     sourceButton.addEventListener('click', () => {
