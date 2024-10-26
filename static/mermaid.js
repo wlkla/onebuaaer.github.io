@@ -134,8 +134,20 @@ function createWrapper(codeBlock) {
     const diagramDiv = document.createElement('div');
     diagramDiv.className = 'mermaid-diagram'; // 默认显示渲染后的图像区域
 
-    // 将原始代码块移动到源码区域
-    sourceDiv.appendChild(codeBlock.cloneNode(true));
+    // 将原始代码块克隆并处理
+    const clonedCode = codeBlock.cloneNode(true);
+    
+    // 删除clipboard-copy元素
+    const clipboardCopy = clonedCode.querySelector('clipboard-copy');
+    if (clipboardCopy) {
+        const clipboardContainer = clipboardCopy.closest('.clipboard-container');
+        if (clipboardContainer) {
+            clipboardContainer.remove();
+        }
+    }
+
+    // 将处理后的代码块添加到源码区域
+    sourceDiv.appendChild(clonedCode);
 
     // 将源码和图表区域添加到内容区域
     content.appendChild(sourceDiv);
@@ -163,7 +175,7 @@ function createWrapper(codeBlock) {
 
     // 复制按钮事件
     copyButton.addEventListener('click', () => {
-        const codeText = codeBlock.innerText; // 获取源码文本
+        const codeText = clonedCode.innerText; // 获取源码文本
         feedback.style.display = 'inline-block';
         navigator.clipboard.writeText(codeText).then(() => {
             // 2秒后移除反馈
