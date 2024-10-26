@@ -8,31 +8,35 @@ function addStyles() {
       margin: 20px 0;
     }
     .mermaid-toolbar {
-      background: #f5f5f5;
+      background: transparent; /* 设置工具栏透明 */
       padding: 8px;
       border-bottom: 1px solid #ddd;
       display: flex;
+      justify-content: flex-end; /* 按钮靠右对齐 */
       gap: 10px;
     }
     .mermaid-toolbar button {
-      padding: 4px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      background: white;
+      width: 32px; /* 按钮固定宽度 */
+      height: 32px;
+      border: none;
+      background: transparent; /* 设置按钮透明 */
       cursor: pointer;
     }
+    .mermaid-toolbar button img {
+      width: 100%;
+      height: 100%;
+    }
     .mermaid-toolbar button.active {
-      background: #e6e6e6;
-      font-weight: bold;
+      background: rgba(230, 230, 230, 0.5); /* 激活状态样式 */
     }
     .mermaid-content {
       padding: 15px;
     }
     .mermaid-diagram {
-      text-align: center; /* 仅将图表居中显示 */
+      text-align: center; /* 图表居中 */
     }
     .mermaid-diagram svg {
-      display: inline-block; /* 图表内容居中 */
+      display: inline-block;
       margin: 0 auto;
     }
     .mermaid-source {
@@ -80,13 +84,26 @@ function createWrapper(codeBlock) {
     const toolbar = document.createElement('div');
     toolbar.className = 'mermaid-toolbar';
 
+    // 创建 sourceButton 并设置图标
     const sourceButton = document.createElement('button');
-    sourceButton.textContent = '显示源码';
+    sourceButton.style.backgroundImage = "url('https://onebuaaer.us.kg/code.png')";
     sourceButton.className = 'active';
+    sourceButton.style.backgroundRepeat = 'no-repeat';
+    sourceButton.style.backgroundPosition = 'center';
+    sourceButton.style.backgroundSize = 'contain';
+    sourceButton.style.width = '15px';
+    sourceButton.style.height = '15px';
 
+    // 创建 diagramButton 并设置图标
     const diagramButton = document.createElement('button');
-    diagramButton.textContent = '显示图表';
+    diagramButton.style.backgroundImage = "url('https://onebuaaer.us.kg/image.png')";
+    diagramButton.style.backgroundRepeat = 'no-repeat';
+    diagramButton.style.backgroundPosition = 'center';
+    diagramButton.style.backgroundSize = 'contain';
+    diagramButton.style.width = '15px';
+    diagramButton.style.height = '15px';
 
+    // 将按钮添加到 toolbar
     toolbar.appendChild(sourceButton);
     toolbar.appendChild(diagramButton);
 
@@ -138,27 +155,24 @@ function extractMermaidCode(element) {
         const codeElement = block.querySelector('pre code');
         if (!codeElement) return;
 
-        // 创建包装器和内容区域
         const {wrapper, diagramContainer} = createWrapper(block);
 
-        // 将原始代码直接保留在 sourceDiv 中
-        const sourceDiv = wrapper.querySelector('.mermaid-source');
-        sourceDiv.appendChild(block.cloneNode(true));
-
-        // 清理并提取代码内容
+        // 获取 Mermaid 代码，并保持其原始格式
         let mermaidCode = codeElement.textContent || codeElement.innerText;
-        mermaidCode = mermaidCode
-            .replace(/<[^>]+>/g, '')
-            .replace(/class="pl-[^"]*"/g, ''); // 去除HTML标签和类
 
-        // 检查代码类型并按原始结构存储
+        // 移除所有 HTML 标签和多余的类名，保留 Mermaid 的结构和内容
+        mermaidCode = mermaidCode.replace(/<[^>]+>/g, '');
+
+        // 直接保留代码的原始格式，避免进行进一步的行分割和重新拼接
+        console.log('Extracted Mermaid code:', mermaidCode); // 用于调试
+
+        // 将原代码块替换为包装器
+        block.parentNode.replaceChild(wrapper, block);
+
         results.push({
             code: mermaidCode,
             container: diagramContainer
         });
-
-        // 替换代码块为新的包装器
-        block.parentNode.replaceChild(wrapper, block);
     });
 
     return results;
