@@ -5,7 +5,6 @@ function addStyles() {
     .mermaid-wrapper {
       border: 1px solid #ddd;
       border-radius: 4px;
-      margin: 20px 0;
     }
     .mermaid-toolbar {
       background: transparent; /* 设置工具栏透明 */
@@ -28,9 +27,6 @@ function addStyles() {
     }
     .mermaid-toolbar button.active {
       background: rgba(230, 230, 230, 0.5); /* 激活状态样式 */
-    }
-    .mermaid-content {
-      padding: 15px;
     }
     .mermaid-diagram {
       text-align: center; /* 图表居中 */
