@@ -168,7 +168,7 @@ function createWrapper(codeBlock) {
         navigator.clipboard.writeText(codeText).then(() => {
             // 2秒后移除反馈
             setTimeout(() => {
-                toolbar.removeChild(feedback);
+                feedback.style.display = 'none';
             }, 2000);
         });
     });
