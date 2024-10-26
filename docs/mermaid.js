@@ -80,14 +80,22 @@ function createWrapper(codeBlock) {
     const toolbar = document.createElement('div');
     toolbar.className = 'mermaid-toolbar';
 
+    // 显示复制反馈
+    const feedback = document.createElement('div');
+    feedback.className = 'copy-feedback';
+    feedback.innerText = 'Copied!';
+    feedback.style.fontSize = '11px';
+    feedback.style.display = 'none';
+
+    // 创建 copyButton 并设置图标
     const copyButton = document.createElement('button');
     copyButton.style.backgroundImage = "url('https://onebuaaer.us.kg/copy.png')";
     copyButton.style.backgroundRepeat = 'no-repeat';
     copyButton.style.backgroundPosition = 'center';
     copyButton.style.display = 'none';
     copyButton.style.backgroundSize = 'contain';
-    copyButton.style.width = '15px';
-    copyButton.style.height = '15px';
+    copyButton.style.width = '13px';
+    copyButton.style.height = '13px';
 
     // 创建 sourceButton 并设置图标
     const sourceButton = document.createElement('button');
@@ -109,6 +117,7 @@ function createWrapper(codeBlock) {
     diagramButton.style.height = '15px';
 
     // 将按钮添加到 toolbar
+    toolbar.appendChild(feedback);
     toolbar.appendChild(copyButton);
     toolbar.appendChild(sourceButton);
     toolbar.appendChild(diagramButton);
@@ -155,20 +164,8 @@ function createWrapper(codeBlock) {
     // 复制按钮事件
     copyButton.addEventListener('click', () => {
         const codeText = codeBlock.innerText; // 获取源码文本
+        feedback.style.display = 'inline-block';
         navigator.clipboard.writeText(codeText).then(() => {
-            // 显示复制反馈
-            const feedback = document.createElement('div');
-            feedback.className = 'copy-feedback';
-            feedback.innerText = 'Copied!';
-            feedback.style.fontSize = '11px';
-            toolbar.removeChild(copyButton);
-            toolbar.removeChild(sourceButton);
-            toolbar.removeChild(diagramButton);
-            toolbar.appendChild(feedback);
-            toolbar.appendChild(copyButton);
-            toolbar.appendChild(sourceButton);
-            toolbar.appendChild(diagramButton);
-
             // 2秒后移除反馈
             setTimeout(() => {
                 toolbar.removeChild(feedback);
