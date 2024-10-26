@@ -80,6 +80,15 @@ function createWrapper(codeBlock) {
     const toolbar = document.createElement('div');
     toolbar.className = 'mermaid-toolbar';
 
+    const copyButton = document.createElement('button');
+    copyButton.style.backgroundImage = "url('https://onebuaaer.us.kg/copy.png')";
+    copyButton.style.backgroundRepeat = 'no-repeat';
+    copyButton.style.backgroundPosition = 'center';
+    copyButton.style.display = 'none';
+    copyButton.style.backgroundSize = 'contain';
+    copyButton.style.width = '15px';
+    copyButton.style.height = '15px';
+
     // 创建 sourceButton 并设置图标
     const sourceButton = document.createElement('button');
     sourceButton.style.backgroundImage = "url('https://onebuaaer.us.kg/code.png')";
@@ -100,6 +109,7 @@ function createWrapper(codeBlock) {
     diagramButton.style.height = '15px';
 
     // 将按钮添加到 toolbar
+    toolbar.appendChild(copyButton);
     toolbar.appendChild(sourceButton);
     toolbar.appendChild(diagramButton);
 
@@ -131,6 +141,7 @@ function createWrapper(codeBlock) {
         diagramDiv.classList.add('hidden'); // 隐藏图表
         sourceButton.classList.add('active');
         diagramButton.classList.remove('active');
+        copyButton.style.display = 'inline-block';
     });
 
     diagramButton.addEventListener('click', () => {
@@ -138,9 +149,10 @@ function createWrapper(codeBlock) {
         diagramDiv.classList.remove('hidden'); // 显示图表
         sourceButton.classList.remove('active');
         diagramButton.classList.add('active');
+        copyButton.style.display = 'none';
     });
 
-        // 复制按钮事件
+    // 复制按钮事件
     copyButton.addEventListener('click', () => {
         const codeText = codeBlock.innerText; // 获取源码文本
         navigator.clipboard.writeText(codeText).then(() => {
@@ -148,7 +160,14 @@ function createWrapper(codeBlock) {
             const feedback = document.createElement('div');
             feedback.className = 'copy-feedback';
             feedback.innerText = 'Copied!';
+            feedback.style.fontSize = '11px';
+            toolbar.removeChild(copyButton);
+            toolbar.removeChild(sourceButton);
+            toolbar.removeChild(diagramButton);
             toolbar.appendChild(feedback);
+            toolbar.appendChild(copyButton);
+            toolbar.appendChild(sourceButton);
+            toolbar.appendChild(diagramButton);
 
             // 2秒后移除反馈
             setTimeout(() => {
