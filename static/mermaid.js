@@ -123,7 +123,7 @@ function createWrapper(codeBlock) {
     content.appendChild(diagramDiv);
 
     wrapper.appendChild(toolbar);
-    wrapper.appendChild(diagramDiv);
+    wrapper.appendChild(content);
 
     // 添加切换功能
     sourceButton.addEventListener('click', () => {
