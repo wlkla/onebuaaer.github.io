@@ -123,19 +123,19 @@ function createWrapper(codeBlock) {
     content.appendChild(diagramDiv);
 
     wrapper.appendChild(toolbar);
-    wrapper.appendChild(diagramDiv);
+    wrapper.appendChild(content);
 
     // 添加切换功能
     sourceButton.addEventListener('click', () => {
-        sourceDiv.classList.remove('hidden');
-        diagramDiv.classList.add('hidden');
+        sourceDiv.classList.remove('hidden'); // 显示源码
+        diagramDiv.classList.add('hidden'); // 隐藏图表
         sourceButton.classList.add('active');
         diagramButton.classList.remove('active');
     });
 
     diagramButton.addEventListener('click', () => {
-        sourceDiv.classList.add('hidden');
-        diagramDiv.classList.remove('hidden');
+        sourceDiv.classList.add('hidden'); // 隐藏源码
+        diagramDiv.classList.remove('hidden'); // 显示图表
         sourceButton.classList.remove('active');
         diagramButton.classList.add('active');
     });
