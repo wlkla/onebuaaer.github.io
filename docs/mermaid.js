@@ -140,6 +140,23 @@ function createWrapper(codeBlock) {
         diagramButton.classList.add('active');
     });
 
+        // 复制按钮事件
+    copyButton.addEventListener('click', () => {
+        const codeText = codeBlock.innerText; // 获取源码文本
+        navigator.clipboard.writeText(codeText).then(() => {
+            // 显示复制反馈
+            const feedback = document.createElement('div');
+            feedback.className = 'copy-feedback';
+            feedback.innerText = 'Copied!';
+            toolbar.appendChild(feedback);
+
+            // 2秒后移除反馈
+            setTimeout(() => {
+                toolbar.removeChild(feedback);
+            }, 2000);
+        });
+    });
+
     return {wrapper, diagramContainer: diagramDiv};
 }
 
