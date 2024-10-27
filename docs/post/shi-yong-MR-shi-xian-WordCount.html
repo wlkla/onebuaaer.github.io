@@ -273,13 +273,26 @@ Hello World
 </ul>
 <hr>
 <h2>任务实现</h2>
-<p>基于<strong>Hadoop Streaming的基础知识</strong>部分知识，在WebRelay直接运行如下命令即可得到结果：</p>
+<p>基于<strong>Hadoop Streaming的基础知识</strong>部分知识，在WebRelay直接运行如下命令：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">hadoop jar <span class="pl-smi">$HADOOP_HOME</span>/share/hadoop/tools/lib/hadoop-streaming-<span class="pl-k">*</span>.jar \
-    -input /input_path \
-    -output /output_path \
-    -mapper /path/to/mapper_script \
-    -reducer /path/to/reducer_script</pre></div>
-<p>最终运行结果为：</p></div>
+    -input afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input \
+    -output afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output \
+    -mapper afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/mapper.py \
+    -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py</pre></div>
+<p>此时运行结果为：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4"><img src="https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4" alt="image" style="max-width: 100%;"></a><br>
+<strong><em>zsh: no matches found: /home/work/tools/hadoop-client-afs/share/hadoop/tools/lib/hadoop-streaming-</em>.jar</strong>*<br>
+通过查询发现这个错误是因为命令中的通配符 *.jar 没有正确匹配到具体的 jar 文件，因此修改命令如下：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">STREAMING_JAR=<span class="pl-s"><span class="pl-pds">$(</span>find <span class="pl-smi">$HADOOP_HOME</span> -name <span class="pl-s"><span class="pl-pds">"</span>hadoop-streaming*.jar<span class="pl-pds">"</span></span> <span class="pl-k">|</span> head -1<span class="pl-pds">)</span></span>
+
+hadoop jar <span class="pl-smi">$STREAMING_JAR</span> \
+    -input afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input \
+    -output afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output \
+    -mapper afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/mapper.py \
+    -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py</pre></div>
+<p>此时运行结果为：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e806a734-9334-4d26-b5f2-652547fb32b4"><img src="https://github.com/user-attachments/assets/e806a734-9334-4d26-b5f2-652547fb32b4" alt="image" style="max-width: 100%;"></a></p>
+<p>因此还要修改命令，最后通过询问AI，得到如下命令：</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎你🧡🧡~~</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

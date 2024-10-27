@@ -175,12 +175,28 @@ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
 ---
 
 ## 任务实现
-基于**Hadoop Streaming的基础知识**部分知识，在WebRelay直接运行如下命令即可得到结果：
+基于**Hadoop Streaming的基础知识**部分知识，在WebRelay直接运行如下命令：
 ```bash
 hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
-    -input /input_path \
-    -output /output_path \
-    -mapper /path/to/mapper_script \
-    -reducer /path/to/reducer_script
+    -input afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input \
+    -output afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output \
+    -mapper afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/mapper.py \
+    -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py
 ```
-最终运行结果为：
+此时运行结果为：
+![image](https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4)
+***zsh: no matches found: /home/work/tools/hadoop-client-afs/share/hadoop/tools/lib/hadoop-streaming-*.jar***
+通过查询发现这个错误是因为命令中的通配符 *.jar 没有正确匹配到具体的 jar 文件，因此修改命令如下：
+```bash
+STREAMING_JAR=$(find $HADOOP_HOME -name "hadoop-streaming*.jar" | head -1)
+
+hadoop jar $STREAMING_JAR \
+    -input afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input \
+    -output afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output \
+    -mapper afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/mapper.py \
+    -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py
+```
+此时运行结果为：
+![image](https://github.com/user-attachments/assets/e806a734-9334-4d26-b5f2-652547fb32b4)
+
+因此还要修改命令，最后通过询问AI，得到如下命令：
