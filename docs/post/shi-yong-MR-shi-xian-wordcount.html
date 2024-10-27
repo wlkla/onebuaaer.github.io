@@ -120,80 +120,126 @@ Map输出为：<code class="notranslate">(hello, 1), (world, 1), (hello, 1)</cod
 </blockquote>
 <h2>使用MR实现wordcount</h2>
 <ol>
-<li><strong>输入数据</strong></li>
+<li><strong>输入数据</strong><br>
+假设有两个文件：<br>
+file1.txt</li>
 </ol>
-<pre lang="plaintext" class="notranslate"><code class="notranslate">hello world
-hello Hadoop
+<pre lang="plaintext" class="notranslate"><code class="notranslate">Hello World
+Hello MapReduce
+</code></pre>
+<p>file2.txt</p>
+<pre lang="plaintext" class="notranslate"><code class="notranslate">World of MapReduce
+Hello World
 </code></pre>
 <ol start="2">
 <li><strong>Map阶段</strong>：将每一行分割为单词，并输出对应的键值对</li>
 </ol>
 <ul>
-<li>
-<code class="notranslate">hello world</code> $\rightarrow$ <code class="notranslate">(hello, 1), (world, 1)</code>
-</li>
-<li>
-<code class="notranslate">hello Hadoop</code> $\rightarrow$ <code class="notranslate">(hello, 1), (Hadoop, 1)</code>
-</li>
+<li>对于file1.txt：</li>
 </ul>
+<div class="highlight highlight-source-python"><pre class="notranslate">[
+    (<span class="pl-s">"hello"</span>, <span class="pl-c1">1</span>),
+    (<span class="pl-s">"world"</span>, <span class="pl-c1">1</span>),
+    (<span class="pl-s">"hello"</span>, <span class="pl-c1">1</span>),
+    (<span class="pl-s">"mapreduce"</span>, <span class="pl-c1">1</span>)
+]</pre></div>
+<ul>
+<li>对于file2.txt</li>
+</ul>
+<div class="highlight highlight-source-python"><pre class="notranslate">[
+    (<span class="pl-s">"world"</span>, <span class="pl-c1">1</span>),
+    (<span class="pl-s">"of"</span>, <span class="pl-c1">1</span>),
+    (<span class="pl-s">"mapreduce"</span>, <span class="pl-c1">1</span>),
+    (<span class="pl-s">"hello"</span>, <span class="pl-c1">1</span>),
+    (<span class="pl-s">"world"</span>, <span class="pl-c1">1</span>)
+]</pre></div>
 <ol start="3">
 <li><strong>Shuffle阶段</strong>：对相同的键进行分组，将Map输出的相同单词聚合到一起</li>
 </ol>
-<ul>
-<li><code class="notranslate">(hello, [1, 1]), (world, [1]), (Hadoop, [1])</code></li>
-</ul>
+<div class="highlight highlight-source-python"><pre class="notranslate">{
+    <span class="pl-s">"hello"</span>: [<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">1</span>],      <span class="pl-c"># 来自两个文件的"hello"</span>
+    <span class="pl-s">"world"</span>: [<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">1</span>],      <span class="pl-c"># 来自两个文件的"world"</span>
+    <span class="pl-s">"mapreduce"</span>: [<span class="pl-c1">1</span>, <span class="pl-c1">1</span>],     <span class="pl-c"># 来自两个文件的"mapreduce"</span>
+    <span class="pl-s">"of"</span>: [<span class="pl-c1">1</span>]                <span class="pl-c"># 只在file2中出现</span>
+}</pre></div>
 <ol start="4">
 <li><strong>Reduce阶段</strong>：对每个键的值进行求和</li>
 </ol>
-<ul>
-<li><code class="notranslate">(hello, 2), (world, 1), (Hadoop, 1)</code></li>
-</ul>
+<div class="highlight highlight-source-python"><pre class="notranslate">[
+    (<span class="pl-s">"hello"</span>, <span class="pl-c1">3</span>),
+    (<span class="pl-s">"world"</span>, <span class="pl-c1">3</span>),
+    (<span class="pl-s">"mapreduce"</span>, <span class="pl-c1">2</span>),
+    (<span class="pl-s">"of"</span>, <span class="pl-c1">1</span>)
+]</pre></div>
+<p><strong>更直观来看，过程如下：</strong></p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TD</span>
+    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span>输入文件<span class="pl-pds"><span class="pl-sg">]</span></span></span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span>Map阶段<span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">file1</span><span class="pl-k">|</span> <span class="pl-ent">C1</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>hello,1 &lt;<span class="pl-ent">br</span>&gt; world,1 &lt;<span class="pl-ent">br</span>&gt; hello,1 &lt;<span class="pl-ent">br</span>&gt; mapreduce,1<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">file2</span><span class="pl-k">|</span> <span class="pl-ent">C2</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>world,1 &lt;<span class="pl-ent">br</span>&gt; of,1 &lt;<span class="pl-ent">br</span>&gt; mapreduce,1 &lt;<span class="pl-ent">br</span>&gt; hello,1 &lt;<span class="pl-ent">br</span>&gt; world,1<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">C1</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">D</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span>Shuffle阶段<span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">C2</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">D</span>
+    <span class="pl-ent">D</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">E1</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>hello: [1,1,1]<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">D</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">E2</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>world: [1,1,1]<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">D</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">E3</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>mapreduce: [1,1]<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">D</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">E4</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>of: [1]<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">E1</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">F</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span>Reduce阶段<span class="pl-pds"><span class="pl-sg">]</span></span></span>
+    <span class="pl-ent">E2</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">F</span>
+    <span class="pl-ent">E3</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">F</span>
+    <span class="pl-ent">E4</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">F</span>
+    <span class="pl-ent">F</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">G</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>最终结果: &lt;<span class="pl-ent">br</span>&gt; hello: 3 &lt;<span class="pl-ent">br</span>&gt; world: 3 &lt;<span class="pl-ent">br</span>&gt; mapreduce: 2 &lt;<span class="pl-ent">br</span>&gt; of: 1<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span></pre></div>
 <hr>
 <h2>WordCount的编码实现</h2>
 <ol>
 <li><strong>Mapper</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 导入sys模块用于处理标准输入输出</span>
-<span class="pl-k">import</span> <span class="pl-s1">sys</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">sys</span>
 
-<span class="pl-c"># 逐行读取标准输入</span>
-<span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
-    <span class="pl-c"># 去除行两端的空白符并将行按空格拆分为单词列表</span>
-    <span class="pl-s1">words</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>()
-    
-    <span class="pl-c"># 遍历每个单词</span>
-    <span class="pl-k">for</span> <span class="pl-s1">word</span> <span class="pl-c1">in</span> <span class="pl-s1">words</span>:
-        <span class="pl-c"># 输出 "word\t1"，表示该单词出现了一次</span>
-        <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span>1"</span>)</pre></div>
+<span class="pl-k">def</span> <span class="pl-en">main</span>():
+    <span class="pl-c"># 从标准输入读取每一行</span>
+    <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
+        <span class="pl-c"># 将行分割成单词</span>
+        <span class="pl-s1">words</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>()
+        
+        <span class="pl-c"># 对每个单词输出 &lt;word, 1&gt;</span>
+        <span class="pl-k">for</span> <span class="pl-s1">word</span> <span class="pl-c1">in</span> <span class="pl-s1">words</span>:
+            <span class="pl-c"># 清理单词，只保留字母和数字，转换为小写</span>
+            <span class="pl-s1">word</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>.<span class="pl-en">join</span>(<span class="pl-s1">c</span> <span class="pl-k">for</span> <span class="pl-s1">c</span> <span class="pl-c1">in</span> <span class="pl-s1">word</span> <span class="pl-k">if</span> <span class="pl-s1">c</span>.<span class="pl-en">isalnum</span>()).<span class="pl-en">lower</span>()
+            <span class="pl-k">if</span> <span class="pl-s1">word</span>:  <span class="pl-c"># 确保单词非空</span>
+                <span class="pl-c"># Hadoop Streaming 期望键值对用 tab 分隔</span>
+                <span class="pl-en">print</span>(<span class="pl-s">f'<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span>1'</span>)
+
+<span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
+    <span class="pl-en">main</span>()</pre></div>
 <ol start="2">
 <li><strong>Reduce</strong></li>
 </ol>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">sys</span>
 
-<span class="pl-c"># 初始化当前单词和计数</span>
-<span class="pl-s1">current_word</span> <span class="pl-c1">=</span> <span class="pl-c1">None</span>
-<span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
+<span class="pl-k">def</span> <span class="pl-en">main</span>():
+    <span class="pl-s1">current_word</span> <span class="pl-c1">=</span> <span class="pl-c1">None</span>
+    <span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
 
-<span class="pl-c"># 逐行读取Mapper的输出</span>
-<span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
-    <span class="pl-c"># 拆分出单词和计数</span>
-    <span class="pl-s1">word</span>, <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>(<span class="pl-s">'<span class="pl-cce">\t</span>'</span>)
-    <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">int</span>(<span class="pl-s1">count</span>)
-    
-    <span class="pl-c"># 如果遇到相同的单词，则累加计数</span>
-    <span class="pl-k">if</span> <span class="pl-s1">word</span> <span class="pl-c1">==</span> <span class="pl-s1">current_word</span>:
-        <span class="pl-s1">current_count</span> <span class="pl-c1">+=</span> <span class="pl-s1">count</span>
-    <span class="pl-k">else</span>:
-        <span class="pl-c"># 如果遇到不同的单词，则输出上一个单词的计数结果</span>
-        <span class="pl-k">if</span> <span class="pl-s1">current_word</span>:
-            <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span><span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_count</span><span class="pl-kos">}</span></span>"</span>)
+    <span class="pl-c"># 从标准输入读取每一行（已按键排序）</span>
+    <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
+        <span class="pl-c"># 解析输入的键值对</span>
+        <span class="pl-s1">word</span>, <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>(<span class="pl-s">'<span class="pl-cce">\t</span>'</span>)
+        <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">int</span>(<span class="pl-s1">count</span>)
+        
+        <span class="pl-c"># 如果是新单词，输出之前累积的计数</span>
+        <span class="pl-k">if</span> <span class="pl-s1">current_word</span> <span class="pl-c1">and</span> <span class="pl-s1">current_word</span> <span class="pl-c1">!=</span> <span class="pl-s1">word</span>:
+            <span class="pl-en">print</span>(<span class="pl-s">f'<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span><span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_count</span><span class="pl-kos">}</span></span>'</span>)
+            <span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
+        
         <span class="pl-c"># 更新当前单词和计数</span>
         <span class="pl-s1">current_word</span> <span class="pl-c1">=</span> <span class="pl-s1">word</span>
-        <span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-s1">count</span>
+        <span class="pl-s1">current_count</span> <span class="pl-c1">+=</span> <span class="pl-s1">count</span>
+    
+    <span class="pl-c"># 输出最后一个单词的计数</span>
+    <span class="pl-k">if</span> <span class="pl-s1">current_word</span>:
+        <span class="pl-en">print</span>(<span class="pl-s">f'<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span><span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_count</span><span class="pl-kos">}</span></span>'</span>)
 
-<span class="pl-c"># 输出最后一个单词的计数结果</span>
-<span class="pl-k">if</span> <span class="pl-s1">current_word</span>:
-    <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span><span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_count</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
+<span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
+    <span class="pl-en">main</span>()</pre></div>
 <hr>
 <h2>Hadoop Streaming的基础知识</h2>
 <p>Hadoop Streaming是一个用于在Hadoop集群上运行MapReduce作业的工具，允许用户使用<strong>支持标准输入输出的编程语言</strong>编写Mapper和Reducer。</p>
@@ -397,6 +443,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-<script src='https://onebuaaer.us.kg/articletoc.js'></script><script src='https://onebuaaer.us.kg/mermaid.js'></script><script src='https://onebuaaer.us.kg/lightbox.js'></script><script>MathJax = {tex: {inlineMath: [["$", "$"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src='https://onebuaaer.us.kg/articletoc.js'></script><script src='https://onebuaaer.us.kg/mermaid.js'></script><script src='https://onebuaaer.us.kg/lightbox.js'></script>
 
 </html>

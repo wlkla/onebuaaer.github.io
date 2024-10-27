@@ -22,64 +22,127 @@ Map输出为：`(hello, 1), (world, 1), (hello, 1)`
 
 ## 使用MR实现wordcount
 1. **输入数据**
+假设有两个文件：
+file1.txt
 ```plaintext
-hello world
-hello Hadoop
+Hello World
+Hello MapReduce
+```
+file2.txt
+```plaintext
+World of MapReduce
+Hello World
 ```
 2. **Map阶段**：将每一行分割为单词，并输出对应的键值对
-- `hello world` $\rightarrow$ `(hello, 1), (world, 1)`
-- `hello Hadoop` $\rightarrow$ `(hello, 1), (Hadoop, 1)`
-3. **Shuffle阶段**：对相同的键进行分组，将Map输出的相同单词聚合到一起
-- `(hello, [1, 1]), (world, [1]), (Hadoop, [1])`
-4. **Reduce阶段**：对每个键的值进行求和
-- `(hello, 2), (world, 1), (Hadoop, 1)`
+- 对于file1.txt：
+```python
+[
+    ("hello", 1),
+    ("world", 1),
+    ("hello", 1),
+    ("mapreduce", 1)
+]
+```
+- 对于file2.txt
+```python
+[
+    ("world", 1),
+    ("of", 1),
+    ("mapreduce", 1),
+    ("hello", 1),
+    ("world", 1)
+]
+```
 
+3. **Shuffle阶段**：对相同的键进行分组，将Map输出的相同单词聚合到一起
+```python
+{
+    "hello": [1, 1, 1],      # 来自两个文件的"hello"
+    "world": [1, 1, 1],      # 来自两个文件的"world"
+    "mapreduce": [1, 1],     # 来自两个文件的"mapreduce"
+    "of": [1]                # 只在file2中出现
+}
+```
+4. **Reduce阶段**：对每个键的值进行求和
+```python
+[
+    ("hello", 3),
+    ("world", 3),
+    ("mapreduce", 2),
+    ("of", 1)
+]
+```
+**更直观来看，过程如下：**
+```mermaid
+graph TD
+    A[输入文件] --> B[Map阶段]
+    B -->|file1| C1["hello,1 <br> world,1 <br> hello,1 <br> mapreduce,1"]
+    B -->|file2| C2["world,1 <br> of,1 <br> mapreduce,1 <br> hello,1 <br> world,1"]
+    C1 --> D[Shuffle阶段]
+    C2 --> D
+    D --> E1["hello: [1,1,1]"]
+    D --> E2["world: [1,1,1]"]
+    D --> E3["mapreduce: [1,1]"]
+    D --> E4["of: [1]"]
+    E1 --> F[Reduce阶段]
+    E2 --> F
+    E3 --> F
+    E4 --> F
+    F --> G["最终结果: <br> hello: 3 <br> world: 3 <br> mapreduce: 2 <br> of: 1"]
+```
 ---
 
 ## WordCount的编码实现
 1. **Mapper**
 ```python
-# 导入sys模块用于处理标准输入输出
 import sys
 
-# 逐行读取标准输入
-for line in sys.stdin:
-    # 去除行两端的空白符并将行按空格拆分为单词列表
-    words = line.strip().split()
-    
-    # 遍历每个单词
-    for word in words:
-        # 输出 "word\t1"，表示该单词出现了一次
-        print(f"{word}\t1")
+def main():
+    # 从标准输入读取每一行
+    for line in sys.stdin:
+        # 将行分割成单词
+        words = line.strip().split()
+        
+        # 对每个单词输出 <word, 1>
+        for word in words:
+            # 清理单词，只保留字母和数字，转换为小写
+            word = ''.join(c for c in word if c.isalnum()).lower()
+            if word:  # 确保单词非空
+                # Hadoop Streaming 期望键值对用 tab 分隔
+                print(f'{word}\t1')
+
+if __name__ == "__main__":
+    main()
 ```
 2. **Reduce**
 ```python
 import sys
 
-# 初始化当前单词和计数
-current_word = None
-current_count = 0
+def main():
+    current_word = None
+    current_count = 0
 
-# 逐行读取Mapper的输出
-for line in sys.stdin:
-    # 拆分出单词和计数
-    word, count = line.strip().split('\t')
-    count = int(count)
-    
-    # 如果遇到相同的单词，则累加计数
-    if word == current_word:
-        current_count += count
-    else:
-        # 如果遇到不同的单词，则输出上一个单词的计数结果
-        if current_word:
-            print(f"{current_word}\t{current_count}")
+    # 从标准输入读取每一行（已按键排序）
+    for line in sys.stdin:
+        # 解析输入的键值对
+        word, count = line.strip().split('\t')
+        count = int(count)
+        
+        # 如果是新单词，输出之前累积的计数
+        if current_word and current_word != word:
+            print(f'{current_word}\t{current_count}')
+            current_count = 0
+        
         # 更新当前单词和计数
         current_word = word
-        current_count = count
+        current_count += count
+    
+    # 输出最后一个单词的计数
+    if current_word:
+        print(f'{current_word}\t{current_count}')
 
-# 输出最后一个单词的计数结果
-if current_word:
-    print(f"{current_word}\t{current_count}")
+if __name__ == "__main__":
+    main()
 ```
 
 ---
