@@ -19,13 +19,9 @@
 6. `hadoop fs –rm/-rmr [-skipTrash] <src>`：删除指定文件
 ![image](https://github.com/user-attachments/assets/974c2e24-eff4-44ff-b913-af8080e52668)
 7. `hadoop fs –put/-copyFromLocal/-moveFromLocal <localsrc> <dst>`：从本地系统拷贝文件到DFS
-![image](https://github.com/user-attachments/assets/5dab810d-cfa3-495e-9997-98e7a551202d)
-> [!CAUTION]
-试了好多种方法，一直没法成功上传，周一要找mentor问问
+![image](https://github.com/user-attachments/assets/1c2fcb5d-a970-4737-8f57-795942c53031)
 8. `hadoop fs –get/–copyToLocal [-ignoreCrc] [-crc] <src> <localdst>`：从DFS拷贝文件到本地文件系统
-![image](https://github.com/user-attachments/assets/98b47aba-a84b-45ba-95d5-258e34c8283f)
-> [!CAUTION]
-试了好多种方法，一直没法成功下载，周一要找mentor问问
+![image](https://github.com/user-attachments/assets/d653212d-5ebf-4979-a6b0-f1f73e5f5bd0)
 9. `hadoop fs –cat <src>`：展示文件内容
 ![image](https://github.com/user-attachments/assets/26a314a4-19f4-4e8c-8bb0-dee51ad2eec6)
 10. `hadoop fs –mkdir <path>`：在指定位置创建目录
@@ -34,4 +30,4 @@
 ![image](https://github.com/user-attachments/assets/7988bd21-6b3d-4288-82a8-84ae9377f25b)
 
 ## 总结
-今天主要是学习了一些基本命令，感觉除了Hadoop的基本命令除了多了一些固定前缀`hadoop fs`，逻辑上与Linux命令并没有十分大的区别，因此整体来说学下来并没有太大问题，就是本地文件系统与集群文件传输的问题可能需要询问一下。
+今天主要是学习了一些基本命令，感觉除了Hadoop的基本命令除了多了一些固定前缀`hadoop fs`，逻辑上与Linux命令并没有十分大的区别，因此整体来说学下来并没有太大问题。
