@@ -53,7 +53,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     font-size: 12px;
 }
 </style>
-
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-warning {border-left-color:var(--borderColor-attention-emphasis, var(--color-attention-emphasis));background-color:var(--color-attention-subtle);}.markdown-alert.markdown-alert-warning .markdown-alert-title {color: var(--fgColor-attention,var(--color-attention-fg));}</style>
 
 
 
@@ -318,9 +318,10 @@ Hello World
     -mapper afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/mapper.py \
     -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py</pre></div>
 <p>此时运行结果为：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4"><img src="https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4" alt="image" style="max-width: 100%;"></a><br>
-<strong><em>zsh: no matches found: /home/work/tools/hadoop-client-afs/share/hadoop/tools/lib/hadoop-streaming-</em>.jar</strong>*<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4"><img src="https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4" alt="image" style="max-width: 100%;"></a></p>
+<div class="markdown-alert markdown-alert-warning"><p class="markdown-alert-title"><svg class="octicon octicon-alert mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p><p><strong><em>zsh: no matches found: /home/work/tools/hadoop-client-afs/share/hadoop/tools/lib/hadoop-streaming-</em>.jar</strong>*<br>
 通过查询发现这个错误是因为命令中的通配符 *.jar 没有正确匹配到具体的 jar 文件，因此修改命令如下：</p>
+</div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">STREAMING_JAR=<span class="pl-s"><span class="pl-pds">$(</span>find <span class="pl-smi">$HADOOP_HOME</span> -name <span class="pl-s"><span class="pl-pds">"</span>hadoop-streaming*.jar<span class="pl-pds">"</span></span> <span class="pl-k">|</span> head -1<span class="pl-pds">)</span></span>
 
 hadoop jar <span class="pl-smi">$STREAMING_JAR</span> \
