@@ -223,8 +223,9 @@ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
 ```
 此时运行结果为：
 ![image](https://github.com/user-attachments/assets/11fd6aab-7f8f-41fb-9a34-5d7911fc58f4)
-> [!WARNING]
+> [!CAUTION]
 ***zsh: no matches found: /home/work/tools/hadoop-client-afs/share/hadoop/tools/lib/hadoop-streaming-*.jar***
+
 通过查询发现这个错误是因为命令中的通配符 *.jar 没有正确匹配到具体的 jar 文件，因此修改命令如下：
 ```bash
 STREAMING_JAR=$(find $HADOOP_HOME -name "hadoop-streaming*.jar" | head -1)
