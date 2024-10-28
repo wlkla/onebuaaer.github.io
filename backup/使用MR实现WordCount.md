@@ -95,27 +95,39 @@ graph TD
 ## WordCount的编码实现
 1. **Mapper**
 ```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import sys
 
 def main():
     # 从标准输入读取每一行
     for line in sys.stdin:
-        # 将行分割成单词
-        words = line.strip().split()
-        
-        # 对每个单词输出 <word, 1>
-        for word in words:
-            # 清理单词，只保留字母和数字，转换为小写
-            word = ''.join(c for c in word if c.isalnum()).lower()
-            if word:  # 确保单词非空
-                # Hadoop Streaming 期望键值对用 tab 分隔
-                print(f'{word}\t1')
+        try:
+            # 将行分割成单词
+            words = line.strip().split()
+            
+            # 对每个单词输出 <word, 1>
+            for word in words:
+                # 清理单词，只保留字母和数字，转换为小写
+                word = ''.join(c for c in word if c.isalnum()).lower()
+                if word:  # 确保单词非空
+                    try:
+                        # Hadoop Streaming 期望键值对用 tab 分隔
+                        print('%s\t%s' % (word, 1))
+                    except Exception as e:
+                        sys.stderr.write('Error writing output: {0}\n'.format(str(e)))
+        except Exception as e:
+            sys.stderr.write('Error processing line: {0}\n'.format(str(e)))
+            continue
 
 if __name__ == "__main__":
     main()
 ```
 2. **Reduce**
 ```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 
 def main():
@@ -124,22 +136,48 @@ def main():
 
     # 从标准输入读取每一行（已按键排序）
     for line in sys.stdin:
-        # 解析输入的键值对
-        word, count = line.strip().split('\t')
-        count = int(count)
-        
-        # 如果是新单词，输出之前累积的计数
-        if current_word and current_word != word:
-            print(f'{current_word}\t{current_count}')
-            current_count = 0
-        
-        # 更新当前单词和计数
-        current_word = word
-        current_count += count
+        try:
+            # 确保行不是空的
+            line = line.strip()
+            if not line:
+                continue
+                
+            # 尝试分割并解析输入
+            parts = line.split('\t')
+            if len(parts) != 2:
+                sys.stderr.write('Warning: Invalid input line format: {0}\n'.format(line))
+                continue
+                
+            word, count = parts
+            
+            try:
+                count = int(count)
+            except ValueError:
+                sys.stderr.write('Warning: Invalid count value: {0}\n'.format(count))
+                continue
+            
+            # 如果是新单词，输出之前累积的计数
+            if current_word and current_word != word:
+                try:
+                    print('%s\t%s' % (current_word, current_count))
+                except Exception as e:
+                    sys.stderr.write('Error writing output: {0}\n'.format(str(e)))
+                current_count = 0
+            
+            # 更新当前单词和计数
+            current_word = word
+            current_count += count
+            
+        except Exception as e:
+            sys.stderr.write('Error processing line: {0}\n'.format(str(e)))
+            continue
     
     # 输出最后一个单词的计数
     if current_word:
-        print(f'{current_word}\t{current_count}')
+        try:
+            print('%s\t%s' % (current_word, current_count))
+        except Exception as e:
+            sys.stderr.write('Error writing output: {0}\n'.format(str(e)))
 
 if __name__ == "__main__":
     main()
@@ -199,4 +237,56 @@ hadoop jar $STREAMING_JAR \
 此时运行结果为：
 ![image](https://github.com/user-attachments/assets/e806a734-9334-4d26-b5f2-652547fb32b4)
 
-因此还要修改命令，最后通过询问AI，得到如下命令：
+因此还要修改命令，最后通过询问AI，得知还是jar路径的问题，因此我们首先使用`find`命令查询jar的具体路径，结果如下：
+![image](https://github.com/user-attachments/assets/ea44398f-1c3a-44a3-b0d1-6072faeade31)
+此时直接将查询到的路径写入命令：
+```bash
+hadoop jar /home/work/tools/yarn-client/hadoop-2.5.1.2-baidu-SNAPSHOT/share/hadoop/tools/lib/hadoop-streaming-2.5.1.2-baidu-SNAPSHOT.jar \
+    -input afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input \
+    -output afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output \
+    -mapper afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/mapper.py \
+    -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py
+```
+好消息是能运行了，坏消息是报错了：
+![image](https://github.com/user-attachments/assets/a234e36e-54d2-441f-8dd3-cadc2d2e00a2)
+然后我尝试了各种方法，使用本地的python文件，使用本地的input，改变文件的权限，修改文件代码，但是一直报错一直报错。
+经过mentor的提醒，我发现控制台里有个`Tracking URL`，点进去发现了该任务的运行日志，通过分析日志发现报错原因为：
+![image](https://github.com/user-attachments/assets/d4ca53cb-5575-4844-9757-697ec517f2f5)
+可是这个文件分明是存在的呀，怎么会报错说不存在呢？搞不懂，搞不懂啊！！
+……
+……
+……
+**终于终于成功了**，测试了无数次成功了，内容上并没有什么修改，主要是将运行语句保存为了sh脚本，脚本内容如下：
+```bash
+#!/bin/bash
+
+# 定义输出路径变量，方便重用
+JAR_PATH="/home/work/tools/yarn-client/hadoop-2.5.1.2-baidu-SNAPSHOT/share/hadoop/tools/lib/hadoop-streaming-2.5.1.2-baidu-SNAPSHOT.jar"
+INPUT_PATH="afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input"
+OUTPUT_PATH="afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output"
+
+# 检查output文件夹是否存在，如果存在则删除
+hadoop fs -test -e ${OUTPUT_PATH}
+if [ $? -eq 0 ]; then
+    echo "Output directory exists. Removing it..."
+    hadoop fs -rmr ${OUTPUT_PATH}
+fi
+
+# 检查mapper.py和reducer.py是否存在
+if [ ! -f "mapper.py" ] || [ ! -f "reducer.py" ]; then
+    echo "Error: mapper.py or reducer.py not found!"
+    exit 1
+fi
+
+# 运行Hadoop Streaming作业
+hadoop jar ${JAR_PATH} \
+    -files mapper.py,reducer.py \
+    -mapper "python mapper.py" \
+    -reducer "python reducer.py" \
+    -input ${INPUT_PATH} \
+    -output ${OUTPUT_PATH}
+```
+然后在控制台运行脚本就成功了，总之就是很奇怪。运行结果如下：
+![image](https://github.com/user-attachments/assets/1cff9a4d-2af8-4fb9-a9c5-099f0fa568d9)
+
+终于成功了，帖子最终更新时间为2024年10月28日，整个任务历时长达一天，太辛苦了！

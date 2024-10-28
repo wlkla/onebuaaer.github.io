@@ -192,28 +192,40 @@ Hello World
 <ol>
 <li><strong>Mapper</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">sys</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c">#!/usr/bin/env python</span>
+<span class="pl-c"># -*- coding: utf-8 -*-</span>
+<span class="pl-k">import</span> <span class="pl-s1">sys</span>
 
 <span class="pl-k">def</span> <span class="pl-en">main</span>():
     <span class="pl-c"># 从标准输入读取每一行</span>
     <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
-        <span class="pl-c"># 将行分割成单词</span>
-        <span class="pl-s1">words</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>()
-        
-        <span class="pl-c"># 对每个单词输出 &lt;word, 1&gt;</span>
-        <span class="pl-k">for</span> <span class="pl-s1">word</span> <span class="pl-c1">in</span> <span class="pl-s1">words</span>:
-            <span class="pl-c"># 清理单词，只保留字母和数字，转换为小写</span>
-            <span class="pl-s1">word</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>.<span class="pl-en">join</span>(<span class="pl-s1">c</span> <span class="pl-k">for</span> <span class="pl-s1">c</span> <span class="pl-c1">in</span> <span class="pl-s1">word</span> <span class="pl-k">if</span> <span class="pl-s1">c</span>.<span class="pl-en">isalnum</span>()).<span class="pl-en">lower</span>()
-            <span class="pl-k">if</span> <span class="pl-s1">word</span>:  <span class="pl-c"># 确保单词非空</span>
-                <span class="pl-c"># Hadoop Streaming 期望键值对用 tab 分隔</span>
-                <span class="pl-en">print</span>(<span class="pl-s">f'<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span>1'</span>)
+        <span class="pl-k">try</span>:
+            <span class="pl-c"># 将行分割成单词</span>
+            <span class="pl-s1">words</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>()
+            
+            <span class="pl-c"># 对每个单词输出 &lt;word, 1&gt;</span>
+            <span class="pl-k">for</span> <span class="pl-s1">word</span> <span class="pl-c1">in</span> <span class="pl-s1">words</span>:
+                <span class="pl-c"># 清理单词，只保留字母和数字，转换为小写</span>
+                <span class="pl-s1">word</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>.<span class="pl-en">join</span>(<span class="pl-s1">c</span> <span class="pl-k">for</span> <span class="pl-s1">c</span> <span class="pl-c1">in</span> <span class="pl-s1">word</span> <span class="pl-k">if</span> <span class="pl-s1">c</span>.<span class="pl-en">isalnum</span>()).<span class="pl-en">lower</span>()
+                <span class="pl-k">if</span> <span class="pl-s1">word</span>:  <span class="pl-c"># 确保单词非空</span>
+                    <span class="pl-k">try</span>:
+                        <span class="pl-c"># Hadoop Streaming 期望键值对用 tab 分隔</span>
+                        <span class="pl-en">print</span>(<span class="pl-s">'%s<span class="pl-cce">\t</span>%s'</span> <span class="pl-c1">%</span> (<span class="pl-s1">word</span>, <span class="pl-c1">1</span>))
+                    <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+                        <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+        <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+            <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error processing line: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+            <span class="pl-k">continue</span>
 
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
     <span class="pl-en">main</span>()</pre></div>
 <ol start="2">
 <li><strong>Reduce</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">sys</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c">#!/usr/bin/env python</span>
+<span class="pl-c"># -*- coding: utf-8 -*-</span>
+
+<span class="pl-k">import</span> <span class="pl-s1">sys</span>
 
 <span class="pl-k">def</span> <span class="pl-en">main</span>():
     <span class="pl-s1">current_word</span> <span class="pl-c1">=</span> <span class="pl-c1">None</span>
@@ -221,22 +233,48 @@ Hello World
 
     <span class="pl-c"># 从标准输入读取每一行（已按键排序）</span>
     <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
-        <span class="pl-c"># 解析输入的键值对</span>
-        <span class="pl-s1">word</span>, <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>(<span class="pl-s">'<span class="pl-cce">\t</span>'</span>)
-        <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">int</span>(<span class="pl-s1">count</span>)
-        
-        <span class="pl-c"># 如果是新单词，输出之前累积的计数</span>
-        <span class="pl-k">if</span> <span class="pl-s1">current_word</span> <span class="pl-c1">and</span> <span class="pl-s1">current_word</span> <span class="pl-c1">!=</span> <span class="pl-s1">word</span>:
-            <span class="pl-en">print</span>(<span class="pl-s">f'<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span><span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_count</span><span class="pl-kos">}</span></span>'</span>)
-            <span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
-        
-        <span class="pl-c"># 更新当前单词和计数</span>
-        <span class="pl-s1">current_word</span> <span class="pl-c1">=</span> <span class="pl-s1">word</span>
-        <span class="pl-s1">current_count</span> <span class="pl-c1">+=</span> <span class="pl-s1">count</span>
+        <span class="pl-k">try</span>:
+            <span class="pl-c"># 确保行不是空的</span>
+            <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>()
+            <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">line</span>:
+                <span class="pl-k">continue</span>
+                
+            <span class="pl-c"># 尝试分割并解析输入</span>
+            <span class="pl-s1">parts</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">split</span>(<span class="pl-s">'<span class="pl-cce">\t</span>'</span>)
+            <span class="pl-k">if</span> <span class="pl-en">len</span>(<span class="pl-s1">parts</span>) <span class="pl-c1">!=</span> <span class="pl-c1">2</span>:
+                <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Warning: Invalid input line format: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-s1">line</span>))
+                <span class="pl-k">continue</span>
+                
+            <span class="pl-s1">word</span>, <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-s1">parts</span>
+            
+            <span class="pl-k">try</span>:
+                <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">int</span>(<span class="pl-s1">count</span>)
+            <span class="pl-k">except</span> <span class="pl-v">ValueError</span>:
+                <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Warning: Invalid count value: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-s1">count</span>))
+                <span class="pl-k">continue</span>
+            
+            <span class="pl-c"># 如果是新单词，输出之前累积的计数</span>
+            <span class="pl-k">if</span> <span class="pl-s1">current_word</span> <span class="pl-c1">and</span> <span class="pl-s1">current_word</span> <span class="pl-c1">!=</span> <span class="pl-s1">word</span>:
+                <span class="pl-k">try</span>:
+                    <span class="pl-en">print</span>(<span class="pl-s">'%s<span class="pl-cce">\t</span>%s'</span> <span class="pl-c1">%</span> (<span class="pl-s1">current_word</span>, <span class="pl-s1">current_count</span>))
+                <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+                    <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+                <span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
+            
+            <span class="pl-c"># 更新当前单词和计数</span>
+            <span class="pl-s1">current_word</span> <span class="pl-c1">=</span> <span class="pl-s1">word</span>
+            <span class="pl-s1">current_count</span> <span class="pl-c1">+=</span> <span class="pl-s1">count</span>
+            
+        <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+            <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error processing line: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+            <span class="pl-k">continue</span>
     
     <span class="pl-c"># 输出最后一个单词的计数</span>
     <span class="pl-k">if</span> <span class="pl-s1">current_word</span>:
-        <span class="pl-en">print</span>(<span class="pl-s">f'<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_word</span><span class="pl-kos">}</span></span><span class="pl-cce">\t</span><span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">current_count</span><span class="pl-kos">}</span></span>'</span>)
+        <span class="pl-k">try</span>:
+            <span class="pl-en">print</span>(<span class="pl-s">'%s<span class="pl-cce">\t</span>%s'</span> <span class="pl-c1">%</span> (<span class="pl-s1">current_word</span>, <span class="pl-s1">current_count</span>))
+        <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+            <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
 
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
     <span class="pl-en">main</span>()</pre></div>
@@ -292,7 +330,54 @@ hadoop jar <span class="pl-smi">$STREAMING_JAR</span> \
     -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py</pre></div>
 <p>此时运行结果为：<br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e806a734-9334-4d26-b5f2-652547fb32b4"><img src="https://github.com/user-attachments/assets/e806a734-9334-4d26-b5f2-652547fb32b4" alt="image" style="max-width: 100%;"></a></p>
-<p>因此还要修改命令，最后通过询问AI，得到如下命令：</p></div>
+<p>因此还要修改命令，最后通过询问AI，得知还是jar路径的问题，因此我们首先使用<code class="notranslate">find</code>命令查询jar的具体路径，结果如下：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ea44398f-1c3a-44a3-b0d1-6072faeade31"><img src="https://github.com/user-attachments/assets/ea44398f-1c3a-44a3-b0d1-6072faeade31" alt="image" style="max-width: 100%;"></a><br>
+此时直接将查询到的路径写入命令：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">hadoop jar /home/work/tools/yarn-client/hadoop-2.5.1.2-baidu-SNAPSHOT/share/hadoop/tools/lib/hadoop-streaming-2.5.1.2-baidu-SNAPSHOT.jar \
+    -input afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input \
+    -output afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output \
+    -mapper afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/mapper.py \
+    -reducer afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/code/reducer.py</pre></div>
+<p>好消息是能运行了，坏消息是报错了：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a234e36e-54d2-441f-8dd3-cadc2d2e00a2"><img src="https://github.com/user-attachments/assets/a234e36e-54d2-441f-8dd3-cadc2d2e00a2" alt="image" style="max-width: 100%;"></a><br>
+然后我尝试了各种方法，使用本地的python文件，使用本地的input，改变文件的权限，修改文件代码，但是一直报错一直报错。<br>
+经过mentor的提醒，我发现控制台里有个<code class="notranslate">Tracking URL</code>，点进去发现了该任务的运行日志，通过分析日志发现报错原因为：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d4ca53cb-5575-4844-9757-697ec517f2f5"><img src="https://github.com/user-attachments/assets/d4ca53cb-5575-4844-9757-697ec517f2f5" alt="image" style="max-width: 100%;"></a><br>
+可是这个文件分明是存在的呀，怎么会报错说不存在呢？搞不懂，搞不懂啊！！<br>
+……<br>
+……<br>
+……<br>
+<strong>终于终于成功了</strong>，测试了无数次成功了，内容上并没有什么修改，主要是将运行语句保存为了sh脚本，脚本内容如下：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 定义输出路径变量，方便重用</span>
+JAR_PATH=<span class="pl-s"><span class="pl-pds">"</span>/home/work/tools/yarn-client/hadoop-2.5.1.2-baidu-SNAPSHOT/share/hadoop/tools/lib/hadoop-streaming-2.5.1.2-baidu-SNAPSHOT.jar<span class="pl-pds">"</span></span>
+INPUT_PATH=<span class="pl-s"><span class="pl-pds">"</span>afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/input<span class="pl-pds">"</span></span>
+OUTPUT_PATH=<span class="pl-s"><span class="pl-pds">"</span>afs://shaolin.afs.baidu.com:9902/user/ubs-ada-querytrade/personal/jingyasen/wordcount/output<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 检查output文件夹是否存在，如果存在则删除</span>
+hadoop fs -test -e <span class="pl-smi">${OUTPUT_PATH}</span>
+<span class="pl-k">if</span> [ <span class="pl-smi">$?</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Output directory exists. Removing it...<span class="pl-pds">"</span></span>
+    hadoop fs -rmr <span class="pl-smi">${OUTPUT_PATH}</span>
+<span class="pl-k">fi</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 检查mapper.py和reducer.py是否存在</span>
+<span class="pl-k">if</span> [ <span class="pl-k">!</span> <span class="pl-k">-f</span> <span class="pl-s"><span class="pl-pds">"</span>mapper.py<span class="pl-pds">"</span></span> ] <span class="pl-k">||</span> [ <span class="pl-k">!</span> <span class="pl-k">-f</span> <span class="pl-s"><span class="pl-pds">"</span>reducer.py<span class="pl-pds">"</span></span> ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Error: mapper.py or reducer.py not found!<span class="pl-pds">"</span></span>
+    <span class="pl-c1">exit</span> 1
+<span class="pl-k">fi</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 运行Hadoop Streaming作业</span>
+hadoop jar <span class="pl-smi">${JAR_PATH}</span> \
+    -files mapper.py,reducer.py \
+    -mapper <span class="pl-s"><span class="pl-pds">"</span>python mapper.py<span class="pl-pds">"</span></span> \
+    -reducer <span class="pl-s"><span class="pl-pds">"</span>python reducer.py<span class="pl-pds">"</span></span> \
+    -input <span class="pl-smi">${INPUT_PATH}</span> \
+    -output <span class="pl-smi">${OUTPUT_PATH}</span></pre></div>
+<p>然后在控制台运行脚本就成功了，总之就是很奇怪。运行结果如下：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1cff9a4d-2af8-4fb9-a9c5-099f0fa568d9"><img src="https://github.com/user-attachments/assets/1cff9a4d-2af8-4fb9-a9c5-099f0fa568d9" alt="image" style="max-width: 100%;"></a></p>
+<p>终于成功了，帖子最终更新时间为2024年10月28日，整个任务历时长达一天，太辛苦了！</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎你🧡🧡~~</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
