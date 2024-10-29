@@ -10,33 +10,6 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-    <script>
-        art()
-        function art() {
-            var a = ""
-            var b = ""
-            while (b != "123456") { //改为你自己的密码！
-                a = prompt("输入正确密码才能登陆!")
-                if (a == "123456") {
-                    b = a
-                    alert("输入成功！")
-                    return 0
-                }
-                if (a != "123456" && a != "") {
-                    if (a == null) {
-                        window.history.back();
-                        location.reload();//强制刷新
-
-                        window.location.go(-1); //强制跳转上一界面
-                    }
-                    else {
-                        alert("密码错误！")
-                    }
-                }
-            }
-
-        }
-    </script>
 <meta name="description" content="## 学习任务
 1. 了解集群
 2. 熟悉Hadoop常用命令，注意删除命令的谨慎使用（尽量不用）
@@ -69,6 +42,28 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 </style>
 
+<script>
+    art()
+    function art() {
+        var a = ""
+        var b = ""
+        while (b != "123456") {
+            a = prompt("输入正确密码才能登陆!")
+            if (a == "123456") {
+                b = a
+                return 0
+            }
+            if (a != "123456" && a != "") {
+                if (a == null) {
+                    window.history.back();
+                    location.reload();//强制刷新
+                    window.location.go(-1); //强制跳转上一界面
+                }
+            }
+        }
+
+    }
+</script>
 <style>
 .postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
