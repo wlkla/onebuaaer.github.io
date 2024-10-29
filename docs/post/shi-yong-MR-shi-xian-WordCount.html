@@ -111,7 +111,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>MR(MapReduce)的执行过程包括四个主要步骤：<strong>分割数据</strong>、<strong>Map阶段</strong>、<strong>Shuffle阶段</strong>和<strong>Reduce阶段</strong>。</p>
 <ol>
 <li><strong>数据分割(Splitting)</strong>：在MR开始之前，输入数据需要被分割成多个小数据块。这些数据块被分配到各个节点并行处理，每个数据块通常对应一个Mapper任务。</li>
-<li><strong>Map阶段</strong>：Map阶段时MapReduce的第一步，主要任务包括：</li>
+<li><strong>Map阶段</strong>：Map阶段是MapReduce的第一步，主要任务包括：</li>
 </ol>
 <ul>
 <li>读取输入数据，将每一行或每一个元素作为Map函数的输入</li>
@@ -119,7 +119,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>将生成的键值对输出，作为Reduce阶段的输入</li>
 </ul>
 <blockquote>
-<p>举个栗子：假设收入的数据时一篇文章，Map阶段会将每个单词提取出来，并将每个单词的出现次数初始化为1，如：<br>
+<p>举个栗子：假设输入的数据是一篇文章，Map阶段会将每个单词提取出来，并将每个单词的出现次数初始化为1，如：<br>
 输入文本为：<code class="notranslate">hello world hello</code><br>
 Map输出为：<code class="notranslate">(hello, 1), (world, 1), (hello, 1)</code></p>
 </blockquote>
