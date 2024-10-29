@@ -10,6 +10,33 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
+    <script>
+        art()
+        function art() {
+            var a = ""
+            var b = ""
+            while (b != "123456") { //改为你自己的密码！
+                a = prompt("输入正确密码才能登陆!")
+                if (a == "123456") {
+                    b = a
+                    alert("输入成功！")
+                    return 0
+                }
+                if (a != "123456" && a != "") {
+                    if (a == null) {
+                        window.history.back();
+                        location.reload();//强制刷新
+
+                        window.location.go(-1); //强制跳转上一界面
+                    }
+                    else {
+                        alert("密码错误！")
+                    }
+                }
+            }
+
+        }
+    </script>
 <meta name="description" content="mentor指派的任务中除了知识的学习，还有一条就是**利用Hadoop Streaming写个MR统计词频**。">
 <meta property="og:title" content="使用MR实现WordCount">
 <meta property="og:description" content="mentor指派的任务中除了知识的学习，还有一条就是**利用Hadoop Streaming写个MR统计词频**。">
@@ -22,97 +49,10 @@
 
 </head>
 <style>
-body {
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
 
-#header {
-    display: flex;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));
-    margin-bottom: 16px;
-}
-
-#footer {
-    margin-top: 64px;
-    text-align: center;
-    font-size: small;
-}
-
-.login-container {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-.login-box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--color-canvas-default);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-}
-
-.login-box h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: var(--color-fg-default);
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.login-form input {
-    padding: 0.75rem;
-    border: 1px solid var(--color-border-default);
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: var(--color-canvas-subtle);
-    color: var(--color-fg-default);
-}
-
-.login-form button {
-    padding: 0.75rem;
-    background-color: var(--color-accent-emphasis);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.login-form button:hover {
-    background-color: var(--color-accent-fg);
-}
-
-.error-message {
-    color: var(--color-danger-fg);
-    text-align: center;
-    margin-top: 0.5rem;
-    display: none;
-}
 </style>
 
 <style>
@@ -169,7 +109,7 @@ body {
 
 </div>
 </div>
-    <div id="content" style="display: none">
+    <div id="content">
 <div class="markdown-body" id="postBody"><p>mentor指派的任务中除了知识的学习，还有一条就是<strong>利用Hadoop Streaming写个MR统计词频</strong>。</p>
 <hr>
 <h2>MR的基础知识</h2>
@@ -488,88 +428,22 @@ if("09/01/2024"!=""){
     document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
 }
 </script></div>
-
-    <div class="login-container" id="loginContainer">
-        <div class="login-box">
-            <h2>登录验证</h2>
-            <form class="login-form" id="loginForm" onsubmit="return validateLogin(event)">
-                <input type="password" id="password" placeholder="请输入密码" required>
-                <button type="submit">登录</button>
-                <div class="error-message" id="errorMessage">密码错误，请重试</div>
-            </form>
-        </div>
-    </div>
 </body>
-
 <script>
 var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
-
-// 登录验证相关代码
-const loginContainer = document.getElementById('loginContainer');
-const content = document.getElementById('content');
-const errorMessage = document.getElementById('errorMessage');
-
-// 使用SHA-256进行密码哈希
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-}
-
-// 检查登录状态
-function checkLoginStatus() {
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    if (!isLoggedIn) {
-        loginContainer.style.display = 'block';
-        content.style.display = 'none';
-    } else {
-        loginContainer.style.display = 'none';
-        content.style.display = 'block';
-    }
-}
-
-// 验证登录
-async function validateLogin(event) {
-    event.preventDefault();
-    const password = document.getElementById('password').value;
-    const hashedPassword = await hashPassword(password);
-    
-    // 这里替换为你的密码哈希值
-    const correctHash = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'; // 这是"123456"的SHA-256哈希值
-    
-    if (hashedPassword === correctHash) {
-        sessionStorage.setItem('isLoggedIn', 'true');
-        loginContainer.style.display = 'none';
-        content.style.display = 'block';
-        errorMessage.style.display = 'none';
-    } else {
-        errorMessage.style.display = 'block';
-        document.getElementById('password').value = '';
-    }
-    return false;
-}
-
-// 页面加载时检查登录状态
-document.addEventListener('DOMContentLoaded', checkLoginStatus);
-
 
 let themeSettings={
     "dark": ["dark","moon","#00f0ff","dark-blue"],
     "light": ["light","sun","#ff5000","github-light"],
     "auto": ["auto","sync","","preferred-color-scheme"]
 };
-
 function changeTheme(mode, icon, color, utheme){
     document.documentElement.setAttribute("data-color-mode",mode);
     document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
     document.getElementById("themeSwitch").parentNode.style.color=color;
     if(utterancesLoad==1){utterancesTheme(utheme);}
 }
-
 function modeSwitch(){
     let currentMode=document.documentElement.getAttribute('data-color-mode');
     let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
@@ -578,13 +452,11 @@ function modeSwitch(){
         changeTheme(...themeSettings[newMode]);
     }
 }
-
 function utterancesTheme(theme){
     const message={type:'set-theme',theme: theme};
     const iframe=document.getElementsByClassName('utterances-frame')[0];
     iframe.contentWindow.postMessage(message,'https://utteranc.es');
 }
-
 if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
 console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
 </script>
