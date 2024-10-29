@@ -12,190 +12,64 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
+    <script>
+        art()
+        function art() {
+            var a = ""
+            var b = ""
+            while (b != "123456") { //改为你自己的密码！
+                a = prompt("输入正确密码才能登陆!")
+                if (a == "123456") {
+                    b = a
+                    alert("输入成功！")
+                    return 0
+                }
+                if (a != "123456" && a != "") {
+                    if (a == null) {
+                        window.history.back();
+                        location.reload();//强制刷新
+
+                        window.location.go(-1); //强制跳转上一界面
+                    }
+                    else {
+                        alert("密码错误！")
+                    }
+                }
+            }
+
+        }
+    </script>
     {%- endif -%}
     {% block head %}{% endblock %}
 </head>
 <style>
-body {
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
 
-#header {
-    display: flex;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));
-    margin-bottom: 16px;
-}
-
-#footer {
-    margin-top: 64px;
-    text-align: center;
-    font-size: small;
-}
-
-.login-container {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-.login-box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--color-canvas-default);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-}
-
-.login-box h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: var(--color-fg-default);
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.login-form input {
-    padding: 0.75rem;
-    border: 1px solid var(--color-border-default);
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: var(--color-canvas-subtle);
-    color: var(--color-fg-default);
-}
-
-.login-form button {
-    padding: 0.75rem;
-    background-color: var(--color-accent-emphasis);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.login-form button:hover {
-    background-color: var(--color-accent-fg);
-}
-
-.error-message {
-    color: var(--color-danger-fg);
-    text-align: center;
-    margin-top: 0.5rem;
-    display: none;
-}
 </style>
 {% block style %}{% endblock %}
 
 <body>
     <div id="header">{% block header %}{% endblock %}</div>
-    <div id="content" style="display: none">{% block content %}{% endblock %}</div>
+    <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer">{% include 'footer.html' %}</div>
-
-    <div class="login-container" id="loginContainer">
-        <div class="login-box">
-            <h2>登录验证</h2>
-            <form class="login-form" id="loginForm" onsubmit="return validateLogin(event)">
-                <input type="password" id="password" placeholder="请输入密码" required>
-                <button type="submit">登录</button>
-                <div class="error-message" id="errorMessage">密码错误，请重试</div>
-            </form>
-        </div>
-    </div>
 </body>
-
 <script>
 var IconList={{ IconList }};
 var utterancesLoad=0;
-
-// 登录验证相关代码
-const loginContainer = document.getElementById('loginContainer');
-const content = document.getElementById('content');
-const errorMessage = document.getElementById('errorMessage');
-
-// 使用SHA-256进行密码哈希
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-}
-
-// 检查登录状态
-function checkLoginStatus() {
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    if (!isLoggedIn) {
-        loginContainer.style.display = 'block';
-        content.style.display = 'none';
-    } else {
-        loginContainer.style.display = 'none';
-        content.style.display = 'block';
-    }
-}
-
-// 验证登录
-async function validateLogin(event) {
-    event.preventDefault();
-    const password = document.getElementById('password').value;
-    const hashedPassword = await hashPassword(password);
-    
-    // 这里替换为你的密码哈希值
-    const correctHash = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'; // 这是"123456"的SHA-256哈希值
-    
-    if (hashedPassword === correctHash) {
-        sessionStorage.setItem('isLoggedIn', 'true');
-        loginContainer.style.display = 'none';
-        content.style.display = 'block';
-        errorMessage.style.display = 'none';
-    } else {
-        errorMessage.style.display = 'block';
-        document.getElementById('password').value = '';
-    }
-    return false;
-}
-
-// 页面加载时检查登录状态
-document.addEventListener('DOMContentLoaded', checkLoginStatus);
-
 {% if blogBase['themeMode']=='manual' %}
 let themeSettings={
     "dark": ["dark","moon","#00f0ff","dark-blue"],
     "light": ["light","sun","#ff5000","github-light"],
     "auto": ["auto","sync","","preferred-color-scheme"]
 };
-
 function changeTheme(mode, icon, color, utheme){
     document.documentElement.setAttribute("data-color-mode",mode);
     document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
     document.getElementById("themeSwitch").parentNode.style.color=color;
     if(utterancesLoad==1){utterancesTheme(utheme);}
 }
-
 function modeSwitch(){
     let currentMode=document.documentElement.getAttribute('data-color-mode');
     let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
@@ -204,13 +78,11 @@ function modeSwitch(){
         changeTheme(...themeSettings[newMode]);
     }
 }
-
 function utterancesTheme(theme){
     const message={type:'set-theme',theme: theme};
     const iframe=document.getElementsByClassName('utterances-frame')[0];
     iframe.contentWindow.postMessage(message,'https://utteranc.es');
 }
-
 if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
 {%- endif %}
 console.log("\n %c Gmeek {{ blogBase['GMEEK_VERSION'] }} https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
