@@ -10,6 +10,33 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
+    <script>
+        art()
+        function art() {
+            var a = ""
+            var b = ""
+            while (b != "123456") { //改为你自己的密码！
+                a = prompt("输入正确密码才能登陆!")
+                if (a == "123456") {
+                    b = a
+                    alert("输入成功！")
+                    return 0
+                }
+                if (a != "123456" && a != "") {
+                    if (a == null) {
+                        window.history.back();
+                        location.reload();//强制刷新
+
+                        window.location.go(-1); //强制跳转上一界面
+                    }
+                    else {
+                        alert("密码错误！")
+                    }
+                }
+            }
+
+        }
+    </script>
 <meta name="description" content="如果说，读书是在奠定人生的基石，在梳理人生的羽毛，那么，实践，就是在构建人生的厅堂，历练人生的翅膀">
 <meta property="og:title" content="我在人世间踽踽独行">
 <meta property="og:description" content="如果说，读书是在奠定人生的基石，在梳理人生的羽毛，那么，实践，就是在构建人生的厅堂，历练人生的翅膀">
@@ -29,7 +56,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <style>
 .avatar {transition: 0.8s;width:64px;height:64px;object-fit: cover;}
 .avatar:hover{transform: scale(1.15) rotate(360deg);}
-#header h1 a{color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;font-family:Monaco;margin-left:8px;}
+.title-left a{color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;font-weight: bold;font-family:Monaco;margin-left:8px;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right button{margin-right:8px;padding:16px;}
 .title-right .circle{padding: 14px 16px;}
@@ -55,8 +82,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1>
-    <img src="https://onebuaaer.us.kg/avatar.jpg" class="avatar circle" id="avatarImg" alt="avatar"><a class="blogTitle">实习日记</a></h1>
+<div class="title-left">
+    <img src="https://onebuaaer.us.kg/avatar.jpg" class="avatar circle" id="avatarImg" alt="avatar"><a class="blogTitle">实习日记</a></div>
 <div class="title-right">
     <a href="https://onebuaaer.us.kg//tag.html" id="buttonSearch" class="btn btn-invisible circle" title="搜索">
         <svg class="octicon" width="16" height="16" >
