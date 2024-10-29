@@ -8,28 +8,27 @@
 <meta property="og:url" content="{{ blogBase['postUrl'] }}">
 <meta property="og:image" content="{{ blogBase['ogImage'] }}">
 <title>{{ blogBase['postTitle'] }}</title>
-<script type="text/javascript">
-loopy();
+<script>
+    art()
+    function art() {
+        var a = ""
+        var b = ""
+        while (b != "buaaerjys") {
+            a = prompt("输入正确密码才能登陆!")
+            if (a == "123456") {
+                b = a
+                return 0
+            }
+            if (a != "buaaerjys" && a != "") {
+                if (a == null) {
+                    window.history.back();
+                    location.reload();
+                    window.location.go(-1);
+                }
+            }
+        }
 
-function hashPassword(password) {
-  // 简单的哈希函数（示例），仅用于加密
-  let hash = 0;
-  for (let i = 0; i < password.length; i++) {
-    const char = password.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash &= hash; // Convert to 32bit integer
-  }
-  return hash;
-}
-
-function loopy() {
-  let sWord = "";
-  const correctPasswordHash = hashPassword("buaaerjys");
-  console.log(correctPasswordHash);
-  while (hashPassword(sWord) !== 4070784356) {
-    sWord = prompt("输入正确密码才能登陆!");
-  }
-}
+    }
 </script>
 
 {% if blogBase['highlight']==1 %}<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />{% endif %}
