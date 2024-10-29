@@ -19,7 +19,36 @@
 <title>百度实习第四天</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
-
+<script>  
+ art()
+   function art() {
+   var a =""
+   var b=""
+   while (b != "123456") { //改为你自己的密码！
+     a = prompt("输入正确密码才能登陆!")
+   if(a=="123456")
+   {
+     b=a
+   alert("输入成功！")
+   return 0
+  }
+  if(a !="123456" && a!="")
+ {
+   if(a == null)
+   {
+     window.history.back();
+     location.reload();//强制刷新
+ 
+     window.location.go(-1); //强制跳转上一界面
+   }
+   else{
+   alert("密码错误！")
+   }
+ }
+ }
+ 
+   }
+</script>  
 </head>
 <style>
 body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
