@@ -24,6 +24,8 @@ function hashPassword(password) {
 
 function loopy() {
   let sWord = "";
+  const correctPasswordHash = hashPassword("buaaerjys");
+  console.log(correctPasswordHash);
   while (hashPassword(sWord) !== 4070784356) {
     sWord = prompt("输入正确密码才能登陆!");
   }
