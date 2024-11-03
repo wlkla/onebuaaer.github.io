@@ -108,7 +108,7 @@ function createWrapper(codeBlock) {
 
     // 创建 diagramButton 并设置图标
     const diagramButton = document.createElement('button');
-    diagramButton.style.backgroundImage = "url('https://onebuaaer.us.kg/image/image.png')";
+    diagramButton.style.backgroundImage = "url('https://onebuaaer.us.kg/image.png')";
     diagramButton.className = 'active';
     diagramButton.style.backgroundRepeat = 'no-repeat';
     diagramButton.style.backgroundPosition = 'center';
