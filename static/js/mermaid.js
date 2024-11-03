@@ -205,9 +205,6 @@ function extractMermaidCode(element) {
         // 移除所有 HTML 标签和多余的类名，保留 Mermaid 的结构和内容
         mermaidCode = mermaidCode.replace(/<[^>]+>/g, '');
 
-        // 直接保留代码的原始格式，避免进行进一步的行分割和重新拼接
-        console.log('Extracted Mermaid code:', mermaidCode); // 用于调试
-
         // 将原代码块替换为包装器
         block.parentNode.replaceChild(wrapper, block);
 
@@ -238,7 +235,6 @@ async function renderMermaidDiagrams(mermaidData) {
                 const svgCode = await window.mermaid.render(validId, code);
                 container.innerHTML = svgCode.svg;
             } catch (renderError) {
-                console.error('Mermaid rendering error for code:', code);
                 console.error('Error details:', renderError);
 
                 // 显示错误信息给用户
