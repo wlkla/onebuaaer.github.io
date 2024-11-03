@@ -1,14 +1,14 @@
-function art() {
-    var a = "";
-    var b = "";
-    while (b != CONFIG.password) {
-        a = prompt("请输入访问密码");
-        if (a == CONFIG.password) {
-            b = a;
+function encipher() {
+    var inputpwd = "";
+    var temp = "";
+    while (temp != CONFIG.password) {
+        inputpwd = prompt("请输入访问密码");
+        if (inputpwd == CONFIG.password) {
+            temp = inputpwd;
             return 0;
         }
-        if (a != CONFIG.password && a != "") {
-            if (a == null) {
+        if (inputpwd != CONFIG.password && inputpwd != "") {
+            if (inputpwd == null) {
                 window.history.back();
                 location.reload();
                 window.location.go(-1);
@@ -17,4 +17,4 @@ function art() {
     }
 }
 
-art();
+encipher();
