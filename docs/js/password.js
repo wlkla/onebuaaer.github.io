@@ -1,3 +1,3 @@
 const CONFIG = {
-    password: "百度实习"
+    password: "onebuaaer"
 };
