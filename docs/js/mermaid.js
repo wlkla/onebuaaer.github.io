@@ -89,7 +89,7 @@ function createWrapper(codeBlock) {
 
     // 创建 copyButton 并设置图标
     const copyButton = document.createElement('button');
-    copyButton.style.backgroundImage = "url('https://onebuaaer.us.kg/copy.png')";
+    copyButton.style.backgroundImage = "url('https://onebuaaer.us.kg/image/copy.png')";
     copyButton.style.backgroundRepeat = 'no-repeat';
     copyButton.style.backgroundPosition = 'center';
     copyButton.style.display = 'none';
@@ -99,7 +99,7 @@ function createWrapper(codeBlock) {
 
     // 创建 sourceButton 并设置图标
     const sourceButton = document.createElement('button');
-    sourceButton.style.backgroundImage = "url('https://onebuaaer.us.kg/code.png')";
+    sourceButton.style.backgroundImage = "url('https://onebuaaer.us.kg/image/code.png')";
     sourceButton.style.backgroundRepeat = 'no-repeat';
     sourceButton.style.backgroundPosition = 'center';
     sourceButton.style.backgroundSize = 'contain';
