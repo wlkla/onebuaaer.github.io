@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     //主页主题------------------------------------------------------------------------------
     
     if (currentUrl == '/' || currentUrl.includes('/index.html') || currentUrl.includes('/page')) {
-        console.log('应用主页主题');
         let style = document.createElement("style");
         style.innerHTML = `
         html {    
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
     //文章页主题------------------------------------------------------------------------------
     
     else if (currentUrl.includes('/post/') || currentUrl.includes('/link.html') || currentUrl.includes('/about.html')) {
-        console.log('文章页主题');
 
         let style = document.createElement("style");
         style.innerHTML = `
@@ -120,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 搜索页主题--------------------------------------------------------------------
     
     else if (currentUrl.includes('/tag')) {
-        console.log('应用搜索页主题');
         let style = document.createElement("style");
         style.innerHTML = `
         
