@@ -126,15 +126,32 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <ul>
 <li>Post Pretrain：后预训练是在预训练模型的基础上，针对特定领域数据进行无监督学习。特点是需要更多专业化的数据来增强模型在特定领域的效果。</li>
 </ul>
-<p>因为我们的数据集是人工已标注的query，因此我们采用SFT与SFT-Lora方法对模型进行微调。</p>
+<p>因为我们的数据集是人工已标注的query，因此我们采用SFT与SFT-LoRA方法对模型进行微调。</p>
 <h2>模型参数调整</h2>
-<p>准备好了数据集与微调方法后，模型能顺利跑同，且训练有一定的效果，</p>
+<p>准备好了数据集与微调方法后，就准备模型训练了，在训练了半个多小时后看到了一个鲜红的<strong>失败</strong>，通过检查日志，发现报错为：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684"><img src="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684" alt="image" style="max-width: 100%;"></a><br>
+因此开始调整参数<strong>微调方法</strong>、<strong>机器卡数</strong>与<strong>batch_size</strong></p>
+<ul>
+<li>将微调方法从STF变为STF-LoRA，训练成功🥰</li>
+<li>将机器卡数从4卡调为8卡，发现资源不足，任务一直无法进行，参数调整失败🫠</li>
+<li>将batch_size从8调为4，搭配STF-LoRA成功🥰</li>
+</ul>
+<p>运行效果如下：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441"><img src="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441" alt="image" style="max-width: 100%;"></a><br>
+由于仅对query进行一级分类，所以正确率在90%以上。等这个模型训练完毕可能就进入二级行业分类，可能正确率瞬间就下去了。</p>
+<p>加下来就是其他各种参数的调整，比如学习率、迭代轮数等，又训练了多个模型：</p>
+<p>选择最好的一个训练结果进行展示：</p>
 <h2>其他</h2>
 <ul>
+<li>百度码神培训已经结束，我也有幸获得了两个奖品：结课奖🏅和幸运奖，也是拿到了我的第一个小熊<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd"><img src="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd" alt="image" style="max-width: 100%;"></a></li>
+<li>今天再次查看我的徽章，发现又多了两个：<strong>码神</strong>和<strong>云开发体验官</strong><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb"><img src="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb" alt="image" style="max-width: 100%;"></a></li>
 <li>今天发的不是水果，算是蔬菜吧，是...是...是一根黄瓜🥒，原谅我没绷住🤣。<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a88051cd-db9f-47b5-abbc-ad5e706e43e4"><img src="https://github.com/user-attachments/assets/a88051cd-db9f-47b5-abbc-ad5e706e43e4" alt="WechatIMG26" style="max-width: 100%;"></a></li>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a88051cd-db9f-47b5-abbc-ad5e706e43e4"><img src="https://github.com/user-attachments/assets/a88051cd-db9f-47b5-abbc-ad5e706e43e4" alt="image" style="max-width: 100%;"></a></li>
 </ul>
-<h2>总结</h2></div>
+<h2>总结</h2>
+<p>今天学习了如何新建fleetx任务（就是上面的模型训练任务），并学会使用一些微调方法以及成功训练了一部分模型。通过对各种参数的微调，也是对大模型的作用机制有了更加深入的了解。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
