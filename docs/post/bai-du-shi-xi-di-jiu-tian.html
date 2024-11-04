@@ -117,7 +117,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 再次审视文档，我将文件命名为train.json、dev.json，且每行为一条 jsonline：</p>
 <div class="highlight highlight-source-json"><pre class="notranslate">{<span class="pl-ent">"system"</span>: <span class="pl-s"><span class="pl-pds">"</span>你精通query分类，query类别有：......，请判断下面这个query属于哪一类。<span class="pl-pds">"</span></span>, <span class="pl-ent">"src"</span>: <span class="pl-s"><span class="pl-pds">"</span>合租室友带人回来长期住<span class="pl-pds">"</span></span>, <span class="pl-ent">"tgt"</span>: <span class="pl-s"><span class="pl-pds">"</span>生活和情感<span class="pl-pds">"</span></span>}</pre></div>
 <h2>模型微调方法</h2>
-<p>本次模型训练主要尝试了SFT与SFT-LoRA，其特点分别如下</p>
+<p>本次模型训练主要尝试了SFT与SFT-LoRA，其特点分别如下：</p>
 <ul>
 <li>SFT：有监督微调（Supervised Fine-Tuning）在预训练语言模型的基础上使用有标签的数据集进行进一步的微调，以适应特定的下游任务。其依赖于<strong>高质量的标注数据</strong>。</li>
 <li>SFT-LoRA：LoRA（Low-Rank Adaption）在SFT的基础上利用低秩矩阵分解的技术，仅需要微调少量参数便能完成模型微调。因此训练时能够降低所需要的资源。</li>
@@ -139,8 +139,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>运行效果如下：<br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441"><img src="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441" alt="image" style="max-width: 100%;"></a><br>
 由于仅对query进行一级分类，所以正确率在90%以上。等这个模型训练完毕可能就进入二级行业分类，可能正确率瞬间就下去了。</p>
-<p>加下来就是其他各种参数的调整，比如学习率、迭代轮数等，又训练了多个模型：</p>
-<p>选择最好的一个训练结果进行展示：</p>
+<p>接下来就是其他各种参数的调整，比如学习率、迭代轮数等，又训练了多个模型：<br>
+<a target="_blank" rel="noopener noreferrer" href="%E5%8D%A0%E4%BD%8D%E7%AC%A6"><img src="%E5%8D%A0%E4%BD%8D%E7%AC%A6" alt="占位符，所有模型图片" style="max-width: 100%;"></a><br>
+选择最好的一个训练结果进行展示：<br>
+<a target="_blank" rel="noopener noreferrer" href="%E5%8D%A0%E4%BD%8D%E7%AC%A6"><img src="%E5%8D%A0%E4%BD%8D%E7%AC%A6" alt="占位符，最好的训练结果" style="max-width: 100%;"></a></p>
 <h2>其他</h2>
 <ul>
 <li>百度码神培训已经结束，我也有幸获得了两个奖品：结课奖🏅和幸运奖，也是拿到了我的第一个小熊<br>
