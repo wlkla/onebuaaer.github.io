@@ -543,7 +543,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <h2>Task14</h2>
 <ul>
-<li>任务状态：❎</li>
+<li>任务状态：❌</li>
 <li>参数列表：</li>
 </ul>
 
@@ -597,7 +597,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <tr>
 <td>4</td>
 <td>4</td>
-<td>0.01</td>
+<td>0.001</td>
 <td>3</td>
 <td>SFT-LoRA</td>
 <td>qwen/qwen-14b</td>
@@ -618,7 +618,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <h2>Task16</h2>
 <ul>
-<li>任务状态：❎</li>
+<li>任务状态：❌</li>
 <li>参数列表：</li>
 </ul>
 
@@ -648,7 +648,41 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 
 <ul>
-<li></li>
+<li>报错原因：本次训练日志文件未丢失，PaddlePaddle抛出<code class="notranslate">ValueError</code>，但不清楚具体原因，决定放弃该参数。</li>
+</ul>
+<h2>Task17</h2>
+<ul>
+<li>任务状态：❌</li>
+<li>参数列表：</li>
+</ul>
+
+
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>GPU卡数</th>
+<th>batch-size</th>
+<th>learning-rate</th>
+<th>train-epochs</th>
+<th>训练模式</th>
+<th>模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>0.01</td>
+<td>3</td>
+<td>SFT-LoRA</td>
+<td>qwen/qwen-14b</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+
+
+<ul>
+<li>报错原因：训练过程中出现空向量。结合之前的训练，总结出一个经验：qwen模型学习率最好小于0.01，否则模型训练会报错。</li>
 </ul></div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 
