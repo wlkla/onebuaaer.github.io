@@ -10,9 +10,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="该篇文章用于记录训练模型的各种参数与训练效果。">
+<meta name="description" content="今天是入职百度的第🔟天，记录一下今天的历程。">
 <meta property="og:title" content="模型训练数据">
-<meta property="og:description" content="该篇文章用于记录训练模型的各种参数与训练效果。">
+<meta property="og:description" content="今天是入职百度的第🔟天，记录一下今天的历程。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://onebuaaer.us.kg//post/mo-xing-xun-lian-shu-ju.html">
 <meta property="og:image" content="https://onebuaaer.us.kg/image/avatar.jpg">
@@ -20,7 +20,7 @@
 <script src="https://onebuaaer.us.kg/js/password.js"></script>
 <script src="https://onebuaaer.us.kg/js/protect.js"></script>
 
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -43,9 +43,19 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
-<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style><style>.markdown-alert.markdown-alert-caution {border-left-color:var(--borderColor-danger-emphasis, var(--color-danger-emphasis));background-color:var(--color-danger-subtle);}.markdown-alert.markdown-alert-caution .markdown-alert-title {color: var(--fgColor-danger,var(--color-danger-fg));}</style>
+
 
 
 
@@ -75,615 +85,72 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>该篇文章用于记录训练模型的各种参数与训练效果。</p>
-<hr>
-<h1>11月4日 周一</h1>
-<h2>Task01</h2>
+<div class="markdown-body" id="postBody"><p>今天是入职百度的第🔟天，记录一下今天的历程。</p>
+<h2>大致流程</h2>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
+    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>创建数据集<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>模型训练<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>模型参数调整<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">A</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">C</span></pre></div>
+<p>今天的学习内容大致如下：</p>
 <ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>8</td>
-<td>0.00001</td>
-<td>1</td>
-<td>SFT</td>
-<td>FlagAlpha/Llama2-Chinese-13b-Chat</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：数据集格式错误，导致数据读取出错。</li>
-</ul>
-<h2>Task02</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>8</td>
-<td>0.00001</td>
-<td>1</td>
-<td>SFT</td>
-<td>FlagAlpha/Llama2-Chinese-13b-Chat</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：GPU耗尽可用内存<code class="notranslate">MemoryError</code>。</li>
-</ul>
-<h2>Task03</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>1</td>
-<td>SFT</td>
-<td>FlagAlpha/Llama2-Chinese-13b-Chat</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：未知，日志丢失，无法确定失败原因。</li>
-</ul>
-<h2>Task04</h2>
-<ul>
-<li>任务状态：✅</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>FlagAlpha/Llama2-Chinese-13b-Chat</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>训练效果：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88a6af35-076a-400c-b21a-3a6f25ada665"><img src="https://github.com/user-attachments/assets/88a6af35-076a-400c-b21a-3a6f25ada665" alt="image" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/9ce3cdfa-9b9d-4e62-8e97-10a16110d505"><img src="https://github.com/user-attachments/assets/9ce3cdfa-9b9d-4e62-8e97-10a16110d505" alt="image" style="max-width: 100%;"></a></li>
-</ul>
-<h2>Task05</h2>
-<ul>
-<li>任务状态：✅</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>FlagAlpha/Llama2-Chinese-13b-Chat</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>克隆Task04，排除成功的偶然性</p>
-</div>
-<h2>Task06</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>8</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：任务一直排队，手动终止。</li>
-</ul>
-<h2>Task07</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：任务一直排队，手动终止。</li>
-</ul>
-<h2>Task08</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：任务一直排队，手动终止。</li>
-</ul>
-<h2>Task09</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>linly-ai/chinese-llama-2-7b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：任务一直排队，手动终止。</li>
-</ul>
-<h2>Task10</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.0001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>FlagAlpha/Llama2-Chinese-13b-Chat</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>失败原因：克隆任务Task04，可能由于资源队列问题导致运行出错，且日志丢失，无法判定错误原因。</li>
-</ul>
-<h2>Task11</h2>
-<ul>
-<li>任务状态：✅</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>FlagAlpha/Llama2-Chinese-13b-Chat</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>训练效果：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/78bd9db2-5155-4314-a14f-809fb76356b7"><img src="https://github.com/user-attachments/assets/78bd9db2-5155-4314-a14f-809fb76356b7" alt="image" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/37f6c3c2-b055-4b66-8842-3844d5f6a08a"><img src="https://github.com/user-attachments/assets/37f6c3c2-b055-4b66-8842-3844d5f6a08a" alt="image" style="max-width: 100%;"></a></li>
-</ul>
-<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p><p>参数与Task04相同但是效果不相同是因为互换了训练与测试数据集。</p>
-</div>
-<h2>Task12</h2>
-<ul>
-<li>任务状态：✅</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.00001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>
-<p>训练效果：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/5543d21d-84a0-4141-aec3-731c02565e92"><img src="https://github.com/user-attachments/assets/5543d21d-84a0-4141-aec3-731c02565e92" alt="image" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ae950501-4330-4c33-893f-8cd35a86b879"><img src="https://github.com/user-attachments/assets/ae950501-4330-4c33-893f-8cd35a86b879" alt="image" style="max-width: 100%;"></a></p>
-</li>
-<li>
-<p>效果评估：可以看到准确率非常低，猜测可能是由于模型不合适或者学习率设置不恰当。</p>
-</li>
+<li>模型微调方法：Post Pretrain、SFT、SFT-LoRA及其相关训练数据格式</li>
+<li>模型参数的学习与调整</li>
 </ul>
 <hr>
-<h1>11月5日 周二</h1>
-<h2>Task13</h2>
+<p>接下来一一介绍每个部分：</p>
+<h2>数据集</h2>
+<p>根据大模型开发说明，我们即可创建自己的数据集。<br>
+需要说明的一点是要好好看说明哦，由于我没有仔细看说明，简单的将训练数据与测试数据命名为train.json、test.json且分别放在了两个文件夹下，且json格式为：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+        <span class="pl-ent">"system"</span>: <span class="pl-s"><span class="pl-pds">"</span>你精通query分类，query类别有：......，请判断下面这个query属于哪一类。<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"src"</span>: [
+            <span class="pl-s"><span class="pl-pds">"</span>什么材质的衬衫比较有质感<span class="pl-pds">"</span></span>
+        ],
+        <span class="pl-ent">"tgt"</span>: [
+            <span class="pl-s"><span class="pl-pds">"</span>生活和情感<span class="pl-pds">"</span></span>
+        ]
+    }</pre></div>
+<p>导致运行时报错：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e025b2a6-ce38-42ff-befc-484e01e9d3a9"><img src="https://github.com/user-attachments/assets/e025b2a6-ce38-42ff-befc-484e01e9d3a9" alt="image" style="max-width: 100%;"></a><br>
+因此大家一定要细心细心再细心<g-emoji class="g-emoji" alias="bangbang">‼️</g-emoji>，不然只会白白浪费时间⏰。<br>
+再次审视文档，我将文件命名为train.json、dev.json，且每行为一条 jsonline：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{<span class="pl-ent">"system"</span>: <span class="pl-s"><span class="pl-pds">"</span>你精通query分类，query类别有：......，请判断下面这个query属于哪一类。<span class="pl-pds">"</span></span>, <span class="pl-ent">"src"</span>: <span class="pl-s"><span class="pl-pds">"</span>合租室友带人回来长期住<span class="pl-pds">"</span></span>, <span class="pl-ent">"tgt"</span>: <span class="pl-s"><span class="pl-pds">"</span>生活和情感<span class="pl-pds">"</span></span>}</pre></div>
+<h2>模型微调方法</h2>
+<p>本次模型训练主要尝试了SFT与SFT-LoRA，其特点分别如下：</p>
 <ul>
-<li>任务状态：✅</li>
-<li>参数列表：</li>
+<li>SFT：有监督微调（Supervised Fine-Tuning）在预训练语言模型的基础上使用有标签的数据集进行进一步的微调，以适应特定的下游任务。其依赖于<strong>高质量的标注数据</strong>。</li>
+<li>SFT-LoRA：LoRA（Low-Rank Adaption）在SFT的基础上利用低秩矩阵分解的技术，仅需要微调少量参数便能完成模型微调。因此训练时能够降低所需要的资源。</li>
 </ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.001</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
+<p>虽然本次并没有使用Post Pretrain，但是也要简单介绍一下这个方法：</p>
 <ul>
-<li>
-<p>训练效果：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/748f6051-3dc0-464d-866f-ae1158972227"><img src="https://github.com/user-attachments/assets/748f6051-3dc0-464d-866f-ae1158972227" alt="image" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/902ad591-e56b-4ed5-91c7-ba952e54d7d7"><img src="https://github.com/user-attachments/assets/902ad591-e56b-4ed5-91c7-ba952e54d7d7" alt="image" style="max-width: 100%;"></a></p>
-</li>
-<li>
-<p>效果评估：在修改学习率后，相比Task12有了显著提升，接下来还可以继续尝试其他学习率尝试改进。</p>
-</li>
+<li>Post Pretrain：后预训练是在预训练模型的基础上，针对特定领域数据进行无监督学习。特点是需要更多专业化的数据来增强模型在特定领域的效果。</li>
 </ul>
-<h2>Task14</h2>
+<p>因为我们的数据集是人工已标注的query，因此我们采用SFT与SFT-LoRA方法对模型进行微调。</p>
+<h2>模型参数调整</h2>
+<p>准备好了数据集与微调方法后，就准备模型训练了，在训练了半个多小时后看到了一个鲜红的<strong>失败</strong>，通过检查日志，发现报错为：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684"><img src="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684" alt="image" style="max-width: 100%;"></a><br>
+因此开始调整参数<strong>微调方法</strong>、<strong>机器卡数</strong>与<strong>batch_size</strong></p>
 <ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
+<li>将微调方法从STF变为STF-LoRA，训练成功🥰</li>
+<li>将机器卡数从4卡调为8卡，发现资源不足，任务一直无法进行，参数调整失败🫠</li>
+<li>将batch_size从8调为4，搭配STF-LoRA成功🥰</li>
 </ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.01</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
+<p>运行效果如下：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441"><img src="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441" alt="image" style="max-width: 100%;"></a><br>
+由于仅对query进行一级分类，所以正确率在90%以上。等这个模型训练完毕可能就进入二级行业分类，可能正确率瞬间就下去了。</p>
+<p>接下来就是其他各种参数的调整，比如学习率、迭代轮数等，又训练了多个模型，详细过程与参数不便详细介绍，因此略过。</p>
+<h2>其他</h2>
 <ul>
-<li>失败原因：log日志文件丢失，失败原因未知，猜测可能是资源队列问题，决定重跑作业，标记为Task16。</li>
+<li>百度码神培训已经结束，我也有幸获得了两个奖品：结课奖🏅和幸运奖，也是拿到了我的第一个小熊<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd"><img src="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd" alt="image" style="max-width: 100%;"></a></li>
+<li>今天再次查看我的徽章，发现又多了两个：<strong>码神</strong>和<strong>云开发体验官</strong><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb"><img src="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb" alt="image" style="max-width: 100%;"></a></li>
+<li>今天发的不是水果，算是蔬菜吧，是一根黄瓜🥒，原谅我没绷住🤣。</li>
 </ul>
-<h2>Task15</h2>
-<ul>
-<li>任务状态：✅</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.001</td>
-<td>3</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>
-<p>训练效果：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/643afe40-cf52-44e6-8add-7499e2a65002"><img src="https://github.com/user-attachments/assets/643afe40-cf52-44e6-8add-7499e2a65002" alt="image" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/015509b9-ac74-4635-a9e5-dc5d1aa02398"><img src="https://github.com/user-attachments/assets/015509b9-ac74-4635-a9e5-dc5d1aa02398" alt="image" style="max-width: 100%;"></a></p>
-</li>
-<li>
-<p>效果评估：正确率相比Task13略有提升，但无法确定是由于learning-rate改变还是train-epochs的调整导致，需要查看Task16训练结果。</p>
-</li>
-</ul>
-<h2>Task16</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.01</td>
-<td>2</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>报错原因：本次训练日志文件未丢失，PaddlePaddle抛出<code class="notranslate">ValueError</code>，但不清楚具体原因，决定放弃该参数。</li>
-</ul>
-<h2>Task17</h2>
-<ul>
-<li>任务状态：❌</li>
-<li>参数列表：</li>
-</ul>
-
-
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>GPU卡数</th>
-<th>batch-size</th>
-<th>learning-rate</th>
-<th>train-epochs</th>
-<th>训练模式</th>
-<th>模型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>0.01</td>
-<td>3</td>
-<td>SFT-LoRA</td>
-<td>qwen/qwen-14b</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-
-
-<ul>
-<li>报错原因：训练过程中出现空向量。结合之前的训练，总结出一个经验：qwen模型学习率最好小于0.01，否则模型训练会报错。</li>
-</ul></div>
+<h2>总结</h2>
+<p>今天学习了如何新建fleetx任务（就是上面的模型训练任务），并学会使用一些微调方法以及成功训练了一部分模型。通过对各种参数的微调，也是对大模型的作用机制有了更加深入的了解。</p>
+</div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -708,7 +175,7 @@ if("09/01/2024"!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -779,7 +246,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 <script src='https://onebuaaer.us.kg/js/articletoc.js'></script><script src='https://onebuaaer.us.kg/js/mermaid.js'></script><script src='https://onebuaaer.us.kg/js/lightbox.js'></script>
