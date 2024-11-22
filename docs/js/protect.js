@@ -20,3 +20,5 @@ function encipher() {
         }
     }
 }
+
+encipher();
