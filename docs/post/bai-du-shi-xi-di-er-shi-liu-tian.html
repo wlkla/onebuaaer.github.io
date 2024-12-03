@@ -99,7 +99,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>今天早上一来发现 Excel 文件已经被处理好了，太开心了😄，上周三给我的数据我到今天终于处理好了，差一天就一周了！<br>
 我迫不及待打开文件检查一下结果，越看越不对劲，感觉这次预测结果很不好，因此简单写了一个代码测试一下正确率，发现居然只有 57% 左右，之前还跟 mentor 汇报说模型正确率能达到 85% 以上呢，这不啪啪打脸吗。<br>
 我就分析一下结果，发现有超过 50% query 被标注为新闻，这是怎么回事🤔？<br>
-我开始排查代码，最后发现是参数 <code class="notranslate">Repetition Penalty</code> 的问题，它对模型的输出起了关键性影响，但是如果我们将参数数值设置过大，模型就倾向于输出<strong>新闻</strong>，我不清楚是什么导致的。因此我暂时 <code class="notranslate">Repetition Penalty</code> 暂定为默认的 1 再次运行（半天就跑出来了），模型正确率为 75%，这与模型训练结果相同。<br>
+我开始排查代码，最后发现是参数 <code class="notranslate">Repetition Penalty</code> 的问题，它对模型的输出起了关键性影响，但是如果我们将参数数值设置过大，模型就倾向于输出<strong>新闻</strong>，我不清楚是什么导致的。<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/5907399f-007c-4e02-9e1a-4d0620f9ae6a"><img src="https://github.com/user-attachments/assets/5907399f-007c-4e02-9e1a-4d0620f9ae6a" alt="image" style="max-width: 100%;"></a><br>
+因此我暂时 <code class="notranslate">Repetition Penalty</code> 暂定为默认的 1 再次运行（半天就跑出来了），模型正确率为 75%，这与模型训练结果相同。<br>
 但是由此就引发一个问题，为什么在测试集上修改<code class="notranslate">Repetition Penalty</code> 多次生成正确率能达到 85% 以上，但是在新的数据集上反而跌至 57% 了呢？在测试集上过拟合？那均设为默认值 1 时，正确率均为 75% 又如何解释呢。<br>
 啊啊啊，脑子疼，还得再好好想想。</p>
 <h2>模型部署</h2>
