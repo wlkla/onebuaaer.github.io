@@ -62,6 +62,32 @@ rdd4.saveAsTextFile('hdfs://node01:9000/data/wc/out/')
 3. 输出 RDD 的第一行：`textFile.first()`
 ![image](https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187)
 
+## Spark实现wordcount
+```python
+# wordcount.py
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setAppName('wordcount').setMaster('local[2]')
+sc = SparkContext(conf=conf)
+sc.setLogLevel('ERROR')
+inputdata = sc.textFile('file:///Users/path/word.txt')
+output = inputdata.flatMap(lambda x: x.split(' ')) \
+                  .map(lambda x: (x, 1)) \
+                  .reduceByKey(lambda a, b: a + b) \
+                  .sortBy(lambda x:x[1], ascending=False)
+
+result = output.collect()
+for i in result:
+    print(i)
+
+sc.stop()
+```
+
+## 任务提交
+编写好代码后该如何提交呢，提交语法如下：
+- 使用 pyspark：
+```python
+pyspark --master yarn --conf spark.files.ignoreCorruptFiles=true --num-executors 100 --executor-memory 4g --executor-cores 3 --driver-memory 8g
+```
 
 <!-- ##{'timestamp':1732972659}## -->。">
 <meta property="og:title" content="Spark学习">
@@ -117,6 +143,32 @@ rdd4.saveAsTextFile('hdfs://node01:9000/data/wc/out/')
 3. 输出 RDD 的第一行：`textFile.first()`
 ![image](https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187)
 
+## Spark实现wordcount
+```python
+# wordcount.py
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setAppName('wordcount').setMaster('local[2]')
+sc = SparkContext(conf=conf)
+sc.setLogLevel('ERROR')
+inputdata = sc.textFile('file:///Users/path/word.txt')
+output = inputdata.flatMap(lambda x: x.split(' ')) \
+                  .map(lambda x: (x, 1)) \
+                  .reduceByKey(lambda a, b: a + b) \
+                  .sortBy(lambda x:x[1], ascending=False)
+
+result = output.collect()
+for i in result:
+    print(i)
+
+sc.stop()
+```
+
+## 任务提交
+编写好代码后该如何提交呢，提交语法如下：
+- 使用 pyspark：
+```python
+pyspark --master yarn --conf spark.files.ignoreCorruptFiles=true --num-executors 100 --executor-memory 4g --executor-cores 3 --driver-memory 8g
+```
 
 <!-- ##{'timestamp':1732972659}## -->。">
 <meta property="og:type" content="article">
@@ -248,6 +300,29 @@ rdd4.saveAsTextFile("hdfs://node01:9000/data/wc/out/")
 <li>输出 RDD 的第一行：<code class="notranslate">textFile.first()</code><br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187"><img src="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187" alt="image" style="max-width: 100%;"></a></li>
 </ol>
+<h2>Spark实现wordcount</h2>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># wordcount.py</span>
+<span class="pl-k">from</span> <span class="pl-s1">pyspark</span> <span class="pl-k">import</span> <span class="pl-v">SparkConf</span>, <span class="pl-v">SparkContext</span>
+<span class="pl-s1">conf</span> <span class="pl-c1">=</span> <span class="pl-v">SparkConf</span>().<span class="pl-en">setAppName</span>(<span class="pl-s">"wordcount"</span>).<span class="pl-en">setMaster</span>(<span class="pl-s">"local[2]"</span>)
+<span class="pl-s1">sc</span> <span class="pl-c1">=</span> <span class="pl-v">SparkContext</span>(<span class="pl-s1">conf</span><span class="pl-c1">=</span><span class="pl-s1">conf</span>)
+<span class="pl-s1">sc</span>.<span class="pl-en">setLogLevel</span>(<span class="pl-s">"ERROR"</span>)
+<span class="pl-s1">inputdata</span> <span class="pl-c1">=</span> <span class="pl-s1">sc</span>.<span class="pl-en">textFile</span>(<span class="pl-s">"file:///Users/path/word.txt"</span>)
+<span class="pl-s1">output</span> <span class="pl-c1">=</span> <span class="pl-s1">inputdata</span>.<span class="pl-en">flatMap</span>(<span class="pl-k">lambda</span> <span class="pl-s1">x</span>: <span class="pl-s1">x</span>.<span class="pl-en">split</span>(<span class="pl-s">" "</span>)) \
+                  .<span class="pl-en">map</span>(<span class="pl-k">lambda</span> <span class="pl-s1">x</span>: (<span class="pl-s1">x</span>, <span class="pl-c1">1</span>)) \
+                  .<span class="pl-en">reduceByKey</span>(<span class="pl-k">lambda</span> <span class="pl-s1">a</span>, <span class="pl-s1">b</span>: <span class="pl-s1">a</span> <span class="pl-c1">+</span> <span class="pl-s1">b</span>) \
+                  .<span class="pl-en">sortBy</span>(<span class="pl-k">lambda</span> <span class="pl-s1">x</span>:<span class="pl-s1">x</span>[<span class="pl-c1">1</span>], <span class="pl-s1">ascending</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)
+
+<span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">output</span>.<span class="pl-en">collect</span>()
+<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-s1">result</span>:
+    <span class="pl-en">print</span>(<span class="pl-s1">i</span>)
+
+<span class="pl-s1">sc</span>.<span class="pl-en">stop</span>()</pre></div>
+<h2>任务提交</h2>
+<p>编写好代码后该如何提交呢，提交语法如下：</p>
+<ul>
+<li>使用 pyspark：</li>
+</ul>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">pyspark</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">master</span> <span class="pl-s1">yarn</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">conf</span> <span class="pl-s1">spark</span>.<span class="pl-s1">files</span>.<span class="pl-s1">ignoreCorruptFiles</span><span class="pl-c1">=</span><span class="pl-s1">true</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">num</span><span class="pl-c1">-</span><span class="pl-s1">executors</span> <span class="pl-c1">100</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">executor</span><span class="pl-c1">-</span><span class="pl-s1">memory</span> <span class="pl-c1">4</span><span class="pl-s1">g</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">executor</span><span class="pl-c1">-</span><span class="pl-s1">cores</span> <span class="pl-c1">3</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">driver</span><span class="pl-c1">-</span><span class="pl-s1">memory</span> <span class="pl-c1">8</span><span class="pl-s1">g</span></pre></div>
 </div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 

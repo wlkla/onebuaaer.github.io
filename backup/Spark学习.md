@@ -50,5 +50,31 @@ rdd4.saveAsTextFile("hdfs://node01:9000/data/wc/out/")
 3. 输出 RDD 的第一行：`textFile.first()`
 ![image](https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187)
 
+## Spark实现wordcount
+```python
+# wordcount.py
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setAppName("wordcount").setMaster("local[2]")
+sc = SparkContext(conf=conf)
+sc.setLogLevel("ERROR")
+inputdata = sc.textFile("file:///Users/path/word.txt")
+output = inputdata.flatMap(lambda x: x.split(" ")) \
+                  .map(lambda x: (x, 1)) \
+                  .reduceByKey(lambda a, b: a + b) \
+                  .sortBy(lambda x:x[1], ascending=False)
+
+result = output.collect()
+for i in result:
+    print(i)
+
+sc.stop()
+```
+
+## 任务提交
+编写好代码后该如何提交呢，提交语法如下：
+- 使用 pyspark：
+```python
+pyspark --master yarn --conf spark.files.ignoreCorruptFiles=true --num-executors 100 --executor-memory 4g --executor-cores 3 --driver-memory 8g
+```
 
 <!-- ##{"timestamp":1732972659}## -->
