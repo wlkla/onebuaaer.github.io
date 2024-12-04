@@ -61,6 +61,14 @@ rdd4.saveAsTextFile('hdfs://node01:9000/data/wc/out/')
 2. 对 RDD 进行行数统计：'textFile.count()'
 3. 输出 RDD 的第一行：`textFile.first()`
 ![image](https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187)
+4. Application：Spark 的应用程序，包含一个 Driver program 和若干 Executor
+5. SparkContext：Spark 应用程序的入口，负责调度各个运算资源，协调各个 Worker Node 上的 Executor
+6. Driver：运行 Application 的 main()  函数并创建 SparkContext
+7. Worker：集群中任何可以运行 Application 代码的节点，运行一个或多个 Executor 进程
+8. Client：用户提交作业的客户端
+9. Executor：是为 Application 运行在 Worker Node 上的一个进程，该进程负责运行 Task，并且负责将数据存在内存或磁盘上，每个 Application 都会申请各自的 Executor 来处理任务
+10. Task：运行在 Executor 上的工作单元
+11. Job：SparkContext 提交的具体 Action 操作
 
 ## Spark实现wordcount
 ```python
@@ -83,10 +91,15 @@ sc.stop()
 ```
 
 ## 任务提交
-编写好代码后该如何提交呢，提交语法如下：
-- 使用 pyspark：
+编写好代码后该如何提交呢，提交语法如下（使用 pyspark）：
 ```python
-pyspark --master yarn --conf spark.files.ignoreCorruptFiles=true --num-executors 100 --executor-memory 4g --executor-cores 3 --driver-memory 8g
+pyspark\ 
+--master yarn\ # 用于指定 Spark 任务的运行模式以及资源管理器
+--conf spark.files.ignoreCorruptFiles=true\ # 
+--num-executors 100\ # 要启动的executor数量
+--executor-memory 4g\ # 每个executor的内存大小
+--executor-cores 3\ # 每个 executor 可以使用的 CPU 核心
+--driver-memory 8g # driver程序的内存大小
 ```
 
 <!-- ##{'timestamp':1732972659}## -->。">
@@ -142,6 +155,14 @@ rdd4.saveAsTextFile('hdfs://node01:9000/data/wc/out/')
 2. 对 RDD 进行行数统计：'textFile.count()'
 3. 输出 RDD 的第一行：`textFile.first()`
 ![image](https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187)
+4. Application：Spark 的应用程序，包含一个 Driver program 和若干 Executor
+5. SparkContext：Spark 应用程序的入口，负责调度各个运算资源，协调各个 Worker Node 上的 Executor
+6. Driver：运行 Application 的 main()  函数并创建 SparkContext
+7. Worker：集群中任何可以运行 Application 代码的节点，运行一个或多个 Executor 进程
+8. Client：用户提交作业的客户端
+9. Executor：是为 Application 运行在 Worker Node 上的一个进程，该进程负责运行 Task，并且负责将数据存在内存或磁盘上，每个 Application 都会申请各自的 Executor 来处理任务
+10. Task：运行在 Executor 上的工作单元
+11. Job：SparkContext 提交的具体 Action 操作
 
 ## Spark实现wordcount
 ```python
@@ -164,10 +185,15 @@ sc.stop()
 ```
 
 ## 任务提交
-编写好代码后该如何提交呢，提交语法如下：
-- 使用 pyspark：
+编写好代码后该如何提交呢，提交语法如下（使用 pyspark）：
 ```python
-pyspark --master yarn --conf spark.files.ignoreCorruptFiles=true --num-executors 100 --executor-memory 4g --executor-cores 3 --driver-memory 8g
+pyspark\ 
+--master yarn\ # 用于指定 Spark 任务的运行模式以及资源管理器
+--conf spark.files.ignoreCorruptFiles=true\ # 
+--num-executors 100\ # 要启动的executor数量
+--executor-memory 4g\ # 每个executor的内存大小
+--executor-cores 3\ # 每个 executor 可以使用的 CPU 核心
+--driver-memory 8g # driver程序的内存大小
 ```
 
 <!-- ##{'timestamp':1732972659}## -->。">
@@ -299,6 +325,14 @@ rdd4.saveAsTextFile("hdfs://node01:9000/data/wc/out/")
 <li>对 RDD 进行行数统计：'textFile.count()'</li>
 <li>输出 RDD 的第一行：<code class="notranslate">textFile.first()</code><br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187"><img src="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187" alt="image" style="max-width: 100%;"></a></li>
+<li>Application：Spark 的应用程序，包含一个 Driver program 和若干 Executor</li>
+<li>SparkContext：Spark 应用程序的入口，负责调度各个运算资源，协调各个 Worker Node 上的 Executor</li>
+<li>Driver：运行 Application 的 main()  函数并创建 SparkContext</li>
+<li>Worker：集群中任何可以运行 Application 代码的节点，运行一个或多个 Executor 进程</li>
+<li>Client：用户提交作业的客户端</li>
+<li>Executor：是为 Application 运行在 Worker Node 上的一个进程，该进程负责运行 Task，并且负责将数据存在内存或磁盘上，每个 Application 都会申请各自的 Executor 来处理任务</li>
+<li>Task：运行在 Executor 上的工作单元</li>
+<li>Job：SparkContext 提交的具体 Action 操作</li>
 </ol>
 <h2>Spark实现wordcount</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># wordcount.py</span>
@@ -318,11 +352,14 @@ rdd4.saveAsTextFile("hdfs://node01:9000/data/wc/out/")
 
 <span class="pl-s1">sc</span>.<span class="pl-en">stop</span>()</pre></div>
 <h2>任务提交</h2>
-<p>编写好代码后该如何提交呢，提交语法如下：</p>
-<ul>
-<li>使用 pyspark：</li>
-</ul>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">pyspark</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">master</span> <span class="pl-s1">yarn</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">conf</span> <span class="pl-s1">spark</span>.<span class="pl-s1">files</span>.<span class="pl-s1">ignoreCorruptFiles</span><span class="pl-c1">=</span><span class="pl-s1">true</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">num</span><span class="pl-c1">-</span><span class="pl-s1">executors</span> <span class="pl-c1">100</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">executor</span><span class="pl-c1">-</span><span class="pl-s1">memory</span> <span class="pl-c1">4</span><span class="pl-s1">g</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">executor</span><span class="pl-c1">-</span><span class="pl-s1">cores</span> <span class="pl-c1">3</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">driver</span><span class="pl-c1">-</span><span class="pl-s1">memory</span> <span class="pl-c1">8</span><span class="pl-s1">g</span></pre></div>
+<p>编写好代码后该如何提交呢，提交语法如下（使用 pyspark）：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">pyspark</span>\ 
+<span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">master</span> <span class="pl-s1">yarn</span>\ <span class="pl-c"># 用于指定 Spark 任务的运行模式以及资源管理器</span>
+<span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">conf</span> <span class="pl-s1">spark</span>.<span class="pl-s1">files</span>.<span class="pl-s1">ignoreCorruptFiles</span><span class="pl-c1">=</span><span class="pl-s1">true</span>\ <span class="pl-c"># </span>
+<span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">num</span><span class="pl-c1">-</span><span class="pl-s1">executors</span> <span class="pl-c1">100</span>\ <span class="pl-c"># 要启动的executor数量</span>
+<span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">executor</span><span class="pl-c1">-</span><span class="pl-s1">memory</span> <span class="pl-c1">4</span><span class="pl-s1">g</span>\ <span class="pl-c"># 每个executor的内存大小</span>
+<span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">executor</span><span class="pl-c1">-</span><span class="pl-s1">cores</span> <span class="pl-c1">3</span>\ <span class="pl-c"># 每个 executor 可以使用的 CPU 核心</span>
+<span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">driver</span><span class="pl-c1">-</span><span class="pl-s1">memory</span> <span class="pl-c1">8</span><span class="pl-s1">g</span> <span class="pl-c"># driver程序的内存大小</span></pre></div>
 </div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 
