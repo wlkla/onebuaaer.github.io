@@ -107,7 +107,7 @@ CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环�
 <h2>参数学习</h2>
 <p>由于我们目前的主要任务是获取模型的 softmax 层输出，因此最近我都在尝试编写代码获取模型的底层输出，在四处查询后，我查找到了这篇文章：<a href="https://huggingface.co/docs/transformers/v4.47.0/zh/main_classes/text_generation#transformers.GenerationConfig.output_scores" rel="nofollow">Generation</a>，通过了解大模型输出时的各个参数，我发现了这个：</p>
 <div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p><strong>output_scores</strong> (bool, optional, defaults to False) — Whether or not to return the prediction scores. See scores under returned tensors for more details.<br>
-<strong>output_scores</strong> (bool, optional, defaults to False) — Whether or not to return the prediction scores. See scores under returned tensors for more details.</p>
+<strong>output_logits</strong> (bool, optional) — Whether or not to return the unprocessed prediction logit scores. See logits under returned tensors for more details.</p>
 </div>
 <p>因此我在尝试了多次之后也是成功编写了一个小 demo：</p>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
