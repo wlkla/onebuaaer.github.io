@@ -201,23 +201,23 @@ Hello World
 
 <span class="pl-k">def</span> <span class="pl-en">main</span>():
     <span class="pl-c"># 从标准输入读取每一行</span>
-    <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
+    <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-c1">stdin</span>:
         <span class="pl-k">try</span>:
             <span class="pl-c"># 将行分割成单词</span>
-            <span class="pl-s1">words</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>().<span class="pl-en">split</span>()
+            <span class="pl-s1">words</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-c1">strip</span>().<span class="pl-c1">split</span>()
             
             <span class="pl-c"># 对每个单词输出 &lt;word, 1&gt;</span>
             <span class="pl-k">for</span> <span class="pl-s1">word</span> <span class="pl-c1">in</span> <span class="pl-s1">words</span>:
                 <span class="pl-c"># 清理单词，只保留字母和数字，转换为小写</span>
-                <span class="pl-s1">word</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>.<span class="pl-en">join</span>(<span class="pl-s1">c</span> <span class="pl-k">for</span> <span class="pl-s1">c</span> <span class="pl-c1">in</span> <span class="pl-s1">word</span> <span class="pl-k">if</span> <span class="pl-s1">c</span>.<span class="pl-en">isalnum</span>()).<span class="pl-en">lower</span>()
+                <span class="pl-s1">word</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>.<span class="pl-c1">join</span>(<span class="pl-s1">c</span> <span class="pl-k">for</span> <span class="pl-s1">c</span> <span class="pl-c1">in</span> <span class="pl-s1">word</span> <span class="pl-k">if</span> <span class="pl-s1">c</span>.<span class="pl-c1">isalnum</span>()).<span class="pl-c1">lower</span>()
                 <span class="pl-k">if</span> <span class="pl-s1">word</span>:  <span class="pl-c"># 确保单词非空</span>
                     <span class="pl-k">try</span>:
                         <span class="pl-c"># Hadoop Streaming 期望键值对用 tab 分隔</span>
                         <span class="pl-en">print</span>(<span class="pl-s">'%s<span class="pl-cce">\t</span>%s'</span> <span class="pl-c1">%</span> (<span class="pl-s1">word</span>, <span class="pl-c1">1</span>))
                     <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-                        <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+                        <span class="pl-s1">sys</span>.<span class="pl-c1">stderr</span>.<span class="pl-c1">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-c1">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
         <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-            <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error processing line: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+            <span class="pl-s1">sys</span>.<span class="pl-c1">stderr</span>.<span class="pl-c1">write</span>(<span class="pl-s">'Error processing line: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-c1">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
             <span class="pl-k">continue</span>
 
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
@@ -235,17 +235,17 @@ Hello World
     <span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
 
     <span class="pl-c"># 从标准输入读取每一行（已按键排序）</span>
-    <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-s1">stdin</span>:
+    <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">sys</span>.<span class="pl-c1">stdin</span>:
         <span class="pl-k">try</span>:
             <span class="pl-c"># 确保行不是空的</span>
-            <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">strip</span>()
+            <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-c1">strip</span>()
             <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">line</span>:
                 <span class="pl-k">continue</span>
                 
             <span class="pl-c"># 尝试分割并解析输入</span>
-            <span class="pl-s1">parts</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-en">split</span>(<span class="pl-s">'<span class="pl-cce">\t</span>'</span>)
+            <span class="pl-s1">parts</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-c1">split</span>(<span class="pl-s">'<span class="pl-cce">\t</span>'</span>)
             <span class="pl-k">if</span> <span class="pl-en">len</span>(<span class="pl-s1">parts</span>) <span class="pl-c1">!=</span> <span class="pl-c1">2</span>:
-                <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Warning: Invalid input line format: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-s1">line</span>))
+                <span class="pl-s1">sys</span>.<span class="pl-c1">stderr</span>.<span class="pl-c1">write</span>(<span class="pl-s">'Warning: Invalid input line format: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-c1">format</span>(<span class="pl-s1">line</span>))
                 <span class="pl-k">continue</span>
                 
             <span class="pl-s1">word</span>, <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-s1">parts</span>
@@ -253,7 +253,7 @@ Hello World
             <span class="pl-k">try</span>:
                 <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">int</span>(<span class="pl-s1">count</span>)
             <span class="pl-k">except</span> <span class="pl-v">ValueError</span>:
-                <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Warning: Invalid count value: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-s1">count</span>))
+                <span class="pl-s1">sys</span>.<span class="pl-c1">stderr</span>.<span class="pl-c1">write</span>(<span class="pl-s">'Warning: Invalid count value: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-c1">format</span>(<span class="pl-s1">count</span>))
                 <span class="pl-k">continue</span>
             
             <span class="pl-c"># 如果是新单词，输出之前累积的计数</span>
@@ -261,7 +261,7 @@ Hello World
                 <span class="pl-k">try</span>:
                     <span class="pl-en">print</span>(<span class="pl-s">'%s<span class="pl-cce">\t</span>%s'</span> <span class="pl-c1">%</span> (<span class="pl-s1">current_word</span>, <span class="pl-s1">current_count</span>))
                 <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-                    <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+                    <span class="pl-s1">sys</span>.<span class="pl-c1">stderr</span>.<span class="pl-c1">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-c1">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
                 <span class="pl-s1">current_count</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
             
             <span class="pl-c"># 更新当前单词和计数</span>
@@ -269,7 +269,7 @@ Hello World
             <span class="pl-s1">current_count</span> <span class="pl-c1">+=</span> <span class="pl-s1">count</span>
             
         <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-            <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error processing line: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+            <span class="pl-s1">sys</span>.<span class="pl-c1">stderr</span>.<span class="pl-c1">write</span>(<span class="pl-s">'Error processing line: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-c1">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
             <span class="pl-k">continue</span>
     
     <span class="pl-c"># 输出最后一个单词的计数</span>
@@ -277,7 +277,7 @@ Hello World
         <span class="pl-k">try</span>:
             <span class="pl-en">print</span>(<span class="pl-s">'%s<span class="pl-cce">\t</span>%s'</span> <span class="pl-c1">%</span> (<span class="pl-s1">current_word</span>, <span class="pl-s1">current_count</span>))
         <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-            <span class="pl-s1">sys</span>.<span class="pl-s1">stderr</span>.<span class="pl-en">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-en">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
+            <span class="pl-s1">sys</span>.<span class="pl-c1">stderr</span>.<span class="pl-c1">write</span>(<span class="pl-s">'Error writing output: {0}<span class="pl-cce">\n</span>'</span>.<span class="pl-c1">format</span>(<span class="pl-en">str</span>(<span class="pl-s1">e</span>)))
 
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
     <span class="pl-en">main</span>()</pre></div>

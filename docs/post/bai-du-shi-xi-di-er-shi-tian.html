@@ -109,21 +109,21 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>mentor 认可了我提出的修改测试逻辑的建议，具体实施操作是每次生成二到三个 label 选项，如果有一个正确即可。</p>
 <h2>测试逻辑的修改与验证</h2>
 <p>在之前的代码中，逻辑代码如下：</p>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">predicted_label</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">get_prediction</span>(<span class="pl-s1">query</span>.<span class="pl-s1">iloc</span>[<span class="pl-s1">i</span>])
-<span class="pl-k">if</span> <span class="pl-s1">predicted_label</span> <span class="pl-c1">==</span> <span class="pl-s1">label</span>.<span class="pl-s1">iloc</span>[<span class="pl-s1">i</span>]:
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">predicted_label</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">get_prediction</span>(<span class="pl-s1">query</span>.<span class="pl-c1">iloc</span>[<span class="pl-s1">i</span>])
+<span class="pl-k">if</span> <span class="pl-s1">predicted_label</span> <span class="pl-c1">==</span> <span class="pl-s1">label</span>.<span class="pl-c1">iloc</span>[<span class="pl-s1">i</span>]:
     <span class="pl-s1">correct_count</span> <span class="pl-c1">+=</span> <span class="pl-c1">1</span></pre></div>
 <p>经过修改，测试逻辑为：</p>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">first_prediction</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">get_valid_prediction</span>(<span class="pl-s1">query</span>.<span class="pl-s1">iloc</span>[<span class="pl-s1">i</span>], <span class="pl-s1">valid_labels</span>)
-<span class="pl-k">if</span> <span class="pl-s1">first_prediction</span> <span class="pl-c1">==</span> <span class="pl-s1">label</span>.<span class="pl-s1">iloc</span>[<span class="pl-s1">i</span>]:
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">first_prediction</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">get_valid_prediction</span>(<span class="pl-s1">query</span>.<span class="pl-c1">iloc</span>[<span class="pl-s1">i</span>], <span class="pl-s1">valid_labels</span>)
+<span class="pl-k">if</span> <span class="pl-s1">first_prediction</span> <span class="pl-c1">==</span> <span class="pl-s1">label</span>.<span class="pl-c1">iloc</span>[<span class="pl-s1">i</span>]:
     <span class="pl-s1">predicted_label</span> <span class="pl-c1">=</span> <span class="pl-s1">first_prediction</span>
 <span class="pl-k">else</span>:
-    <span class="pl-s1">results</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">get_multiple_predictions</span>(<span class="pl-s1">query</span>.<span class="pl-s1">iloc</span>[<span class="pl-s1">i</span>], <span class="pl-s1">valid_labels</span>)
+    <span class="pl-s1">results</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">get_multiple_predictions</span>(<span class="pl-s1">query</span>.<span class="pl-c1">iloc</span>[<span class="pl-s1">i</span>], <span class="pl-s1">valid_labels</span>)
     <span class="pl-k">if</span> <span class="pl-en">len</span>(<span class="pl-s1">results</span>) <span class="pl-c1">==</span> <span class="pl-c1">0</span>:
         <span class="pl-s1">predicted_label</span> <span class="pl-c1">=</span> <span class="pl-s1">first_prediction</span>
     <span class="pl-k">elif</span> <span class="pl-en">len</span>(<span class="pl-s1">results</span>) <span class="pl-c1">==</span> <span class="pl-c1">1</span>:
         <span class="pl-s1">predicted_label</span> <span class="pl-c1">=</span> <span class="pl-s1">results</span>[<span class="pl-c1">0</span>]
     <span class="pl-k">else</span>:
-        <span class="pl-s1">predicted_label</span> <span class="pl-c1">=</span> <span class="pl-en">max</span>(<span class="pl-s1">results</span>, <span class="pl-s1">key</span><span class="pl-c1">=</span><span class="pl-s1">results</span>.<span class="pl-s1">count</span>)</pre></div>
+        <span class="pl-s1">predicted_label</span> <span class="pl-c1">=</span> <span class="pl-en">max</span>(<span class="pl-s1">results</span>, <span class="pl-s1">key</span><span class="pl-c1">=</span><span class="pl-s1">results</span>.<span class="pl-c1">count</span>)</pre></div>
 <p>经过一轮测试，模型正确率已经来到了 80%，但是这还远远不够。<br>
 由于模型生成的随机性也依赖于多个参数，因此接下来我的主要任务就是找到合适的参数使得模型提供的多个备选项尽量合理。<br>
 其实还有一个原因就是无法控制模型每次输出两到三个候选答案，还在研究中。</p>

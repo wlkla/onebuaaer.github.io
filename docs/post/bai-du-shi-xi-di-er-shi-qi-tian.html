@@ -111,22 +111,22 @@ CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环�
 </div>
 <p>因此我在尝试了多次之后也是成功编写了一个小 demo：</p>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
-<span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span>.<span class="pl-s1">functional</span> <span class="pl-k">as</span> <span class="pl-v">F</span>
+<span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span>.<span class="pl-s1">functional</span> <span class="pl-k">as</span> <span class="pl-c1">F</span>
 <span class="pl-k">from</span> <span class="pl-s1">transformers</span> <span class="pl-k">import</span> <span class="pl-v">AutoModelForCausalLM</span>, <span class="pl-v">AutoTokenizer</span>
 
 <span class="pl-c"># 加载模型和tokenizer</span>
-<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-v">AutoModelForCausalLM</span>.<span class="pl-en">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
-<span class="pl-s1">tokenizer</span> <span class="pl-c1">=</span> <span class="pl-v">AutoTokenizer</span>.<span class="pl-en">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
+<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-v">AutoModelForCausalLM</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
+<span class="pl-s1">tokenizer</span> <span class="pl-c1">=</span> <span class="pl-v">AutoTokenizer</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
 
 
 <span class="pl-k">def</span> <span class="pl-en">generate_text_with_probabilities</span>(<span class="pl-s1">model</span>, <span class="pl-s1">tokenizer</span>, <span class="pl-s1">input_text</span>, <span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-c1">50</span>):
     <span class="pl-c"># 编码输入文本</span>
-    <span class="pl-s1">input_ids</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-en">encode</span>(<span class="pl-s1">input_text</span>, <span class="pl-s1">return_tensors</span><span class="pl-c1">=</span><span class="pl-s">'pt'</span>)
+    <span class="pl-s1">input_ids</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-c1">encode</span>(<span class="pl-s1">input_text</span>, <span class="pl-s1">return_tensors</span><span class="pl-c1">=</span><span class="pl-s">'pt'</span>)
 
     <span class="pl-c"># 关闭梯度计算以提高效率</span>
-    <span class="pl-k">with</span> <span class="pl-s1">torch</span>.<span class="pl-en">no_grad</span>():
+    <span class="pl-k">with</span> <span class="pl-s1">torch</span>.<span class="pl-c1">no_grad</span>():
         <span class="pl-c"># 生成文本</span>
-        <span class="pl-s1">outputs</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-en">generate</span>(
+        <span class="pl-s1">outputs</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">generate</span>(
             <span class="pl-s1">input_ids</span>,
             <span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-s1">max_length</span>,
             <span class="pl-s1">num_return_sequences</span><span class="pl-c1">=</span><span class="pl-c1">1</span>,
@@ -138,28 +138,28 @@ CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环�
         <span class="pl-s1">generated_token_probs</span> <span class="pl-c1">=</span> []
 
         <span class="pl-c"># 遍历生成的token序列</span>
-        <span class="pl-k">for</span> <span class="pl-s1">step</span>, <span class="pl-s1">logits</span> <span class="pl-c1">in</span> <span class="pl-en">enumerate</span>(<span class="pl-s1">outputs</span>.<span class="pl-s1">scores</span>):
+        <span class="pl-k">for</span> <span class="pl-s1">step</span>, <span class="pl-s1">logits</span> <span class="pl-c1">in</span> <span class="pl-en">enumerate</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">scores</span>):
             <span class="pl-c"># 使用softmax将logits转换为概率</span>
-            <span class="pl-s1">probs</span> <span class="pl-c1">=</span> <span class="pl-v">F</span>.<span class="pl-en">softmax</span>(<span class="pl-s1">logits</span>, <span class="pl-s1">dim</span><span class="pl-c1">=</span><span class="pl-c1">-</span><span class="pl-c1">1</span>)
+            <span class="pl-s1">probs</span> <span class="pl-c1">=</span> <span class="pl-c1">F</span>.<span class="pl-c1">softmax</span>(<span class="pl-s1">logits</span>, <span class="pl-s1">dim</span><span class="pl-c1">=</span><span class="pl-c1">-</span><span class="pl-c1">1</span>)
 
             <span class="pl-c"># 获取概率最高的前20个token</span>
-            <span class="pl-s1">top_k_probs</span>, <span class="pl-s1">top_k_indices</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-en">topk</span>(<span class="pl-s1">probs</span>[<span class="pl-c1">0</span>], <span class="pl-s1">k</span><span class="pl-c1">=</span><span class="pl-c1">20</span>)
+            <span class="pl-s1">top_k_probs</span>, <span class="pl-s1">top_k_indices</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">topk</span>(<span class="pl-s1">probs</span>[<span class="pl-c1">0</span>], <span class="pl-s1">k</span><span class="pl-c1">=</span><span class="pl-c1">20</span>)
 
             <span class="pl-c"># 归一化top-k概率</span>
-            <span class="pl-s1">normalized_top_k_probs</span> <span class="pl-c1">=</span> <span class="pl-s1">top_k_probs</span> <span class="pl-c1">/</span> <span class="pl-s1">top_k_probs</span>.<span class="pl-en">sum</span>()
+            <span class="pl-s1">normalized_top_k_probs</span> <span class="pl-c1">=</span> <span class="pl-s1">top_k_probs</span> <span class="pl-c1">/</span> <span class="pl-s1">top_k_probs</span>.<span class="pl-c1">sum</span>()
 
             <span class="pl-c"># 将token及其概率存储为字典</span>
             <span class="pl-s1">token_prob_dict</span> <span class="pl-c1">=</span> {
                 <span class="pl-s">'step'</span>: <span class="pl-s1">step</span>,
-                <span class="pl-s">'tokens'</span>: [<span class="pl-s1">tokenizer</span>.<span class="pl-en">decode</span>(<span class="pl-s1">idx</span>) <span class="pl-k">for</span> <span class="pl-s1">idx</span> <span class="pl-c1">in</span> <span class="pl-s1">top_k_indices</span>],
-                <span class="pl-s">'probabilities'</span>: <span class="pl-s1">normalized_top_k_probs</span>.<span class="pl-en">tolist</span>(),
-                <span class="pl-s">'selected_token'</span>: <span class="pl-s1">tokenizer</span>.<span class="pl-en">decode</span>(<span class="pl-s1">outputs</span>.<span class="pl-s1">sequences</span>[<span class="pl-c1">0</span>][<span class="pl-s1">input_ids</span>.<span class="pl-s1">shape</span>[<span class="pl-c1">1</span>] <span class="pl-c1">+</span> <span class="pl-s1">step</span>])
+                <span class="pl-s">'tokens'</span>: [<span class="pl-s1">tokenizer</span>.<span class="pl-c1">decode</span>(<span class="pl-s1">idx</span>) <span class="pl-k">for</span> <span class="pl-s1">idx</span> <span class="pl-c1">in</span> <span class="pl-s1">top_k_indices</span>],
+                <span class="pl-s">'probabilities'</span>: <span class="pl-s1">normalized_top_k_probs</span>.<span class="pl-c1">tolist</span>(),
+                <span class="pl-s">'selected_token'</span>: <span class="pl-s1">tokenizer</span>.<span class="pl-c1">decode</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">sequences</span>[<span class="pl-c1">0</span>][<span class="pl-s1">input_ids</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">1</span>] <span class="pl-c1">+</span> <span class="pl-s1">step</span>])
             }
 
-            <span class="pl-s1">generated_token_probs</span>.<span class="pl-en">append</span>(<span class="pl-s1">token_prob_dict</span>)
+            <span class="pl-s1">generated_token_probs</span>.<span class="pl-c1">append</span>(<span class="pl-s1">token_prob_dict</span>)
 
         <span class="pl-c"># 解码生成的文本</span>
-        <span class="pl-s1">generated_text</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-en">decode</span>(<span class="pl-s1">outputs</span>.<span class="pl-s1">sequences</span>[<span class="pl-c1">0</span>])
+        <span class="pl-s1">generated_text</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-c1">decode</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">sequences</span>[<span class="pl-c1">0</span>])
 
         <span class="pl-k">return</span> {
             <span class="pl-s">'generated_text'</span>: <span class="pl-s1">generated_text</span>,
