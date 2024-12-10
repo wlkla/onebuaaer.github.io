@@ -95,10 +95,111 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <p>接下来一一介绍每个部分：</p>
 <h2>代码编写</h2>
+<p>其实没啥好说的，就是各种问题，各种报错，原因应有尽有，只有你想不到，没有他做不到。<br>
+改改改……改改改……改改改……改改改……改改改……改改改……改改改……改改改……改改改……改改改……改改改……改改改……<br>
+改了十多次，包括后面要提到的Google Colab。<br>
+老天爷呀，可怜可怜我吧！</p>
 <h2>任务提交</h2>
+<p>先看一下我的战果吧：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b39ddce0-d8b9-437e-91d1-3a217a4e3320"><img src="https://github.com/user-attachments/assets/b39ddce0-d8b9-437e-91d1-3a217a4e3320" alt="image" style="max-width: 100%;"></a><br>
+哈哈哈哈哈哈哈啊啊啊啊啊啊啊呜呜呜呜呜呜呜……<br>
+虽然任务提交我不需要一直等着，但是这一个小时的代码让我每次看到失败都很难受啊！<br>
+我到底什么时候才能成功啊！<br>
+我再不做出来点东西跟mentor都没什么汇报的了，好焦虑啊！</p>
 <h2>切换平台</h2>
+<p>往队列上提交任务太难了，提交了好多了，一直失败一直失败，不是环境问题，就是python包版本问题，不是代码问题，就是数据处理问题。在本地解决提到的问题后还要花一个小时提交任务，因此我就在想，有没有更方便的方法呢？💡想到了：Google Colab。<br>
+于是我登录Google Colab，然后将自己的数据集上传到huggingface，这样就可以直接通过huggingface访问了。<br>
+……<br>
+……<br>
+中间过程就简单说一下吧，也是遇到了很多问题，比如数据处理啊，python库选择啊，loss计算啊等等等等……最终也是敲定了一版代码：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate">!p<span class="pl-s1">ip</span> <span class="pl-s1">install</span> <span class="pl-s1">datasets</span> <span class="pl-s1">evaluate</span> <span class="pl-s1">transformers</span>
+
+<span class="pl-k">from</span> <span class="pl-s1">datasets</span> <span class="pl-k">import</span> <span class="pl-s1">load_dataset</span>
+<span class="pl-k">from</span> <span class="pl-s1">transformers</span> <span class="pl-k">import</span> <span class="pl-v">AutoTokenizer</span>, <span class="pl-v">AutoModelForSequenceClassification</span>, <span class="pl-v">TrainingArguments</span>, <span class="pl-v">Trainer</span>
+<span class="pl-k">import</span> <span class="pl-s1">torch</span>
+<span class="pl-k">import</span> <span class="pl-s1">evaluate</span>
+
+<span class="pl-c"># 加载数据集</span>
+<span class="pl-s1">dataset</span> <span class="pl-c1">=</span> <span class="pl-en">load_dataset</span>(<span class="pl-s">"wlkla/query-classification"</span>)
+
+<span class="pl-c"># 加载分词器</span>
+<span class="pl-s1">tokenizer</span> <span class="pl-c1">=</span> <span class="pl-v">AutoTokenizer</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">"THUDM/chatglm3-6b"</span>, <span class="pl-s1">trust_remote_code</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+
+<span class="pl-c"># 创建标签映射</span>
+<span class="pl-s1">unique_labels</span> <span class="pl-c1">=</span> <span class="pl-en">list</span>(<span class="pl-en">set</span>(<span class="pl-s1">dataset</span>[<span class="pl-s">'train'</span>][<span class="pl-s">'Label'</span>]))
+<span class="pl-s1">label2id</span> <span class="pl-c1">=</span> {<span class="pl-s1">label</span>: <span class="pl-s1">idx</span> <span class="pl-k">for</span> <span class="pl-s1">idx</span>, <span class="pl-s1">label</span> <span class="pl-c1">in</span> <span class="pl-en">enumerate</span>(<span class="pl-s1">unique_labels</span>)}
+<span class="pl-s1">id2label</span> <span class="pl-c1">=</span> {<span class="pl-s1">idx</span>: <span class="pl-s1">label</span> <span class="pl-k">for</span> <span class="pl-s1">label</span>, <span class="pl-s1">idx</span> <span class="pl-c1">in</span> <span class="pl-s1">label2id</span>.<span class="pl-c1">items</span>()}
+
+<span class="pl-c"># 分词函数</span>
+<span class="pl-k">def</span> <span class="pl-en">tokenize_function</span>(<span class="pl-s1">examples</span>):
+    <span class="pl-k">return</span> <span class="pl-en">tokenizer</span>(
+        <span class="pl-s1">examples</span>[<span class="pl-s">"Query"</span>],
+        <span class="pl-s1">padding</span><span class="pl-c1">=</span><span class="pl-s">"max_length"</span>,
+        <span class="pl-s1">truncation</span><span class="pl-c1">=</span><span class="pl-c1">True</span>,
+        <span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-c1">64</span>
+    )
+
+<span class="pl-c"># 转换标签并分词</span>
+<span class="pl-k">def</span> <span class="pl-en">preprocess_labels</span>(<span class="pl-s1">example</span>):
+    <span class="pl-s1">example</span>[<span class="pl-s">"labels"</span>] <span class="pl-c1">=</span> <span class="pl-s1">label2id</span>[<span class="pl-s1">example</span>[<span class="pl-s">"Label"</span>]]  <span class="pl-c"># 转换标签为数字</span>
+    <span class="pl-k">return</span> <span class="pl-s1">example</span>
+
+<span class="pl-s1">tokenized_datasets</span> <span class="pl-c1">=</span> <span class="pl-s1">dataset</span>.<span class="pl-c1">map</span>(<span class="pl-s1">tokenize_function</span>, <span class="pl-s1">batched</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">remove_columns</span><span class="pl-c1">=</span>[<span class="pl-s">"Query"</span>])
+<span class="pl-s1">tokenized_datasets</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenized_datasets</span>.<span class="pl-c1">map</span>(<span class="pl-s1">preprocess_labels</span>)
+
+<span class="pl-c"># 设置数据格式为 PyTorch</span>
+<span class="pl-s1">tokenized_datasets</span>.<span class="pl-c1">set_format</span>(<span class="pl-s">"torch"</span>)
+
+<span class="pl-c"># 加载模型</span>
+<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-v">AutoModelForSequenceClassification</span>.<span class="pl-c1">from_pretrained</span>(
+    <span class="pl-s">"THUDM/chatglm3-6b"</span>,
+    <span class="pl-s1">num_labels</span><span class="pl-c1">=</span><span class="pl-en">len</span>(<span class="pl-s1">label2id</span>),
+    <span class="pl-s1">id2label</span><span class="pl-c1">=</span><span class="pl-s1">id2label</span>,
+    <span class="pl-s1">label2id</span><span class="pl-c1">=</span><span class="pl-s1">label2id</span>,
+    <span class="pl-s1">trust_remote_code</span><span class="pl-c1">=</span><span class="pl-c1">True</span>
+)
+
+<span class="pl-c"># 加载评估指标</span>
+<span class="pl-s1">metric</span> <span class="pl-c1">=</span> <span class="pl-s1">evaluate</span>.<span class="pl-c1">load</span>(<span class="pl-s">"accuracy"</span>)
+
+<span class="pl-c"># 定义评估函数</span>
+<span class="pl-k">def</span> <span class="pl-en">compute_metrics</span>(<span class="pl-s1">eval_pred</span>):
+    <span class="pl-s1">logits</span>, <span class="pl-s1">labels</span> <span class="pl-c1">=</span> <span class="pl-s1">eval_pred</span>
+    <span class="pl-s1">predictions</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">argmax</span>(<span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>(<span class="pl-s1">logits</span>), <span class="pl-s1">dim</span><span class="pl-c1">=</span><span class="pl-c1">-</span><span class="pl-c1">1</span>).<span class="pl-c1">numpy</span>()
+    <span class="pl-k">return</span> <span class="pl-s1">metric</span>.<span class="pl-c1">compute</span>(<span class="pl-s1">predictions</span><span class="pl-c1">=</span><span class="pl-s1">predictions</span>, <span class="pl-s1">references</span><span class="pl-c1">=</span><span class="pl-s1">labels</span>)
+
+<span class="pl-c"># 定义训练参数</span>
+<span class="pl-s1">training_args</span> <span class="pl-c1">=</span> <span class="pl-en">TrainingArguments</span>(
+    <span class="pl-s1">output_dir</span><span class="pl-c1">=</span><span class="pl-s">"./query_classification_results"</span>,
+    <span class="pl-s1">num_train_epochs</span><span class="pl-c1">=</span><span class="pl-c1">3</span>,
+    <span class="pl-s1">per_device_train_batch_size</span><span class="pl-c1">=</span><span class="pl-c1">1</span>,
+    <span class="pl-s1">per_device_eval_batch_size</span><span class="pl-c1">=</span><span class="pl-c1">1</span>,
+    <span class="pl-s1">gradient_accumulation_steps</span><span class="pl-c1">=</span><span class="pl-c1">8</span>,
+    <span class="pl-s1">warmup_steps</span><span class="pl-c1">=</span><span class="pl-c1">500</span>,
+    <span class="pl-s1">weight_decay</span><span class="pl-c1">=</span><span class="pl-c1">0.01</span>,
+    <span class="pl-s1">logging_dir</span><span class="pl-c1">=</span><span class="pl-s">'./logs'</span>,
+    <span class="pl-s1">logging_steps</span><span class="pl-c1">=</span><span class="pl-c1">10</span>,
+    <span class="pl-s1">evaluation_strategy</span><span class="pl-c1">=</span><span class="pl-s">"epoch"</span>,
+    <span class="pl-s1">fp16</span><span class="pl-c1">=</span><span class="pl-c1">True</span>
+)
+
+<span class="pl-c"># 定义 Trainer</span>
+<span class="pl-s1">trainer</span> <span class="pl-c1">=</span> <span class="pl-en">Trainer</span>(
+    <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s1">model</span>,
+    <span class="pl-s1">args</span><span class="pl-c1">=</span><span class="pl-s1">training_args</span>,
+    <span class="pl-s1">train_dataset</span><span class="pl-c1">=</span><span class="pl-s1">tokenized_datasets</span>[<span class="pl-s">'train'</span>],
+    <span class="pl-s1">eval_dataset</span><span class="pl-c1">=</span><span class="pl-s1">tokenized_datasets</span>[<span class="pl-s">'test'</span>],
+    <span class="pl-s1">compute_metrics</span><span class="pl-c1">=</span><span class="pl-s1">compute_metrics</span>,
+)
+
+<span class="pl-c"># 开始训练</span>
+<span class="pl-s1">trainer</span>.<span class="pl-c1">train</span>()</pre></div>
+<p>但是运行报错啦😭：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e65d4751-c532-46a4-b9e1-551c8e2515a5"><img src="https://github.com/user-attachments/assets/e65d4751-c532-46a4-b9e1-551c8e2515a5" alt="image" style="max-width: 100%;"></a><br>
+我现在已经不想抱怨了，搞了一下午，还是一直失败，我现在内心毫无波澜，已经失望了😞。</p>
 <h2>其他</h2>
 <ul>
+<li>小结一下，今天改了一天代码，提了一天任务，全失败了，我现在很痛苦💔！</li>
 <li>今天发的水果是一个橘子🍊。</li>
 </ul>
 <h2>总结</h2>
