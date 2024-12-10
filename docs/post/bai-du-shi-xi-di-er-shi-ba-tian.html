@@ -56,7 +56,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     font-size: 12px;
 }
 </style>
-<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style>
+
 
 
 
@@ -89,37 +89,36 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="markdown-body" id="postBody"><p>今天是入职百度的第2️⃣8️⃣天，记录一下今天的历程。</p>
 <h2>大致流程</h2>
 <div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
-    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>本地部署<span class="pl-pds"><span class="pl-sg">)</span></span></span>
-    <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>参数学习<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>汇报进度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>模型下载<span class="pl-pds"><span class="pl-sg">)</span></span></span>
     <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>任务提交<span class="pl-pds"><span class="pl-sg">)</span></span></span>
     <span class="pl-ent">A</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">C</span></pre></div>
-<p>今天想尽一切办法想把模型在本地搭建起来。</p>
+<p>今天想尽一切办法想把任务提交到队列上并且成功运行。</p>
 <hr>
 <p>接下来一一介绍每个部分：</p>
-<h2>本地部署</h2>
-<p>好事并没有发生，今天起来看到昨晚跑的程序报错了，说没有<code class="notranslate">model_state.pdparams</code>文件，这又是怎么回事啊，好奇怪哦。不管了，先去公司。<br>
-到公司后我尝试在开发机上再次运行代码看看能不能正常运行，但是显而易见，报错的原因是文件缺失，而不是配置不足，看来我由于配置不足导致中间文件无法生成的臆想破碎了。<br>
-但是文件中有一个<code class="notranslate">lora_model_state.pdparams</code>，我知道可能有问题，但是我还是决定将文件拷贝并重命名一份试试，在本地又报错了，但是错误原因是内存不足，因此我在开发机上再次尝试，这次居然成功了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120"><img src="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120" alt="image" style="max-width: 100%;"></a><br>
-但是在接下来的询问过程中出现了问题：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5"><img src="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5" alt="image" style="max-width: 100%;"></a><br>
-CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环境，我原计划打算直接修改调用的库文件，但是改了一个又一个，根本改不完，我决定还是提交到资源队列上运行吧。</p>
-<h2>参数学习</h2>
-<p>由于我们目前的主要任务是获取模型的 softmax 层输出，因此最近我都在尝试编写代码获取模型的底层输出，在四处查询后，我查找到了这篇文章：<a href="https://huggingface.co/docs/transformers/v4.47.0/zh/main_classes/text_generation#transformers.GenerationConfig.output_scores" rel="nofollow">Generation</a>，通过了解大模型输出时的各个参数，我发现了这个：</p>
-<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p><strong>output_scores</strong> (bool, optional, defaults to False) — Whether or not to return the prediction scores. See scores under returned tensors for more details.<br>
-<strong>output_logits</strong> (bool, optional) — Whether or not to return the unprocessed prediction logit scores. See logits under returned tensors for more details.</p>
-</div>
-<p>因此我在尝试了多次之后也是成功编写了一个小 demo：</p>
+<h2>进度汇报</h2>
+<p>今天早上跟mentor汇报进度，主要进展如下：</p>
+<ul>
+<li>对于我们之前训练的模型，我已下载到本地，但是模型文件跟大模型常规结构不同，缺少很多关键的文件（比如<code class="notranslate">config.json</code>与<code class="notranslate">model_state.pdparams</code>），虽然目前已经解决（大致解决方法👉<a href="https://onebuaaer.us.kg/post/bai-du-shi-xi-di-er-shi-liu-tian.html" rel="nofollow">第二十六天</a>和<a href="https://onebuaaer.us.kg/post/bai-du-shi-xi-di-er-shi-qi-tian.html" rel="nofollow">第二十七天</a>），但是并没有完成测试，不能保证模型文件的完整性与可用性，周三已经提交任务，但是任务报错了，主要是因为我配置的参数错误，打算再次尝试：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bb45fc42-f939-46ab-a49a-1038e0c558f9"><img src="https://github.com/user-attachments/assets/bb45fc42-f939-46ab-a49a-1038e0c558f9" alt="image" style="max-width: 100%;"></a></li>
+<li>与此同时打算从huggingface上下载一个ChatGLM3-6B模型，自己进行训练，可以保证模型文件的完整性与可用性</li>
+<li>新词挖掘任务方面，论文并没有新的进展😅</li>
+</ul>
+<h2>开源模型测试</h2>
+<p>之前就注册过huggingface账户，因此直接登录找到模型开始下载，模型好大哦，下了一下午：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/19307df9-69a2-4e8e-a6a3-529377259a7f"><img src="https://github.com/user-attachments/assets/19307df9-69a2-4e8e-a6a3-529377259a7f" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/478ecb94-1e77-42be-8040-344384ff814b"><img src="https://github.com/user-attachments/assets/478ecb94-1e77-42be-8040-344384ff814b" alt="image" style="max-width: 100%;"></a><br>
+然后简单编写了一个小demo测试模型的可用性与是否符合我们的需求：</p>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
 <span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span>.<span class="pl-s1">functional</span> <span class="pl-k">as</span> <span class="pl-c1">F</span>
 <span class="pl-k">from</span> <span class="pl-s1">transformers</span> <span class="pl-k">import</span> <span class="pl-v">AutoModelForCausalLM</span>, <span class="pl-v">AutoTokenizer</span>
 
 <span class="pl-c"># 加载模型和tokenizer</span>
-<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-v">AutoModelForCausalLM</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
-<span class="pl-s1">tokenizer</span> <span class="pl-c1">=</span> <span class="pl-v">AutoTokenizer</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
+<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-v">AutoModelForCausalLM</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'ChatGLM3-6B'</span>, <span class="pl-s1">trust_remote_code</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">tokenizer</span> <span class="pl-c1">=</span> <span class="pl-v">AutoTokenizer</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'ChatGLM3-6B'</span>, <span class="pl-s1">trust_remote_code</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
 
 
-<span class="pl-k">def</span> <span class="pl-en">generate_text_with_probabilities</span>(<span class="pl-s1">model</span>, <span class="pl-s1">tokenizer</span>, <span class="pl-s1">input_text</span>, <span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-c1">50</span>):
+<span class="pl-k">def</span> <span class="pl-en">generate_text_with_probabilities</span>(<span class="pl-s1">model</span>, <span class="pl-s1">tokenizer</span>, <span class="pl-s1">input_text</span>, <span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-c1">100</span>):
     <span class="pl-c"># 编码输入文本</span>
     <span class="pl-s1">input_ids</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-c1">encode</span>(<span class="pl-s1">input_text</span>, <span class="pl-s1">return_tensors</span><span class="pl-c1">=</span><span class="pl-s">'pt'</span>)
 
@@ -155,6 +154,7 @@ CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环�
                 <span class="pl-s">'probabilities'</span>: <span class="pl-s1">normalized_top_k_probs</span>.<span class="pl-c1">tolist</span>(),
                 <span class="pl-s">'selected_token'</span>: <span class="pl-s1">tokenizer</span>.<span class="pl-c1">decode</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">sequences</span>[<span class="pl-c1">0</span>][<span class="pl-s1">input_ids</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">1</span>] <span class="pl-c1">+</span> <span class="pl-s1">step</span>])
             }
+            <span class="pl-en">print</span>(<span class="pl-s1">token_prob_dict</span>)
 
             <span class="pl-s1">generated_token_probs</span>.<span class="pl-c1">append</span>(<span class="pl-s1">token_prob_dict</span>)
 
@@ -180,17 +180,40 @@ CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环�
         <span class="pl-s">f"<span class="pl-cce">\n</span>Step <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">token_info</span>[<span class="pl-s">'step'</span>]<span class="pl-kos">}</span></span>, Selected Token: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">token_info</span>[<span class="pl-s">'selected_token'</span>]<span class="pl-kos">}</span></span>, Top 20 Tokens and Probabilities:"</span>)
     <span class="pl-k">for</span> <span class="pl-s1">token</span>, <span class="pl-s1">prob</span> <span class="pl-c1">in</span> <span class="pl-en">zip</span>(<span class="pl-s1">token_info</span>[<span class="pl-s">'tokens'</span>], <span class="pl-s1">token_info</span>[<span class="pl-s">'probabilities'</span>]):
         <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">token</span><span class="pl-kos">}</span></span>: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">prob</span>:.4f<span class="pl-kos">}</span></span>"</span>)</pre></div>
-<p>但是这个模型是我从 huggingface 上下载下来的，并不是我们部门需要的，但是理论能行，接下来只要我们能成功部署我们的模型就可以达成我们的目标了！</p>
+<p>模型也是有了理想的输出：</p>
+<pre lang="plaintext" class="notranslate"><code class="notranslate">Step 5, Selected Token: life, Top 20 Tokens and Probabilities:
+life: 0.8956
+good: 0.1021
+food: 0.0011
+life: 0.0006
+Life: 0.0002
+goods: 0.0001
+lif: 0.0001
+books: 0.0001
+生命: 0.0000
+Good: 0.0000
+gro: 0.0000
+live: 0.0000
+good: 0.0000
+culture: 0.0000
+business: 0.0000
+li: 0.0000
+loss: 0.0000
+family: 0.0000
+生活: 0.0000
+生命的: 0.0000
+</code></pre>
+<p>接下来我们就要编写训练模型的代码了。<br>
+我从huggingface官网找到模型微调相关文章<a href="https://huggingface.co/docs/transformers/zh/training" rel="nofollow">微调预训练模型</a>，然后简单编写了一个训练代码，在自己电脑上先运行测试，前面加在模型与处理输入都能正常运行，但是在训练阶段就卡住了，这也正常，电脑配置不行，于是就准备提交到队列上运行。</p>
 <h2>任务提交</h2>
-<p>当我们前置工作已经完成，即模型可以实例化，softmax 输出可以打印，那么接下来我们就尝试解决目前遇到的一个问题：解决 float16 数据类型，根据查询，这个问题应该是由于版本为 CPU 的问题，用 GPU 应该可以解决，因此我们就使用 paddlecloud 提交任务。<br>
-在之前的文章<a href="https://onebuaaer.us.kg/post/PaddleCloud-ke-hu-duan-xue-xi.html" rel="nofollow">PaddleCloud客户端学习</a>中已经介绍过提交流程，但是我忘记了🤣，因此我又花了一段时间熟悉操作，然后提交了任务。<br>
-提交任务后我就一直等，发现任务始终处于排队状态，因此我就决定回学校，下次来公司肯定就能出结果了，希望是好结果吧，求求了。</p>
+<p>由于之前的参数设置错误，因此这次我把所有需要设置的参数前前后后检查了多次，保证每条路径的存在，然后将模型打包上传。由于模型实在太大了，任务上传就要花一个小时左右，这要是运行错误，代价就太大了。<br>
+任务上传之后已经很晚了，我就回家了，希望周一来了之后能成功。</p>
 <h2>其他</h2>
 <ul>
-<li>今天发的水果是一根香蕉🍌。</li>
+<li>今天发的水果是一个苹果🍎。</li>
 </ul>
 <h2>总结</h2>
-<p>今天真是脑子要炸了，一直在配环境，调参数提交任务，真是太煎熬了，我什么时候能把模型部署完成啊🙀！</p>
+<p>模型训练好麻烦啊，单是环境配置就把我搞的晕头转向。继续加油！</p>
 </div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 
