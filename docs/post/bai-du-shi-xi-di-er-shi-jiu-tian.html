@@ -56,7 +56,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     font-size: 12px;
 }
 </style>
-<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style>
+
 
 
 
@@ -89,108 +89,20 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="markdown-body" id="postBody"><p>今天是入职百度的第2️⃣9️⃣天，记录一下今天的历程。</p>
 <h2>大致流程</h2>
 <div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
-    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>本地部署<span class="pl-pds"><span class="pl-sg">)</span></span></span>
-    <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>参数学习<span class="pl-pds"><span class="pl-sg">)</span></span></span>
-    <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>任务提交<span class="pl-pds"><span class="pl-sg">)</span></span></span>
-    <span class="pl-ent">A</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">C</span></pre></div>
-<p>今天想尽一切办法想把模型在本地搭建起来。</p>
+    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>任务提交<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">A</span></pre></div>
+<p>今天想尽一切办法训练模型。</p>
 <hr>
 <p>接下来一一介绍每个部分：</p>
-<h2>本地部署</h2>
-<p>好事并没有发生，今天起来看到昨晚跑的程序报错了，说没有<code class="notranslate">model_state.pdparams</code>文件，这又是怎么回事啊，好奇怪哦。不管了，先去公司。<br>
-到公司后我尝试在开发机上再次运行代码看看能不能正常运行，但是显而易见，报错的原因是文件缺失，而不是配置不足，看来我由于配置不足导致中间文件无法生成的臆想破碎了。<br>
-但是文件中有一个<code class="notranslate">lora_model_state.pdparams</code>，我知道可能有问题，但是我还是决定将文件拷贝并重命名一份试试，在本地又报错了，但是错误原因是内存不足，因此我在开发机上再次尝试，这次居然成功了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120"><img src="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120" alt="image" style="max-width: 100%;"></a><br>
-但是在接下来的询问过程中出现了问题：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5"><img src="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5" alt="image" style="max-width: 100%;"></a><br>
-CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环境，我原计划打算直接修改调用的库文件，但是改了一个又一个，根本改不完，我决定还是提交到资源队列上运行吧。</p>
-<h2>参数学习</h2>
-<p>由于我们目前的主要任务是获取模型的 softmax 层输出，因此最近我都在尝试编写代码获取模型的底层输出，在四处查询后，我查找到了这篇文章：<a href="https://huggingface.co/docs/transformers/v4.47.0/zh/main_classes/text_generation#transformers.GenerationConfig.output_scores" rel="nofollow">Generation</a>，通过了解大模型输出时的各个参数，我发现了这个：</p>
-<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p><strong>output_scores</strong> (bool, optional, defaults to False) — Whether or not to return the prediction scores. See scores under returned tensors for more details.<br>
-<strong>output_logits</strong> (bool, optional) — Whether or not to return the unprocessed prediction logit scores. See logits under returned tensors for more details.</p>
-</div>
-<p>因此我在尝试了多次之后也是成功编写了一个小 demo：</p>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
-<span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span>.<span class="pl-s1">functional</span> <span class="pl-k">as</span> <span class="pl-c1">F</span>
-<span class="pl-k">from</span> <span class="pl-s1">transformers</span> <span class="pl-k">import</span> <span class="pl-v">AutoModelForCausalLM</span>, <span class="pl-v">AutoTokenizer</span>
-
-<span class="pl-c"># 加载模型和tokenizer</span>
-<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-v">AutoModelForCausalLM</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
-<span class="pl-s1">tokenizer</span> <span class="pl-c1">=</span> <span class="pl-v">AutoTokenizer</span>.<span class="pl-c1">from_pretrained</span>(<span class="pl-s">'Models/Gemma'</span>)
-
-
-<span class="pl-k">def</span> <span class="pl-en">generate_text_with_probabilities</span>(<span class="pl-s1">model</span>, <span class="pl-s1">tokenizer</span>, <span class="pl-s1">input_text</span>, <span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-c1">50</span>):
-    <span class="pl-c"># 编码输入文本</span>
-    <span class="pl-s1">input_ids</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-c1">encode</span>(<span class="pl-s1">input_text</span>, <span class="pl-s1">return_tensors</span><span class="pl-c1">=</span><span class="pl-s">'pt'</span>)
-
-    <span class="pl-c"># 关闭梯度计算以提高效率</span>
-    <span class="pl-k">with</span> <span class="pl-s1">torch</span>.<span class="pl-c1">no_grad</span>():
-        <span class="pl-c"># 生成文本</span>
-        <span class="pl-s1">outputs</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">generate</span>(
-            <span class="pl-s1">input_ids</span>,
-            <span class="pl-s1">max_length</span><span class="pl-c1">=</span><span class="pl-s1">max_length</span>,
-            <span class="pl-s1">num_return_sequences</span><span class="pl-c1">=</span><span class="pl-c1">1</span>,
-            <span class="pl-s1">return_dict_in_generate</span><span class="pl-c1">=</span><span class="pl-c1">True</span>,
-            <span class="pl-s1">output_scores</span><span class="pl-c1">=</span><span class="pl-c1">True</span>
-        )
-
-        <span class="pl-c"># 存储每个生成token的概率信息</span>
-        <span class="pl-s1">generated_token_probs</span> <span class="pl-c1">=</span> []
-
-        <span class="pl-c"># 遍历生成的token序列</span>
-        <span class="pl-k">for</span> <span class="pl-s1">step</span>, <span class="pl-s1">logits</span> <span class="pl-c1">in</span> <span class="pl-en">enumerate</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">scores</span>):
-            <span class="pl-c"># 使用softmax将logits转换为概率</span>
-            <span class="pl-s1">probs</span> <span class="pl-c1">=</span> <span class="pl-c1">F</span>.<span class="pl-c1">softmax</span>(<span class="pl-s1">logits</span>, <span class="pl-s1">dim</span><span class="pl-c1">=</span><span class="pl-c1">-</span><span class="pl-c1">1</span>)
-
-            <span class="pl-c"># 获取概率最高的前20个token</span>
-            <span class="pl-s1">top_k_probs</span>, <span class="pl-s1">top_k_indices</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">topk</span>(<span class="pl-s1">probs</span>[<span class="pl-c1">0</span>], <span class="pl-s1">k</span><span class="pl-c1">=</span><span class="pl-c1">20</span>)
-
-            <span class="pl-c"># 归一化top-k概率</span>
-            <span class="pl-s1">normalized_top_k_probs</span> <span class="pl-c1">=</span> <span class="pl-s1">top_k_probs</span> <span class="pl-c1">/</span> <span class="pl-s1">top_k_probs</span>.<span class="pl-c1">sum</span>()
-
-            <span class="pl-c"># 将token及其概率存储为字典</span>
-            <span class="pl-s1">token_prob_dict</span> <span class="pl-c1">=</span> {
-                <span class="pl-s">'step'</span>: <span class="pl-s1">step</span>,
-                <span class="pl-s">'tokens'</span>: [<span class="pl-s1">tokenizer</span>.<span class="pl-c1">decode</span>(<span class="pl-s1">idx</span>) <span class="pl-k">for</span> <span class="pl-s1">idx</span> <span class="pl-c1">in</span> <span class="pl-s1">top_k_indices</span>],
-                <span class="pl-s">'probabilities'</span>: <span class="pl-s1">normalized_top_k_probs</span>.<span class="pl-c1">tolist</span>(),
-                <span class="pl-s">'selected_token'</span>: <span class="pl-s1">tokenizer</span>.<span class="pl-c1">decode</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">sequences</span>[<span class="pl-c1">0</span>][<span class="pl-s1">input_ids</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">1</span>] <span class="pl-c1">+</span> <span class="pl-s1">step</span>])
-            }
-
-            <span class="pl-s1">generated_token_probs</span>.<span class="pl-c1">append</span>(<span class="pl-s1">token_prob_dict</span>)
-
-        <span class="pl-c"># 解码生成的文本</span>
-        <span class="pl-s1">generated_text</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-c1">decode</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">sequences</span>[<span class="pl-c1">0</span>])
-
-        <span class="pl-k">return</span> {
-            <span class="pl-s">'generated_text'</span>: <span class="pl-s1">generated_text</span>,
-            <span class="pl-s">'token_probabilities'</span>: <span class="pl-s1">generated_token_probs</span>
-        }
-
-
-<span class="pl-c"># 测试函数</span>
-<span class="pl-s1">input_text</span> <span class="pl-c1">=</span> (<span class="pl-s">'The input query is "what is the price of cabbage today?" Please determine whether the query belongs to '</span>
-              <span class="pl-s">'"goods" or "life". Just reply "goods" or "life" without any redundant explanations.'</span>)
-<span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-en">generate_text_with_probabilities</span>(<span class="pl-s1">model</span>, <span class="pl-s1">tokenizer</span>, <span class="pl-s1">input_text</span>)
-
-<span class="pl-c"># 打印结果</span>
-<span class="pl-en">print</span>(<span class="pl-s">"Generated Text:"</span>, <span class="pl-s1">result</span>[<span class="pl-s">'generated_text'</span>])
-<span class="pl-en">print</span>(<span class="pl-s">"<span class="pl-cce">\n</span>Token Probabilities:"</span>)
-<span class="pl-k">for</span> <span class="pl-s1">token_info</span> <span class="pl-c1">in</span> <span class="pl-s1">result</span>[<span class="pl-s">'token_probabilities'</span>]:
-    <span class="pl-en">print</span>(
-        <span class="pl-s">f"<span class="pl-cce">\n</span>Step <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">token_info</span>[<span class="pl-s">'step'</span>]<span class="pl-kos">}</span></span>, Selected Token: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">token_info</span>[<span class="pl-s">'selected_token'</span>]<span class="pl-kos">}</span></span>, Top 20 Tokens and Probabilities:"</span>)
-    <span class="pl-k">for</span> <span class="pl-s1">token</span>, <span class="pl-s1">prob</span> <span class="pl-c1">in</span> <span class="pl-en">zip</span>(<span class="pl-s1">token_info</span>[<span class="pl-s">'tokens'</span>], <span class="pl-s1">token_info</span>[<span class="pl-s">'probabilities'</span>]):
-        <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">token</span><span class="pl-kos">}</span></span>: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">prob</span>:.4f<span class="pl-kos">}</span></span>"</span>)</pre></div>
-<p>但是这个模型是我从 huggingface 上下载下来的，并不是我们部门需要的，但是理论能行，接下来只要我们能成功部署我们的模型就可以达成我们的目标了！</p>
+<h2>代码编写</h2>
 <h2>任务提交</h2>
-<p>当我们前置工作已经完成，即模型可以实例化，softmax 输出可以打印，那么接下来我们就尝试解决目前遇到的一个问题：解决 float16 数据类型，根据查询，这个问题应该是由于版本为 CPU 的问题，用 GPU 应该可以解决，因此我们就使用 paddlecloud 提交任务。<br>
-在之前的文章<a href="https://onebuaaer.us.kg/post/PaddleCloud-ke-hu-duan-xue-xi.html" rel="nofollow">PaddleCloud客户端学习</a>中已经介绍过提交流程，但是我忘记了🤣，因此我又花了一段时间熟悉操作，然后提交了任务。<br>
-提交任务后我就一直等，发现任务始终处于排队状态，因此我就决定回学校，下次来公司肯定就能出结果了，希望是好结果吧，求求了。</p>
+<h2>切换平台</h2>
 <h2>其他</h2>
 <ul>
-<li>今天发的水果是一根香蕉🍌。</li>
+<li>今天发的水果是一个橘子🍊。</li>
 </ul>
 <h2>总结</h2>
-<p>今天真是脑子要炸了，一直在配环境，调参数提交任务，真是太煎熬了，我什么时候能把模型部署完成啊🙀！</p>
+<p>啊啊啊啊啊，痛苦啊，我只是想训练一个模型，为什么那么难，任务提交好麻烦啊，给我一台高配电脑多好啊，我就不用考虑到底怎么提交任务了，怎么在远程配置环境了，分明思路很明确的事，却由于环境一直不成功，痛，太痛啦！！</p>
 </div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 
