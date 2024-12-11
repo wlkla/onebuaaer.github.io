@@ -1,3 +1,3 @@
 const CONFIG = {
-    passwordHash: "0d107d09f5bbe40cade3de5c71e9e9b7"
+    passwordHash: "05546b0e38ab9175cd905eebcc6ebb76"
 };
