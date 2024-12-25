@@ -89,86 +89,105 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="markdown-body" id="postBody"><p>今天是入职百度的第3️⃣7️⃣天，记录一下今天的历程。</p>
 <h2>大致流程</h2>
 <div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">LR</span>
-    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>汇报进度<span class="pl-pds"><span class="pl-sg">)</span></span></span>
-    <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>任务提交<span class="pl-pds"><span class="pl-sg">)</span></span></span>
-    <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>优化代码<span class="pl-pds"><span class="pl-sg">)</span></span></span>
-    <span class="pl-ent">A</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">C</span></pre></div>
-<p>今天跟周二一样，又是半天模型，半天代码。</p>
+    <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>合并scala文件<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>提交新词发现任务<span class="pl-pds"><span class="pl-sg">)</span></span></span>
+    <span class="pl-ent">A</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span></pre></div>
+<p>在昨天的基础上将<code class="notranslate">QueryExtraction</code>文件和<code class="notranslate">WordDiscovery</code>文件进行合并，然后尝试提交任务。</p>
 <hr>
 <p>接下来一一介绍每个部分：</p>
-<h2>汇报</h2>
-<p>原本mentor都不打算让我汇报，他以为我这周只在公司工作两天没有做什么东西，然后十一点十分左右我问mentor：</p>
-<ul>
-<li>黎明哥，我们今天什么时候汇报啊。</li>
-<li>啊，你这周有新的进展吗？</li>
-<li>有的有的🙂‍<g-emoji class="g-emoji" alias="arrow_up_down">↕️</g-emoji></li>
-<li>那好，等我忙完这一点咱们找个会议室汇报一下</li>
-</ul>
-<p>然后我把这周的进度简单整理总结一下：</p>
-<pre lang="plaintext" class="notranslate"><code class="notranslate"># 本周汇报内容
+<h2>合并文件</h2>
+<p>昨天成功将新词发现的python文件转化为了scala文件，接下来就是将新词发现文件和query抽取文件进行合并——抽取query后直接传入新词发现部分进行处理，然后将保存query改为保存计算后的新词。<br>
+但是在合并过程中发现了问题——我发现我不会🤣。<br>
+于是我就直接询问ai，但是合并后一堆bug，后面就开始查找文档自己学习，并结合ai通过以下方法实现了query的传入：</p>
+<ol>
+<li>数据获取：通过 SparkSQL 查询获取 query</li>
+</ol>
+<div class="highlight highlight-source-scala"><pre class="notranslate"><span class="pl-k">val</span> <span class="pl-v">query</span> <span class="pl-k">=</span> <span class="pl-k">s</span><span class="pl-s">"""</span>
+<span class="pl-s">  SELECT DISTINCT query  </span>
+<span class="pl-s">  FROM </span>$databaseName<span class="pl-s">.</span>$tableName
+<span class="pl-s">  WHERE partition_stat_date = '</span>$date<span class="pl-s">'</span>
+<span class="pl-s">  LIMIT </span>$maxRecords
+<span class="pl-s">"""</span>
 
-## 新词挖掘进展
+<span class="pl-k">val</span> <span class="pl-v">queriesDf</span> <span class="pl-k">=</span> spark.sql(query)</pre></div>
+<ol start="2">
+<li>数据转换：将 DataFrame 转换为 Scala 序列</li>
+</ol>
+<div class="highlight highlight-source-scala"><pre class="notranslate"><span class="pl-k">val</span> <span class="pl-v">batch</span> <span class="pl-k">=</span> queriesDf
+  .collect()  <span class="pl-c"><span class="pl-c">//</span> 将分布式 DataFrame 收集到 driver 端</span>
+  .map(_.getString(<span class="pl-c1">0</span>))  <span class="pl-c"><span class="pl-c">//</span> 获取每行的 query 字符串</span></pre></div>
+<ol start="3">
+<li>数据预处理：对query进行预处理</li>
+</ol>
+<div class="highlight highlight-source-scala"><pre class="notranslate"><span class="pl-k">private</span> <span class="pl-k">def</span> <span class="pl-en">processQueries</span>(<span class="pl-v">queries</span>: <span class="pl-en">Seq</span>[<span class="pl-en">String</span>])<span class="pl-k">:</span> <span class="pl-en">Map</span>[<span class="pl-en">String</span>, (<span class="pl-en">Int</span>, <span class="pl-en">Double</span>, <span class="pl-en">Double</span>)] <span class="pl-k">=</span> {
+  <span class="pl-c"><span class="pl-c">//</span> 预处理每个 query:</span>
+  <span class="pl-c"><span class="pl-c">//</span> 1. 移除空格</span>
+  <span class="pl-c"><span class="pl-c">//</span> 2. 保护英文和数字(将它们转换为特殊标记)</span>
+  <span class="pl-k">val</span> <span class="pl-v">processedQueries</span> <span class="pl-k">=</span> queries.map(q <span class="pl-k">=&gt;</span> 
+    <span class="pl-en">WordDiscovery</span>.protectNonChineseWords(q.replace(<span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>)))
+  
+  <span class="pl-c"><span class="pl-c">//</span> 分词并过滤标点符号</span>
+  <span class="pl-k">val</span> <span class="pl-v">textList</span> <span class="pl-k">=</span> processedQueries.flatMap(q <span class="pl-k">=&gt;</span>
+    <span class="pl-en">WordDiscovery</span>.splitStringWithNonChineseTags(q)
+      .filter(s <span class="pl-k">=&gt;</span> <span class="pl-k">!</span>s.exists(<span class="pl-en">WordDiscovery</span>.puncs.contains))
+  )
+    
+  <span class="pl-c"><span class="pl-c">//</span> 创建新词发现实例并执行分析</span>
+  <span class="pl-k">val</span> <span class="pl-v">discovery</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">WordDiscovery</span>(ngramSize <span class="pl-k">=</span> <span class="pl-c1">5</span>)
+  discovery.parse(
+    textList,
+    entropyThreshold <span class="pl-k">=</span> <span class="pl-c1">2.0</span>,
+    mutualInfoThreshold <span class="pl-k">=</span> <span class="pl-c1">5.0</span>,
+    freqThreshold <span class="pl-k">=</span> <span class="pl-c1">10</span>
+  )
+}</pre></div>
+<ol start="4">
+<li>新词发现处理：将处理后的结果传入新词发现类中</li>
+</ol>
+<div class="highlight highlight-source-scala"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">parse</span>(<span class="pl-v">textList</span>: <span class="pl-en">Seq</span>[<span class="pl-en">String</span>], <span class="pl-v">entropyThreshold</span>: <span class="pl-en">Double</span>, <span class="pl-v">mutualInfoThreshold</span>: <span class="pl-en">Double</span>, <span class="pl-v">freqThreshold</span>: <span class="pl-en">Int</span>)<span class="pl-k">:</span> <span class="pl-en">Map</span>[<span class="pl-en">String</span>, (<span class="pl-en">Int</span>, <span class="pl-en">Double</span>, <span class="pl-en">Double</span>)] <span class="pl-k">=</span> {
+  <span class="pl-c"><span class="pl-c">//</span> 1. 预解析，构建正向和反向 n-gram</span>
+  <span class="pl-k">val</span> (chunks, bchunks) <span class="pl-k">=</span> preparse(textList)
+  
+  <span class="pl-c"><span class="pl-c">//</span> 2. 计算熵值</span>
+  <span class="pl-k">val</span> <span class="pl-v">fwEntropy</span> <span class="pl-k">=</span> calcEntropy(chunks, fwNgram)
+  <span class="pl-k">val</span> <span class="pl-v">bwEntropy</span> <span class="pl-k">=</span> calcEntropy(bchunks, bwNgram)
+  
+  <span class="pl-c"><span class="pl-c">//</span> 3. 计算互信息</span>
+  <span class="pl-k">val</span> <span class="pl-v">fwMi</span> <span class="pl-k">=</span> calcMutualInfo(chunks, fwNgram)
+  <span class="pl-k">val</span> <span class="pl-v">bwMi</span> <span class="pl-k">=</span> calcMutualInfo(bchunks, bwNgram)
+  
+  <span class="pl-c"><span class="pl-c">//</span> 4. 根据阈值筛选新词</span>
+  chunks.map { chunk <span class="pl-k">=&gt;</span>
+    <span class="pl-k">val</span> <span class="pl-v">word</span> <span class="pl-k">=</span> chunk.mkString
+    <span class="pl-k">val</span> <span class="pl-v">reversedWord</span> <span class="pl-k">=</span> chunk.reverse.mkString
+    
+    (word, fwMi.get(word), bwMi.get(reversedWord)) <span class="pl-k">match</span> {
+      <span class="pl-k">case</span> (w, <span class="pl-en">Some</span>((fmi, ffreq)), <span class="pl-en">Some</span>((bmi, bfreq))) <span class="pl-k">=&gt;</span>
+        <span class="pl-k">val</span> <span class="pl-v">miMin</span> <span class="pl-k">=</span> math.min(fmi, bmi)
+        <span class="pl-k">val</span> <span class="pl-v">wordProb</span> <span class="pl-k">=</span> math.min(ffreq, bfreq)
+        <span class="pl-k">val</span> <span class="pl-v">avgEntropy</span> <span class="pl-k">=</span> (fwEntropy.getOrElse(w, <span class="pl-c1">0.0</span>) <span class="pl-k">+</span> bwEntropy.getOrElse(reversedWord, <span class="pl-c1">0.0</span>)) <span class="pl-k">/</span> <span class="pl-c1">2</span>
 
-### 前期进度回顾
-
-基于上下文判断相似性，然后计算该候选词的增强互信息
-
-![PixPin_2024-12-12_23-57-45](https://telegraph-image-6b4.pages.dev/file/67374d8fd47394dfc9689-c3169c3de82e139485.png)
-
-![PixPin_2024-12-12_23-47-03](https://telegraph-image-6b4.pages.dev/file/ead6980a269232c8b800d-79951d1f75a8d68b66.png)
-
-![PixPin_2024-12-12_23-48-25](https://telegraph-image-6b4.pages.dev/file/42a054d32230a914c1131-64b17c93e72e6b7ec8.png)
-
-复现时遇到的问题：**分词的准确性本身就依赖于词库的完整性，如果词库中根本没有新词，则信任分词结果无法被信任**
-
----
-
-如果不依赖词库进行分词，而是自己制定一种方法对文本进行分词，然后将结果与已有词库进行对比，则可筛选出候选词
-
-1. 内部凝聚度：衡量一个词组内部子部分之间关联紧密程度的指标，结果越大说明该候选词越稳定，即是一个新词的可能性越大
-
-   $Agg(w)=min_{1\leqslant l \lt len(w)}\frac{p(w)}{p(w[0:i])p(w[i:lwn(w)])}$
-
-2. 自由度：衡量一个候选词的左邻字集合和右邻字集合的随机性，结果越小说明该词独立存在的可能性越小，即是新词的可能性越小
-
-   Ent(w)=min(- \sum_{c\in N_L(w)}P_L(c|w)logP_L(c|w),- \sum_{c\in N_R(w)}P_R(c|w)logP_R(c|w))
-
-因此综合考虑因素：频数、内部凝聚度、自由度来筛选候选词
-
-## 模型训练
-
-方法：
-
-1. 本机：模型正常加载，但由于配置不足无法继续进行训练
-
-2. Google Colab：模型正常加载，前期可以正常训练，后续训练过程中会出现内存不足问题
-
-   ![PixPin_2024-12-13_02-05-07](D:\PixPin\Temp\PixPin_2024-12-13_02-05-07.png)
-
-3. paddlecloud：环境搭建失败，失败原因：
-
-   1. paddlenlp或paddlepaddle版本问题
-   2. torch与paddlenlp的混合使用问题
-   3. 平台的python版本问题
-</code></pre>
-<p>mentor发现我居然实现了新词发现的小demo很开心，夸了我😄，但是也提出了一些改进意见：在新词发现的过程中英文和数字被截断了，从而出现了一些不是单词的候选词，需要改进一下。</p>
-<h2>任务提交</h2>
-<p>这次在提交任务方面取得了很大的进展——python环境不报错了！<br>
-但是这次是其他类型的错误：</p>
-<blockquote>
-<p>RuntimeError: r.nvmlDeviceGetNvLinkRemoteDeviceType_ INTERNAL ASSERT FAILED at "../c10/cuda/driver_api.cpp":33, please report a bug to PyTorch. Can't find nvmlDeviceGetNvLinkRemoteDeviceType: /home/opt/gpuproxy/lib64/libnvidia-ml.so.1: undefined symbol: nvmlDeviceGetNvLinkRemoteDeviceType</p>
-</blockquote>
-<p>通过询问AI发现可能是CUDA （NVIDIA GPU） 驱动程序或库问题。这个问题就不是我能解决的了，于是我在paddlecloud用于群里提问，但是今天没人回我，等下周一再说吧。</p>
-<h2>代码优化</h2>
-<p>今天上午mentor提出了改进意见后我就马上开始着手解决了，但是我在修改的过程中遇到了好多问题，在处理文本时我用&lt;EN_XXX&gt;和&lt;NUM_XXX&gt;保护英文和数字，但是此时如何处理下标和长度就成了一个大问题，因为我们经常需要取<code class="notranslate">[start: end], [::-1], [:-1]</code>，如果不能讲&lt;EN_XXX&gt;和&lt;NUM_XXX&gt;识别成一个整体的话就会破坏被保护对象，从而出现bug。<br>
-我使用re库尝试了好多好多方法，也问了ai好多次，但是ai给我的代码也是一堆bug，每次都破坏被保护对象。<br>
-晚上七点半，我想到一个方法，感觉能解决这个问题，但是先不说了，等实现出来再详细介绍，回学校！</p>
+        <span class="pl-k">if</span> (miMin <span class="pl-k">&gt;=</span> mutualInfoThreshold <span class="pl-k">&amp;&amp;</span> wordProb <span class="pl-k">&gt;=</span> freqThreshold <span class="pl-k">&amp;&amp;</span> avgEntropy <span class="pl-k">&gt;=</span> entropyThreshold) {
+          <span class="pl-en">Some</span>(w <span class="pl-k">-&gt;</span> (wordProb, miMin, avgEntropy))
+        } <span class="pl-k">else</span> <span class="pl-en">None</span>
+      <span class="pl-k">case</span> _ <span class="pl-k">=&gt;</span> <span class="pl-en">None</span>
+    }
+  }.flatten.toMap
+}</pre></div>
+<p>总之就是大致完成了合并，但是并不知道是否能正确运行，因此打算提交任务查看运行结果。</p>
+<h2>提交任务</h2>
+<p>合并文件之后不知道是否正确，想要提交一下任务看看能否正确运行，于是通过脚本提交任务。提交上去之后代码任务被正确接收，然后控制台就没有反应了，我知道是因为后台在进行大量计算操作，所以控制台没有反应，因此尝试添加println语句显示运行进度，然后使用<code class="notranslate">control+z</code>终止任务。<br>
+修改之后再次提交，发现部分语句能够正常打印，但是依然有部分不太能，因此再次终止任务修改代码……<br>
+经过多次反复，感觉代码应该能够正常打印显示进度了，于是再次提交，但是此时控制台却显示队列资源不足，部分任务被拒绝，需要等待，但是最开始接触时我不知道什么原因，终止任务后再次提交，这样反反复复数十次，任务一直提交不上去。<br>
+晚饭后跟梁哥讨论问题，梁哥给我推荐了一个新平台——五彩石，用于查看队列相关的spark任务，发现我之前的所有任务都没有被正确kill掉，还在后台运行，数十个任务占用大量资源，导致新的任务无法被分配资源。梁哥告诉我需要使用<code class="notranslate">sh yarn-client application -kill application_id</code>命令或者<code class="notranslate">control+c</code>终止任务，<code class="notranslate">control+z</code>只是在终端中打断任务。<br>
+我将多余任务全部kill之后再次提交，果然瞬间就提交上去了，然后程序开始慢慢运行，我也打算直接回学校，等下次来公司再看运行结果。</p>
 <h2>其他</h2>
 <ul>
-<li>今天发的水果是一个橙子🍊。</li>
+<li>提交任务失败的原因找到之后，梁哥跟我说：幸亏只是内部队列，万一你提交到服务队列上，用户请求无法被响应，这就称为安全事故了。羞愧死了，我居然差点引发事故。然后梁哥跟我再三确认所有数据都存在个人路径下，不要轻易删除文件。</li>
+<li>今天是平安夜，公司发的水果是一个苹果🍎。</li>
 </ul>
 <h2>总结</h2>
-<p>今天很无聊，很无聊，很无聊！</p>
+<p>今天应该是成功合并了两个文件，至少打包成jar包时没有报错，且运行时也没有报错。同时学会了如何kill任务（这个都不该组员教的，应该是自学的），也学会了要多看文档，有问题要及时询问。</p>
 </div>
 <div style="font-size:small;margin-top:8px;float:right;">~~🧡🧡欢迎您🧡🧡~~</div>
 
