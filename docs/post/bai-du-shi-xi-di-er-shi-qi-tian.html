@@ -100,9 +100,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>好事并没有发生，今天起来看到昨晚跑的程序报错了，说没有<code class="notranslate">model_state.pdparams</code>文件，这又是怎么回事啊，好奇怪哦。不管了，先去公司。<br>
 到公司后我尝试在开发机上再次运行代码看看能不能正常运行，但是显而易见，报错的原因是文件缺失，而不是配置不足，看来我由于配置不足导致中间文件无法生成的臆想破碎了。<br>
 但是文件中有一个<code class="notranslate">lora_model_state.pdparams</code>，我知道可能有问题，但是我还是决定将文件拷贝并重命名一份试试，在本地又报错了，但是错误原因是内存不足，因此我在开发机上再次尝试，这次居然成功了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120"><img src="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120"><img src="https://github.com/user-attachments/assets/da10b1e6-202d-4a5a-a173-26d4d6b97120" alt="image" style="max-width: 100%; height: auto;"></a><br>
 但是在接下来的询问过程中出现了问题：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5"><img src="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5"><img src="https://github.com/user-attachments/assets/85cf9fe2-8004-4800-85c2-235b9b31fee5" alt="image" style="max-width: 100%; height: auto;"></a><br>
 CPU 版本的 paddle 无法处理 float16 格式的数据。由于是虚拟环境，我原计划打算直接修改调用的库文件，但是改了一个又一个，根本改不完，我决定还是提交到资源队列上运行吧。</p>
 <h2>参数学习</h2>
 <p>由于我们目前的主要任务是获取模型的 softmax 层输出，因此最近我都在尝试编写代码获取模型的底层输出，在四处查询后，我查找到了这篇文章：<a href="https://huggingface.co/docs/transformers/v4.47.0/zh/main_classes/text_generation#transformers.GenerationConfig.output_scores" rel="nofollow">Generation</a>，通过了解大模型输出时的各个参数，我发现了这个：</p>

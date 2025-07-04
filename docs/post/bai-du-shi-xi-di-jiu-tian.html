@@ -113,7 +113,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         ]
     }</pre></div>
 <p>导致运行时报错：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e025b2a6-ce38-42ff-befc-484e01e9d3a9"><img src="https://github.com/user-attachments/assets/e025b2a6-ce38-42ff-befc-484e01e9d3a9" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e025b2a6-ce38-42ff-befc-484e01e9d3a9"><img src="https://github.com/user-attachments/assets/e025b2a6-ce38-42ff-befc-484e01e9d3a9" alt="image" style="max-width: 100%; height: auto;"></a><br>
 因此大家一定要细心细心再细心<g-emoji class="g-emoji" alias="bangbang">‼️</g-emoji>，不然只会白白浪费时间⏰。<br>
 再次审视文档，我将文件命名为train.json、dev.json，且每行为一条 jsonline：</p>
 <div class="highlight highlight-source-json"><pre class="notranslate">{<span class="pl-ent">"system"</span>: <span class="pl-s"><span class="pl-pds">"</span>你精通query分类，query类别有：......，请判断下面这个query属于哪一类。<span class="pl-pds">"</span></span>, <span class="pl-ent">"src"</span>: <span class="pl-s"><span class="pl-pds">"</span>合租室友带人回来长期住<span class="pl-pds">"</span></span>, <span class="pl-ent">"tgt"</span>: <span class="pl-s"><span class="pl-pds">"</span>生活和情感<span class="pl-pds">"</span></span>}</pre></div>
@@ -130,7 +130,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>因为我们的数据集是人工已标注的query，因此我们采用SFT与SFT-LoRA方法对模型进行微调。</p>
 <h2>模型参数调整</h2>
 <p>准备好了数据集与微调方法后，就准备模型训练了，在训练了半个多小时后看到了一个鲜红的<strong>失败</strong>，通过检查日志，发现报错为：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684"><img src="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684"><img src="https://github.com/user-attachments/assets/f0e4297f-b390-4085-a4a7-1c80f9208684" alt="image" style="max-width: 100%; height: auto;"></a><br>
 因此开始调整参数<strong>微调方法</strong>、<strong>机器卡数</strong>与<strong>batch_size</strong></p>
 <ul>
 <li>将微调方法从STF变为STF-LoRA，训练成功🥰</li>
@@ -138,15 +138,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>将batch_size从8调为4，搭配STF-LoRA成功🥰</li>
 </ul>
 <p>运行效果如下：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441"><img src="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441"><img src="https://github.com/user-attachments/assets/09a4027b-3a58-4fcf-a9cc-177f95baf441" alt="image" style="max-width: 100%; height: auto;"></a><br>
 由于仅对query进行一级分类，所以正确率在90%以上。等这个模型训练完毕可能就进入二级行业分类，可能正确率瞬间就下去了。</p>
 <p>接下来就是其他各种参数的调整，比如学习率、迭代轮数等，又训练了多个模型，详细过程与参数不便详细介绍，因此略过。</p>
 <h2>其他</h2>
 <ul>
 <li>百度码神培训已经结束，我也有幸获得了两个奖品：结课奖🏅和幸运奖，也是拿到了我的第一个小熊<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd"><img src="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd" alt="image" style="max-width: 100%;"></a></li>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd"><img src="https://github.com/user-attachments/assets/3cb0a946-cbab-4720-8b3f-30d1502126fd" alt="image" style="max-width: 100%; height: auto;"></a></li>
 <li>今天再次查看我的徽章，发现又多了两个：<strong>码神</strong>和<strong>云开发体验官</strong><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb"><img src="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb" alt="image" style="max-width: 100%;"></a></li>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb"><img src="https://github.com/user-attachments/assets/88ddbfac-8e47-4783-985f-769e71ba14eb" alt="image" style="max-width: 100%; height: auto;"></a></li>
 <li>今天发的不是水果，算是蔬菜吧，是一根黄瓜🥒，原谅我没绷住🤣。</li>
 </ul>
 <h2>总结</h2>

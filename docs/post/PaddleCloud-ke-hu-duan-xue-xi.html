@@ -89,15 +89,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="markdown-body" id="postBody"><p><a href="http://paddlecloud.baidu-int.com/" rel="nofollow"><em>PaddleCloud</em></a>是一个面向百度内部所有AI研发者的AI研发平台，但是PaddleCloud客户端功能更加强大与易用，因此根据最新的任务安排，我开始学习使用PaddleCloud客户端。</p>
 <h2>客户端介绍</h2>
 <p>PaddleCloud客户端没有可视化界面，主要在开发机上使用，通过命令行对任务进行提交、管理等操作，跟我想的不太一样。<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7fbddfdf-38a9-4457-b6a2-04798798d088"><img src="https://github.com/user-attachments/assets/7fbddfdf-38a9-4457-b6a2-04798798d088" alt="image" style="max-width: 100%;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7fbddfdf-38a9-4457-b6a2-04798798d088"><img src="https://github.com/user-attachments/assets/7fbddfdf-38a9-4457-b6a2-04798798d088" alt="image" style="max-width: 100%; height: auto;"></a></p>
 <hr>
 <h2>客户端安装</h2>
 <p>通过mentor发来的压缩包链接🔗，我是用Hadoop从集群上下载下来，然后在work开发机上解压，通过ls命令，我看到了主要包含如下文件：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/30f5e37f-128a-49b7-91f8-c9beadaddab1"><img src="https://github.com/user-attachments/assets/30f5e37f-128a-49b7-91f8-c9beadaddab1" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/30f5e37f-128a-49b7-91f8-c9beadaddab1"><img src="https://github.com/user-attachments/assets/30f5e37f-128a-49b7-91f8-c9beadaddab1" alt="image" style="max-width: 100%; height: auto;"></a><br>
 显然，太显然了，我们要运行<code class="notranslate">paddlecloud_run.sh</code>，因此我果断运行命令<code class="notranslate">./paddlecloud_run.sh</code>，不出意外的话就出意外了，报错了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7d43daff-3784-4144-87b5-7b2a1e3a1fa6"><img src="https://github.com/user-attachments/assets/7d43daff-3784-4144-87b5-7b2a1e3a1fa6" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7d43daff-3784-4144-87b5-7b2a1e3a1fa6"><img src="https://github.com/user-attachments/assets/7d43daff-3784-4144-87b5-7b2a1e3a1fa6" alt="image" style="max-width: 100%; height: auto;"></a><br>
 我开始去内网上查询，发现需要配置ak、sk、algo_id等，按照要求配置好后就能运行成功了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f0d3691a-5e2e-4ccb-a7aa-8cf2ddb1e4c1"><img src="https://github.com/user-attachments/assets/f0d3691a-5e2e-4ccb-a7aa-8cf2ddb1e4c1" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f0d3691a-5e2e-4ccb-a7aa-8cf2ddb1e4c1"><img src="https://github.com/user-attachments/assets/f0d3691a-5e2e-4ccb-a7aa-8cf2ddb1e4c1" alt="image" style="max-width: 100%; height: auto;"></a><br>
 OK了，家人们，客户端配置完成，接下来就要开始学习使用了！</p>
 <hr>
 <h2>命令介绍</h2>
@@ -107,7 +107,7 @@ OK了，家人们，客户端配置完成，接下来就要开始学习使用了
 <li><code class="notranslate">paddlecloud config</code>：用于快速配置用户ak、sk、paddlecloud server host与port等</li>
 <li><code class="notranslate">paddlecloud cluster</code>：用于查看当前组所关联的集群资源列表以及集群quota信息等</li>
 <li><code class="notranslate">paddlecloud update</code>：用于客户端升级<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8dbab3f1-071d-4818-9aca-ba44b9a3b2e9"><img src="https://github.com/user-attachments/assets/8dbab3f1-071d-4818-9aca-ba44b9a3b2e9" alt="image" style="max-width: 100%;"></a></li>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8dbab3f1-071d-4818-9aca-ba44b9a3b2e9"><img src="https://github.com/user-attachments/assets/8dbab3f1-071d-4818-9aca-ba44b9a3b2e9" alt="image" style="max-width: 100%; height: auto;"></a></li>
 </ul>
 <h4>config子命令介绍</h4>
 <div class="highlight highlight-source-shell"><pre class="notranslate">$ paddlecloud config -h
@@ -184,8 +184,8 @@ Specific job actions:
     <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">(</span></span>成功<span class="pl-pds"><span class="pl-sg">)</span></span></span>
     <span class="pl-ent">A</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">C</span></pre></div>
 <p>大致过程就如上所示，其中很多细节不便多讲，虽说有了前两天手动部署模型的折磨，我对脚本中很多参数都有了深刻的了解，但耐不住大模型这种东西含有一定的玄学成分，一直不成功，找mentor看了我的参数后他也搞不明白，直接让我放弃，去做其他任务。<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3533b33f-599a-4f8a-b833-a59d2bbbc7ed"><img src="https://github.com/user-attachments/assets/3533b33f-599a-4f8a-b833-a59d2bbbc7ed" alt="image" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8c34e1bc-2c0b-43ce-bc3a-1f92f44fbf46"><img src="https://github.com/user-attachments/assets/8c34e1bc-2c0b-43ce-bc3a-1f92f44fbf46" alt="image" style="max-width: 100%;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3533b33f-599a-4f8a-b833-a59d2bbbc7ed"><img src="https://github.com/user-attachments/assets/3533b33f-599a-4f8a-b833-a59d2bbbc7ed" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8c34e1bc-2c0b-43ce-bc3a-1f92f44fbf46"><img src="https://github.com/user-attachments/assets/8c34e1bc-2c0b-43ce-bc3a-1f92f44fbf46" alt="image" style="max-width: 100%; height: auto;"></a></p>
 <hr>
 <h2>总结</h2>
 <p>由于刚接触PaddleCloud客户端，并没有深刻体会到mentor口中所说的比网页端功能更强大，说不定等以后逐渐了解后会有所体会吧。这个任务整体来说难度不大，也许是因为我有了前期部署模型的经验，也可能是因为我自身能力有了提升。但是到最后告诉我说我学了两天的东西重要性不是很大，这多少有点扎心💔。</p></div>

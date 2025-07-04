@@ -100,14 +100,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>今天早上跟mentor汇报进度，主要进展如下：</p>
 <ul>
 <li>对于我们之前训练的模型，我已下载到本地，但是模型文件跟大模型常规结构不同，缺少很多关键的文件（比如<code class="notranslate">config.json</code>与<code class="notranslate">model_state.pdparams</code>），虽然目前已经解决（大致解决方法👉<a href="https://onebuaaer.us.kg/post/bai-du-shi-xi-di-er-shi-liu-tian.html" rel="nofollow">第二十六天</a>和<a href="https://onebuaaer.us.kg/post/bai-du-shi-xi-di-er-shi-qi-tian.html" rel="nofollow">第二十七天</a>），但是并没有完成测试，不能保证模型文件的完整性与可用性，周三已经提交任务，但是任务报错了，主要是因为我配置的参数错误，打算再次尝试：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bb45fc42-f939-46ab-a49a-1038e0c558f9"><img src="https://github.com/user-attachments/assets/bb45fc42-f939-46ab-a49a-1038e0c558f9" alt="image" style="max-width: 100%;"></a></li>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bb45fc42-f939-46ab-a49a-1038e0c558f9"><img src="https://github.com/user-attachments/assets/bb45fc42-f939-46ab-a49a-1038e0c558f9" alt="image" style="max-width: 100%; height: auto;"></a></li>
 <li>与此同时打算从huggingface上下载一个ChatGLM3-6B模型，自己进行训练，可以保证模型文件的完整性与可用性</li>
 <li>新词挖掘任务方面，论文并没有新的进展😅</li>
 </ul>
 <h2>开源模型测试</h2>
 <p>之前就注册过huggingface账户，因此直接登录找到模型开始下载，模型好大哦，下了一下午：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/19307df9-69a2-4e8e-a6a3-529377259a7f"><img src="https://github.com/user-attachments/assets/19307df9-69a2-4e8e-a6a3-529377259a7f" alt="image" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/478ecb94-1e77-42be-8040-344384ff814b"><img src="https://github.com/user-attachments/assets/478ecb94-1e77-42be-8040-344384ff814b" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/19307df9-69a2-4e8e-a6a3-529377259a7f"><img src="https://github.com/user-attachments/assets/19307df9-69a2-4e8e-a6a3-529377259a7f" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/478ecb94-1e77-42be-8040-344384ff814b"><img src="https://github.com/user-attachments/assets/478ecb94-1e77-42be-8040-344384ff814b" alt="image" style="max-width: 100%; height: auto;"></a><br>
 然后简单编写了一个小demo测试模型的可用性与是否符合我们的需求：</p>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
 <span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span>.<span class="pl-s1">functional</span> <span class="pl-k">as</span> <span class="pl-c1">F</span>
