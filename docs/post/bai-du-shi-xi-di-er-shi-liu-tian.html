@@ -100,27 +100,27 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 我迫不及待打开文件检查一下结果，越看越不对劲，感觉这次预测结果很不好，因此简单写了一个代码测试一下正确率，发现居然只有 57% 左右，之前还跟 mentor 汇报说模型正确率能达到 85% 以上呢，这不啪啪打脸吗。<br>
 我就分析一下结果，发现有超过 50% query 被标注为新闻，这是怎么回事🤔？<br>
 我开始排查代码，最后发现是参数 <code class="notranslate">Repetition Penalty</code> 的问题，它对模型的输出起了关键性影响，但是如果我们将参数数值设置过大，模型就倾向于输出<strong>新闻</strong>，我不清楚是什么导致的。<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/5907399f-007c-4e02-9e1a-4d0620f9ae6a"><img src="https://github.com/user-attachments/assets/5907399f-007c-4e02-9e1a-4d0620f9ae6a" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/5907399f-007c-4e02-9e1a-4d0620f9ae6a"><img src="https://github.com/user-attachments/assets/5907399f-007c-4e02-9e1a-4d0620f9ae6a" alt="image" style="max-width: 100%;"></a><br>
 因此我暂时 <code class="notranslate">Repetition Penalty</code> 暂定为默认的 1 再次运行（半天就跑出来了），模型正确率为 75%，这与模型训练结果相同。<br>
 但是由此就引发一个问题，为什么在测试集上修改<code class="notranslate">Repetition Penalty</code> 多次生成正确率能达到 85% 以上，但是在新的数据集上反而跌至 57% 了呢？在测试集上过拟合？那均设为默认值 1 时，正确率均为 75% 又如何解释呢。<br>
 啊啊啊，脑子疼，还得再好好想想。</p>
 <h2>模型部署</h2>
 <p>今天上午十一点左右，群里消息收到回复，说相关问题请到另外一个群询问：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c37b63bc-1349-476f-a6bc-613cb831af58"><img src="https://github.com/user-attachments/assets/c37b63bc-1349-476f-a6bc-613cb831af58" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c37b63bc-1349-476f-a6bc-613cb831af58"><img src="https://github.com/user-attachments/assets/c37b63bc-1349-476f-a6bc-613cb831af58" alt="image" style="max-width: 100%;"></a><br>
 因此我在文心一言群里又问了一遍，到了下午没人回复我，头像是小猫咪的管理员（上图中那个人，后面就称她为猫猫吧）就问我问题解决没有，我说还没，没人回复我，她就拉了一个群，让相关部门的甲帮我解决：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/99760677-00f5-4663-93e3-85f120f2316e"><img src="https://github.com/user-attachments/assets/99760677-00f5-4663-93e3-85f120f2316e" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/99760677-00f5-4663-93e3-85f120f2316e"><img src="https://github.com/user-attachments/assets/99760677-00f5-4663-93e3-85f120f2316e" alt="image" style="max-width: 100%;"></a><br>
 然后甲说他也不会，得找乙：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/573c8496-1ed4-48ea-a9c0-a5d592ea6aa9"><img src="https://github.com/user-attachments/assets/573c8496-1ed4-48ea-a9c0-a5d592ea6aa9" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/573c8496-1ed4-48ea-a9c0-a5d592ea6aa9"><img src="https://github.com/user-attachments/assets/573c8496-1ed4-48ea-a9c0-a5d592ea6aa9" alt="image" style="max-width: 100%;"></a><br>
 我跟乙谈了一会，没有解决问题，后面乙说这个问题得问丙：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/fd9f38f9-711e-4411-8787-87b2f1e9f65c"><img src="https://github.com/user-attachments/assets/fd9f38f9-711e-4411-8787-87b2f1e9f65c" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/fd9f38f9-711e-4411-8787-87b2f1e9f65c"><img src="https://github.com/user-attachments/assets/fd9f38f9-711e-4411-8787-87b2f1e9f65c" alt="image" style="max-width: 100%;"></a><br>
 然后丙被拉进来了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4c30f706-e6b9-41a3-9cdf-37cdba66972b"><img src="https://github.com/user-attachments/assets/4c30f706-e6b9-41a3-9cdf-37cdba66972b" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4c30f706-e6b9-41a3-9cdf-37cdba66972b"><img src="https://github.com/user-attachments/assets/4c30f706-e6b9-41a3-9cdf-37cdba66972b" alt="image" style="max-width: 100%;"></a><br>
 但是丙一直没回我，可能下班了，于是猫猫又邀请了丁进群：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2c3bc8ed-2a39-4091-8c19-48ca71986286"><img src="https://github.com/user-attachments/assets/2c3bc8ed-2a39-4091-8c19-48ca71986286" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2c3bc8ed-2a39-4091-8c19-48ca71986286"><img src="https://github.com/user-attachments/assets/2c3bc8ed-2a39-4091-8c19-48ca71986286" alt="image" style="max-width: 100%;"></a><br>
 丁也没回我，已经七点半了，可能大家都走了吧。这个时候丙把戊拉进来了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3939cd24-9cdb-4d4d-a223-c64cd217f832"><img src="https://github.com/user-attachments/assets/3939cd24-9cdb-4d4d-a223-c64cd217f832" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3939cd24-9cdb-4d4d-a223-c64cd217f832"><img src="https://github.com/user-attachments/assets/3939cd24-9cdb-4d4d-a223-c64cd217f832" alt="image" style="max-width: 100%;"></a><br>
 后面跟戊聊了很久，他帮我找到了一种解决方案，不过等解决时已经凌晨了。<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1440321c-8253-4470-9e54-691bef577298"><img src="https://github.com/user-attachments/assets/1440321c-8253-4470-9e54-691bef577298" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1440321c-8253-4470-9e54-691bef577298"><img src="https://github.com/user-attachments/assets/1440321c-8253-4470-9e54-691bef577298" alt="image" style="max-width: 100%;"></a><br>
 没事，正好程序要跑好久，说不定第二天一起来就有好事发生。</p>
 <h2>其他</h2>
 <ul>

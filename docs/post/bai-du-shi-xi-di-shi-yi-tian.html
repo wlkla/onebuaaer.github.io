@@ -139,7 +139,7 @@ utterance:  "��制造、生活和情感、政务、小说、信息技术及�
 ]
 </code></pre>
 <p>在做出以上修改以后发现效果十分不错，感觉主要是ChatGLM模型比较好吧，然后开始再次逐渐增加label数量直到将所有label纳入数据集，并训练出了第一个效果较好的模型：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/78848cba-c107-4ab8-9f9a-3fe6f841dc49"><img src="https://github.com/user-attachments/assets/78848cba-c107-4ab8-9f9a-3fe6f841dc49" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/78848cba-c107-4ab8-9f9a-3fe6f841dc49"><img src="https://github.com/user-attachments/assets/78848cba-c107-4ab8-9f9a-3fe6f841dc49" alt="image" style="max-width: 100%;"></a><br>
 虽然训练效果很好，但是与之前我认为很好的llama2相比也没太大区别，因此主要还是看模型部署后的实际效果如何：</p>
 <pre lang="plaintext" class="notranslate"><code class="notranslate">[
 0:  {
@@ -162,7 +162,7 @@ utterance:  "影视动漫"
 </code></pre>
 <p>可以看出他的回答格式严格遵循我们训练的数据（llama2就不是🤮），且多次询问后都不会出现模型不稳定的问题，效果令人十分满意。<br>
 在测试集上进行验证后发现正确率果然达不到93%：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/680ac357-5431-4b86-a2d1-0f57e9309a0f"><img src="https://github.com/user-attachments/assets/680ac357-5431-4b86-a2d1-0f57e9309a0f" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/680ac357-5431-4b86-a2d1-0f57e9309a0f"><img src="https://github.com/user-attachments/assets/680ac357-5431-4b86-a2d1-0f57e9309a0f" alt="image" style="max-width: 100%;"></a><br>
 最后正确率稳定在了71%左右。但是我分析那些错误的分类发现有一些是因为所谓的正确答案错误而导致，因此实际正确率可能要更高，我决定将每个label的召回率、正确率等全部计算出来再做分析，不过这个要等到明天了。</p>
 <h2>其他</h2>
 <ul>

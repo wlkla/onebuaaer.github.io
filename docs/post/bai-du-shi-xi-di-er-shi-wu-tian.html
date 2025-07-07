@@ -112,15 +112,15 @@ leader 说如果本地部署不成功的话，要及时止损。我说哦，好�
 <li>
 <p>macOS：部署过程中遇到的问题为：无法安装 paddle。<br>
 通过<code class="notranslate">pip3 install paddle</code>命令安装时报错，说没有<code class="notranslate">common</code>库：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88cc4683-e1f4-4e34-b854-cdd463763259"><img src="https://github.com/user-attachments/assets/88cc4683-e1f4-4e34-b854-cdd463763259" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88cc4683-e1f4-4e34-b854-cdd463763259"><img src="https://github.com/user-attachments/assets/88cc4683-e1f4-4e34-b854-cdd463763259" alt="image" style="max-width: 100%;"></a><br>
 没有就安装嘛，嘿，您猜怎么着，已经安装好了：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bf1fc35f-ce5f-4210-8cbd-fc219aaa6e6b"><img src="https://github.com/user-attachments/assets/bf1fc35f-ce5f-4210-8cbd-fc219aaa6e6b" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bf1fc35f-ce5f-4210-8cbd-fc219aaa6e6b"><img src="https://github.com/user-attachments/assets/bf1fc35f-ce5f-4210-8cbd-fc219aaa6e6b" alt="image" style="max-width: 100%;"></a><br>
 那我就再次尝试安装 paddle，又报错说没有 common 库😡。<br>
 反反复复几次，就是不行</p>
 </li>
 <li>
 <p>CentOS：本地不行我就在开发机上试试嘛，正好还能用 GPU 加速，测试了一下，嘿，需要的 paddle 和 paddlenlp 都安装好了，那就直接运行：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/93697818-2436-4498-8bcb-fa3a01931e4e"><img src="https://github.com/user-attachments/assets/93697818-2436-4498-8bcb-fa3a01931e4e" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/93697818-2436-4498-8bcb-fa3a01931e4e"><img src="https://github.com/user-attachments/assets/93697818-2436-4498-8bcb-fa3a01931e4e" alt="image" style="max-width: 100%;"></a><br>
 显示没有<code class="notranslate">GLIBCXX_3.4.29</code>，没有就安装！我通过查询找到以下命令：</p>
 </li>
 </ul>
@@ -145,7 +145,7 @@ sudo make install</pre></div>
 <p>又等了一个小时安装好了，但是依然显示没有<code class="notranslate">GLIBCXX_3.4.32</code>，依然无法运行，好愤怒啊😡！</p>
 <ul>
 <li>Windows：回到学校后我尝试在自己电脑上运行，前期没有出现任务问题，多亏了我当时跟着老师做项目有用过 paddle，相关的库已经装好了，省去了我好多时间。但是代码运行后显示模型加载错误，找不到 config.json文件，我检查了一下模型文件夹，确实没有，我又去开发机与集群上看了一眼，发现也没有，那 paddlecloud 平台是如何部署使用的呢？我在 paddlecloud 用户交流群中提交了问题：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1e1e2df4-5f82-4ce4-b8be-0cd0968794e8"><img src="https://github.com/user-attachments/assets/1e1e2df4-5f82-4ce4-b8be-0cd0968794e8" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1e1e2df4-5f82-4ce4-b8be-0cd0968794e8"><img src="https://github.com/user-attachments/assets/1e1e2df4-5f82-4ce4-b8be-0cd0968794e8" alt="image" style="max-width: 100%;"></a><br>
 希望明天能给我解决方案。</li>
 </ul>
 <h2>其他</h2>

@@ -324,7 +324,7 @@ rdd4.saveAsTextFile("hdfs://node01:9000/data/wc/out/")
 <li>读取文件存储为 RDD：<code class="notranslate">textFile = spark.read.text("file:///home/work/jingyasen/data/train.json")</code></li>
 <li>对 RDD 进行行数统计：'textFile.count()'</li>
 <li>输出 RDD 的第一行：<code class="notranslate">textFile.first()</code><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187"><img src="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187" alt="image" style="max-width: 100%; height: auto;"></a></li>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187"><img src="https://github.com/user-attachments/assets/bda39244-bb3f-4e7c-a99a-cf86d4c6d187" alt="image" style="max-width: 100%;"></a></li>
 <li>Application：Spark 的应用程序，包含一个 Driver program 和若干 Executor</li>
 <li>SparkContext：Spark 应用程序的入口，负责调度各个运算资源，协调各个 Worker Node 上的 Executor</li>
 <li>Driver：运行 Application 的 main()  函数并创建 SparkContext</li>

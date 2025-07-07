@@ -111,7 +111,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 虽然上面只显示了三个问题，其实在解决过程中特别曲折，重复提交了五六次才解决上面的问题。安装完<code class="notranslate">transformers[torch]</code>后已经很晚了，我就回学校了。</p>
 <h2>论文复现</h2>
 <p>先看一下我的战果吧：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d60e4959-d26e-43ca-b222-92882137334b"><img src="https://github.com/user-attachments/assets/d60e4959-d26e-43ca-b222-92882137334b" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d60e4959-d26e-43ca-b222-92882137334b"><img src="https://github.com/user-attachments/assets/d60e4959-d26e-43ca-b222-92882137334b" alt="image" style="max-width: 100%;"></a><br>
 根据论文内容大致规划了一下思路，然后就开始尝试复现。<br>
 复现过程中遇到以下问题：<strong>分词的准确性本身就依赖于词库的完整性，如果词库中根本没有新词，则信任分词结果无法被信任</strong><br>
 因此根据自己以往的项目经历以及网上的一些文章，我尝试了以下思路：<strong>不依赖词库进行分词，而是自己制定一种方法对文本进行分词，然后将结果与已有词库进行对比，则可筛选出候选词</strong><br>
